@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buzzerhood — Media, Influence & Distribution Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15110D;
+    --ink-2:#1E1812;
+    --surface:#241C15;
+    --surface-2:#2C2119;
+    --line: rgba(255,246,236,0.10);
+    --line-strong: rgba(255,246,236,0.18);
+    --paper:#FFF6EC;
+    --paper-dim:#C9BFB1;
+    --paper-faint:#8F8577;
+    --orange:#FF5A1F;
+    --orange-2:#FF7A3D;
+    --amber:#C2410C;
+    --signal:#FFB347;
+    --good:#6FCF97;
+    --radius-s:4px;
+    --radius-m:10px;
+    --radius-l:22px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    line-height:0.95;
+    text-transform:uppercase;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  ::selection{background:var(--orange); color:var(--ink);}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+
+  /* ---------- NAV ---------- */
+  header.site{
+    position:sticky; top:0; z-index:100;
+    background:rgba(21,17,13,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+    max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:900; font-size:24px; letter-spacing:0.02em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .dot{width:10px; height:10px; border-radius:50%; background:var(--orange); box-shadow:0 0 0 4px rgba(255,90,31,0.18);}
+  nav.links{display:flex; gap:34px; font-size:14px; font-weight:600; color:var(--paper-dim);}
+  nav.links a:hover{color:var(--orange-2);}
+  .nav-cta{
+    background:var(--orange); color:var(--ink); font-weight:700; font-size:14px;
+    padding:11px 20px; border-radius:999px; white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--orange-2);}
+  .burger{display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none;}
+  .burger span{width:22px; height:2px; background:var(--paper);}
+  @media(max-width:900px){
+    nav.links{display:none;}
+    .burger{display:flex;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:88px 0 0;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:center;
+    max-width:1180px; margin:0 auto; padding:0 32px;
+  }
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700; letter-spacing:0.08em;
+    color:var(--orange-2); margin-bottom:22px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--orange-2);}
+  h1.hero-h{
+    font-size:clamp(42px, 6.4vw, 84px);
+    color:var(--paper);
+  }
+  h1.hero-h em{
+    font-style:normal; color:var(--orange);
+    -webkit-text-stroke:0;
+  }
+  .hero p.lead{
+    max-width:520px; margin-top:22px;
+    font-size:17px; color:var(--paper-dim);
+  }
+  .hero-cta{display:flex; gap:14px; margin-top:34px; flex-wrap:wrap;}
+  .btn-solid{
+    background:var(--orange); color:var(--ink); font-weight:700; font-size:15px;
+    padding:15px 26px; border-radius:999px; border:1px solid var(--orange);
+  }
+  .btn-solid:hover{background:var(--orange-2); border-color:var(--orange-2);}
+  .btn-ghost{
+    border:1px solid var(--line-strong); color:var(--paper); font-weight:600; font-size:15px;
+    padding:14px 26px; border-radius:999px;
+  }
+  .btn-ghost:hover{border-color:var(--orange-2); color:var(--orange-2);}
+
+  /* signal graphic */
+  .signal-wrap{position:relative; height:420px;}
+  @media(max-width:900px){.signal-wrap{height:280px; margin-top:20px;}}
+  .signal-wrap svg{width:100%; height:100%;}
+  .pulse{transform-origin:center; animation:pulse 3.2s ease-out infinite;}
+  .pulse2{animation-delay:1.1s;}
+  .pulse3{animation-delay:2.2s;}
+  @keyframes pulse{
+    0%{ r:6; opacity:0.9; }
+    100%{ r:120; opacity:0; }
+  }
+  .node{animation:blink 2.4s ease-in-out infinite;}
+  @keyframes blink{ 0%,100%{opacity:0.55;} 50%{opacity:1;} }
+
+  /* ticker */
+  .ticker-band{
+    margin-top:64px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+    overflow:hidden;
+    position:relative;
+  }
+  .ticker-track{
+    display:flex; width:max-content;
+    animation:scroll 32s linear infinite;
+  }
+  .ticker-track:hover{animation-play-state:paused;}
+  @keyframes scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  .tick{
+    display:flex; align-items:baseline; gap:10px;
+    padding:20px 40px;
+    border-right:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .tick .num{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:30px; color:var(--paper); font-variant-numeric:tabular-nums;
+  }
+  .tick .num span.suffix{color:var(--orange-2);}
+  .tick .label{font-size:12.5px; color:var(--paper-faint); font-weight:600; text-transform:uppercase; letter-spacing:0.04em;}
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{padding:100px 0;}
+  @media(max-width:640px){section{padding:64px 0;}}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head .tag{font-size:12.5px; font-weight:700; color:var(--orange-2); letter-spacing:0.08em; margin-bottom:14px; display:block;}
+  .section-head h2{font-size:clamp(30px,4vw,46px); color:var(--paper);}
+  .section-head p{margin-top:16px; color:var(--paper-dim); font-size:16px; max-width:540px;}
+
+  /* ---------- POSITIONING ---------- */
+  .position{
+    background:var(--surface);
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .position-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;}
+  @media(max-width:820px){.position-grid{grid-template-columns:1fr; gap:28px;}}
+  .position blockquote{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-size:clamp(28px,3.6vw,42px);
+    font-weight:700; text-transform:none; line-height:1.15;
+    color:var(--paper);
+  }
+  .position blockquote .strike{color:var(--paper-faint); text-decoration:line-through; text-decoration-color:var(--orange); text-decoration-thickness:2px;}
+  .position blockquote .hi{color:var(--orange);}
+  .position .support p{color:var(--paper-dim); margin-bottom:16px;}
+  .position .support p:last-child{margin-bottom:0;}
+
+  /* ---------- TEAM ---------- */
+  .team-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    overflow:hidden;
+  }
+  @media(max-width:820px){.team-grid{grid-template-columns:repeat(2,1fr);}}
+  .team-cell{
+    background:var(--ink); padding:30px 24px; min-height:150px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    transition:background .2s;
+  }
+  .team-cell:hover{background:var(--surface);}
+  .team-cell .mark{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:15px;
+    color:var(--orange); border:1px solid var(--line-strong); border-radius:50%;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+  }
+  .team-cell .role{margin-top:24px; font-size:15px; font-weight:700; color:var(--paper); text-transform:none; letter-spacing:0;}
+
+  /* ---------- NETWORK COMPOSITION ---------- */
+  .comp-cols{display:grid; grid-template-columns:repeat(3,1fr); gap:36px;}
+  @media(max-width:820px){.comp-cols{grid-template-columns:1fr;}}
+  .comp-col h4{
+    font-family:'Inter'; text-transform:none; font-weight:700; font-size:13px;
+    letter-spacing:0.04em; color:var(--paper-faint); margin-bottom:16px;
+  }
+  .chip-list{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{
+    border:1px solid var(--line-strong); padding:9px 16px; border-radius:999px;
+    font-size:13.5px; font-weight:600; color:var(--paper-dim);
+  }
+  .chip:hover{border-color:var(--orange); color:var(--orange-2);}
+
+  /* ---------- PRODUCTS ---------- */
+  .product-list{display:flex; flex-direction:column;}
+  .product-row{
+    display:grid; grid-template-columns:220px 1fr 240px; gap:28px;
+    align-items:start;
+    padding:32px 0; border-top:1px solid var(--line);
+  }
+  .product-list .product-row:last-child{border-bottom:1px solid var(--line);}
+  @media(max-width:820px){.product-row{grid-template-columns:1fr; gap:10px;}}
+  .product-row .pname{
+    font-family:'Big Shoulders Display'; font-weight:800; font-size:26px; color:var(--paper);
+  }
+  .product-row .pfreq{font-size:12.5px; color:var(--orange-2); font-weight:700; letter-spacing:0.04em; margin-top:6px; display:block;}
+  .product-row .pdesc{color:var(--paper-dim); font-size:15px;}
+  .product-row ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .product-row ul li{font-size:13.5px; color:var(--paper-faint); padding-left:16px; position:relative;}
+  .product-row ul li::before{content:"—"; position:absolute; left:0; color:var(--orange);}
+
+  /* ---------- PACKAGES ---------- */
+  .pkg-list{display:flex; flex-direction:column; border-top:1px solid var(--line);}
+  .pkg-row{
+    display:grid; grid-template-columns:50px 1fr auto; gap:24px; align-items:center;
+    padding:26px 0; border-bottom:1px solid var(--line);
+  }
+  @media(max-width:640px){.pkg-row{grid-template-columns:36px 1fr; }
+    .pkg-row .pkg-price{grid-column:2; margin-top:6px;}}
+  .pkg-row .pkg-idx{font-family:'Big Shoulders Display'; font-weight:800; font-size:22px; color:var(--paper-faint);}
+  .pkg-row:hover .pkg-idx{color:var(--orange);}
+  .pkg-row .pkg-name{font-size:18px; font-weight:700; color:var(--paper);}
+  .pkg-row .pkg-sub{font-size:13.5px; color:var(--paper-faint); margin-top:4px;}
+  .pkg-row .pkg-price{
+    font-family:'Big Shoulders Display'; font-weight:800; font-size:24px; color:var(--orange-2);
+    text-align:right; white-space:nowrap;
+  }
+
+  /* ---------- TARGET 2027 ---------- */
+  .target{
+    background:linear-gradient(135deg, var(--amber), var(--orange));
+    color:var(--ink); border-radius:var(--radius-l);
+    padding:60px 48px;
+  }
+  @media(max-width:640px){.target{padding:36px 24px;}}
+  .target .section-head h2, .target .section-head .tag{color:var(--ink);}
+  .target .section-head p{color:rgba(21,17,13,0.72);}
+  .target-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:32px; margin-top:20px;}
+  @media(max-width:820px){.target-grid{grid-template-columns:repeat(2,1fr);}}
+  .target-num{font-family:'Big Shoulders Display'; font-weight:900; font-size:clamp(36px,4.6vw,54px); line-height:1;}
+  .target-lbl{margin-top:10px; font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;}
+  .target-fields{
+    margin-top:44px; padding-top:32px; border-top:1px solid rgba(21,17,13,0.2);
+  }
+  .target-fields p{font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:14px;}
+  .field-chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .field-chips span{
+    background:rgba(21,17,13,0.12); padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600;
+  }
+
+  /* ---------- DATABASE / WEB APP ---------- */
+  .db-section{background:var(--surface); border-top:1px solid var(--line);}
+  .db-toolbar{
+    display:flex; flex-wrap:wrap; gap:14px; align-items:center;
+    margin-bottom:24px;
+  }
+  .db-search{
+    flex:1; min-width:220px;
+    background:var(--ink); border:1px solid var(--line-strong);
+    border-radius:10px; padding:13px 16px; color:var(--paper); font-size:14px;
+    font-family:'Inter';
+  }
+  .db-search::placeholder{color:var(--paper-faint);}
+  .db-search:focus{outline:none; border-color:var(--orange);}
+  .filter-group{display:flex; gap:8px; flex-wrap:wrap;}
+  .filter-btn{
+    background:transparent; border:1px solid var(--line-strong); color:var(--paper-dim);
+    padding:10px 16px; border-radius:999px; font-size:13px; font-weight:600; cursor:pointer;
+    font-family:'Inter';
+  }
+  .filter-btn.active, .filter-btn:hover{border-color:var(--orange); color:var(--orange-2); background:rgba(255,90,31,0.08);}
+  .db-meta{font-size:13px; color:var(--paper-faint); margin-bottom:14px;}
+  .db-meta strong{color:var(--orange-2);}
+  .db-table-wrap{
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; overflow-x:auto;
+    background:var(--ink);
+  }
+  table.db-table{width:100%; border-collapse:collapse; min-width:760px;}
+  table.db-table thead th{
+    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--paper-faint); font-weight:700; padding:16px 18px; border-bottom:1px solid var(--line);
+    background:var(--surface-2); position:sticky; top:0;
+  }
+  table.db-table tbody td{
+    padding:14px 18px; font-size:14px; border-bottom:1px solid var(--line); color:var(--paper-dim);
+    white-space:nowrap;
+  }
+  table.db-table tbody tr:hover{background:rgba(255,90,31,0.05);}
+  table.db-table td.tname{color:var(--paper); font-weight:600;}
+  table.db-table td.tnum{font-variant-numeric:tabular-nums; color:var(--paper);}
+  .tier-badge{
+    display:inline-block; padding:4px 10px; border-radius:999px; font-size:11.5px; font-weight:700;
+  }
+  .tier-Mega{background:rgba(255,90,31,0.18); color:var(--orange-2);}
+  .tier-Macro{background:rgba(255,179,71,0.16); color:var(--signal);}
+  .tier-Mid{background:rgba(255,246,236,0.10); color:var(--paper-dim);}
+  .tier-Micro{background:rgba(255,246,236,0.06); color:var(--paper-faint);}
+  .tier-Nano{background:rgba(255,246,236,0.06); color:var(--paper-faint);}
+
+  .plat-badge{
+    display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:7px;
+    font-size:12px; font-weight:700; border:1px solid var(--line-strong); color:var(--paper-dim);
+    white-space:nowrap;
+  }
+  .plat-badge::before{content:""; width:6px; height:6px; border-radius:50%;}
+  .plat-Instagram::before{background:#E1306C;}
+  .plat-TikTok::before{background:#69C9D0;}
+  .plat-YouTube::before{background:#FF0000;}
+  .plat-Website::before{background:var(--signal);}
+  .plat-X::before{background:#F5F5F5;}
+  .plat-Threads::before{background:#B9A4FF;}
+  .plat-Lainnya::before{background:var(--paper-faint);}
+
+  .niche-tag{
+    font-size:12.5px; color:var(--paper-dim); font-weight:500;
+  }
+  .partner-badge{
+    display:inline-block; padding:4px 10px; border-radius:999px; font-size:11.5px; font-weight:700;
+    border:1px solid var(--line-strong);
+  }
+  .partner-Media{background:rgba(255,179,71,0.14); color:var(--signal); border-color:transparent;}
+  .partner-KOL{background:rgba(255,90,31,0.16); color:var(--orange-2); border-color:transparent;}
+  .partner-Influencer{background:rgba(255,246,236,0.08); color:var(--paper-dim); border-color:transparent;}
+  .partner-MicroInfluencer{background:rgba(255,246,236,0.05); color:var(--paper-faint); border-color:transparent;}
+  .partner-Komunitas{background:rgba(111,207,151,0.14); color:var(--good); border-color:transparent;}
+
+  .status-dot{display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--paper-dim);}
+  .status-dot::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--paper-faint);}
+  .status-dot.s-active::before, .status-dot.s-Potensi::before{background:var(--signal);}
+  .status-dot.s-Respon::before{background:var(--good);}
+  .db-empty{padding:60px 20px; text-align:center; color:var(--paper-faint); font-size:14px;}
+  .db-foot{display:flex; justify-content:space-between; align-items:center; margin-top:18px; flex-wrap:wrap; gap:10px;}
+  .db-foot .hint{font-size:12.5px; color:var(--paper-faint);}
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  .cta-final{
+    text-align:center; padding:110px 0 70px;
+  }
+  .cta-final h2{font-size:clamp(34px,6vw,72px); max-width:820px; margin:0 auto;}
+  .cta-final p{color:var(--paper-dim); max-width:480px; margin:20px auto 0;}
+  .cta-final .hero-cta{justify-content:center; margin-top:36px;}
+
+  footer{border-top:1px solid var(--line); padding:48px 0 30px;}
+  .foot-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px;}
+  .foot-brand .brand{margin-bottom:10px;}
+  .foot-brand p{font-size:13.5px; color:var(--paper-faint); max-width:280px;}
+  .foot-cols{display:flex; gap:60px; flex-wrap:wrap;}
+  .foot-col h5{font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--paper-faint); margin-bottom:14px; font-weight:700;}
+  .foot-col a{display:block; font-size:14px; color:var(--paper-dim); margin-bottom:10px;}
+  .foot-col a:hover{color:var(--orange-2);}
+  .foot-bottom{
+    margin-top:50px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-size:12.5px; color:var(--paper-faint);
+  }
+
+  /* ---------- PHOTO TILES ---------- */
+  .photo-tile{position:relative; overflow:hidden; border-radius:var(--radius-m); border:1px solid var(--line-strong); background:var(--surface-2);}
+  .photo-tile img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(0.2) contrast(1.08) saturate(0.85) brightness(0.92);}
+  .photo-tile::after{content:""; position:absolute; inset:0; background:linear-gradient(155deg, rgba(255,90,31,0.32) 0%, rgba(21,17,13,0.15) 45%, rgba(21,17,13,0.75) 100%); mix-blend-mode:multiply; pointer-events:none;}
+  .photo-tile::before{content:""; position:absolute; left:14px; top:14px; width:8px; height:8px; border-radius:50%; background:var(--orange); z-index:2; box-shadow:0 0 0 4px rgba(255,90,31,0.22);}
+  .photo-tile .cap{position:absolute; left:16px; bottom:14px; right:16px; z-index:2; font-size:12px; font-weight:700; letter-spacing:0.03em; color:var(--paper); text-transform:uppercase;}
+  .photo-row{display:grid; gap:16px;}
+  .photo-row.cols-3{grid-template-columns:repeat(3,1fr);}
+  @media(max-width:640px){.photo-row.cols-3{grid-template-columns:1fr;}}
+
+  .hero-bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
+  .hero-bg img{width:100%; height:100%; object-fit:cover; opacity:0.4; filter:grayscale(0.25) contrast(1.1);}
+  .hero-bg::after{content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 78% 18%, rgba(255,90,31,0.28), transparent 55%),
+      linear-gradient(180deg, rgba(21,17,13,0.55) 0%, rgba(21,17,13,0.88) 68%, var(--ink) 100%);
+  }
+  .hero-grid, .ticker-band{position:relative; z-index:1;}
+
+  .head-with-photo{display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap;}
+  .head-with-photo .photo-tile{width:280px; height:150px; flex-shrink:0;}
+  @media(max-width:820px){.head-with-photo .photo-tile{width:100%; height:170px;}}
+
+  .comp-col .photo-tile{height:120px; margin-bottom:16px;}
+
+  .position-photo{margin-bottom:26px;}
+  .position-photo .photo-tile{height:210px;}
+
+  .target-photo{position:absolute; top:26px; right:26px; width:190px; height:120px; z-index:2;}
+  @media(max-width:820px){.target-photo{display:none;}}
+
+  .db-side{display:grid; grid-template-columns:1fr 260px; gap:32px; align-items:end;}
+  @media(max-width:900px){.db-side{grid-template-columns:1fr;}}
+  .db-side .photo-tile{height:150px;}
+
+  .cta-photos{margin-top:56px;}
+
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <div class="brand"><span class="dot"></span>BUZZERHOOD</div>
+    <nav class="links">
+      <a href="#jaringan">Jaringan</a>
+      <a href="#layanan">Layanan</a>
+      <a href="#paket">Paket</a>
+      <a href="#database">Database</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+    <a href="#kontak" class="nav-cta">Mulai Campaign</a>
+    <button class="burger" onclick="document.querySelector('nav.links').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"><img src="https://images.pexels.com/photos/35381826/pexels-photo-35381826.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="" loading="lazy"></div>
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Distribution infrastructure, bukan jasa buzzer</span>
+        <h1 class="hero-h">Media, <em>Influence</em> &amp; Distribution Network</h1>
+        <p class="lead">Buzzerhood menghubungkan media online, kreator, dan komunitas dalam satu jaringan distribusi terukur — supaya setiap pesan brand sampai ke audiens yang tepat, di platform yang tepat.</p>
+        <div class="hero-cta">
+          <a href="#kontak" class="btn-solid">Diskusikan Campaign</a>
+          <a href="#database" class="btn-ghost">Lihat Network Database</a>
+        </div>
+      </div>
+      <div class="signal-wrap" aria-hidden="true">
+        <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="rgba(255,246,236,0.14)" stroke-width="1">
+            <line x1="200" y1="210" x2="70" y2="90"/>
+            <line x1="200" y1="210" x2="330" y2="70"/>
+            <line x1="200" y1="210" x2="60" y2="300"/>
+            <line x1="200" y1="210" x2="320" y2="320"/>
+            <line x1="200" y1="210" x2="200" y2="40"/>
+            <line x1="200" y1="210" x2="200" y2="380"/>
+          </g>
+          <circle class="pulse" cx="200" cy="210" r="6" fill="none" stroke="#FF5A1F" stroke-width="2"/>
+          <circle class="pulse pulse2" cx="200" cy="210" r="6" fill="none" stroke="#FF5A1F" stroke-width="2"/>
+          <circle class="pulse pulse3" cx="200" cy="210" r="6" fill="none" stroke="#FF5A1F" stroke-width="2"/>
+          <circle cx="200" cy="210" r="14" fill="#FF5A1F"/>
+          <g fill="#FFB347">
+            <circle class="node" cx="70" cy="90" r="6"/>
+            <circle class="node" cx="330" cy="70" r="5" style="animation-delay:.3s"/>
+            <circle class="node" cx="60" cy="300" r="5" style="animation-delay:.6s"/>
+            <circle class="node" cx="320" cy="320" r="6" style="animation-delay:.9s"/>
+            <circle class="node" cx="200" cy="40" r="4" style="animation-delay:1.2s"/>
+            <circle class="node" cx="200" cy="380" r="4" style="animation-delay:1.5s"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="ticker-band">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+  </section>
+
+  <!-- POSITIONING -->
+  <section class="position">
+    <div class="wrap position-grid reveal">
+      <blockquote>Buzzerhood dibangun sebagai <span class="hi">distribution infrastructure.</span><br><span class="strike">Bukan sekadar jasa buzzer.</span></blockquote>
+      <div class="support">
+        <div class="position-photo">
+          <div class="photo-tile"><img src="https://images.pexels.com/photos/36733315/pexels-photo-36733315.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Tim Buzzerhood menyusun strategi campaign" loading="lazy"><span class="cap">Strategy session — tim campaign</span></div>
+        </div>
+        <p>Kebanyakan jasa "buzzer" berhenti di satu campaign lalu selesai. Buzzerhood dibangun sebagai jaringan permanen — media, kreator, dan komunitas yang sama terus dipakai ulang, diukur performanya, dan makin efisien setiap campaign berikutnya.</p>
+        <p>Satu database, satu tim operasional, satu standar pelaporan — untuk media blast, KOL campaign, digital PR, sampai monitoring reputasi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="wrap">
+    <div class="head-with-photo reveal">
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="tag">Tim Operasional</span>
+        <h2>Delapan peran, satu campaign</h2>
+        <p>Setiap campaign dikerjakan oleh tim lintas fungsi — dari riset jaringan sampai pelaporan sentimen.</p>
+      </div>
+      <div class="photo-tile"><img src="https://images.pexels.com/photos/7643897/pexels-photo-7643897.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Tim Buzzerhood berdiskusi" loading="lazy"><span class="cap">Cross-function team</span></div>
+    </div>
+    <div class="team-grid reveal" id="teamGrid" style="margin-top:40px;"></div>
+  </section>
+
+  <!-- NETWORK COMPOSITION -->
+  <section id="jaringan" class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Komposisi Jaringan</span>
+      <h2>Satu database, tiga lapisan jaringan</h2>
+      <p>Media, platform kreator, dan komunitas — dikurasi dan diperbarui terus-menerus.</p>
+    </div>
+    <div class="comp-cols reveal">
+      <div class="comp-col">
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/7651804/pexels-photo-7651804.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Jaringan media" loading="lazy"></div>
+        <h4>Media</h4>
+        <div class="chip-list">
+          <span class="chip">Media Online</span>
+          <span class="chip">Local Media</span>
+          <span class="chip">National Media</span>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/13835575/pexels-photo-13835575.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Kreator platform" loading="lazy"></div>
+        <h4>Platform Creator</h4>
+        <div class="chip-list">
+          <span class="chip">Instagram Publisher</span>
+          <span class="chip">TikTok Creator</span>
+          <span class="chip">YouTube Creator</span>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/9287491/pexels-photo-9287491.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Komunitas" loading="lazy"></div>
+        <h4>Orang &amp; Komunitas</h4>
+        <div class="chip-list">
+          <span class="chip">Influencer</span>
+          <span class="chip">Micro Influencer</span>
+          <span class="chip">Nano Influencer</span>
+          <span class="chip">Community</span>
+          <span class="chip">KOL</span>
+          <span class="chip">Public Figure</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="layanan" class="wrap">
+    <div class="head-with-photo reveal">
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="tag">Layanan</span>
+        <h2>Tujuh cara menyalurkan pesan brand</h2>
+        <p>Dipilih sesuai tujuan campaign — awareness cepat, reputasi jangka panjang, atau percakapan organik.</p>
+      </div>
+      <div class="photo-tile"><img src="https://images.pexels.com/photos/7652054/pexels-photo-7652054.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Tim menyusun layanan campaign" loading="lazy"></div>
+    </div>
+    <div class="product-list reveal" id="productList" style="margin-top:40px;"></div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section id="paket" class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Paket</span>
+      <h2>Skala campaign, dari lokal sampai nasional</h2>
+      <p>Harga disesuaikan dengan jangkauan jaringan yang digerakkan dan durasi campaign.</p>
+    </div>
+    <div class="pkg-list reveal" id="pkgList"></div>
+  </section>
+
+  <!-- TARGET 2027 -->
+  <section class="wrap">
+    <div class="target reveal" style="position:relative;">
+      <div class="target-photo photo-tile"><img src="https://images.pexels.com/photos/36766687/pexels-photo-36766687.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Tim Buzzerhood" loading="lazy"></div>
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="tag">Target Jaringan 2027</span>
+        <h2>Menuju 5.000 akun digital dalam satu database</h2>
+        <p>Empat kategori jaringan yang terus dikurasi setiap bulan.</p>
+      </div>
+      <div class="target-grid">
+        <div><div class="target-num">1.000</div><div class="target-lbl">Media Online</div></div>
+        <div><div class="target-num">2.000</div><div class="target-lbl">Influencer / Creator</div></div>
+        <div><div class="target-num">500</div><div class="target-lbl">Komunitas</div></div>
+        <div><div class="target-num">5.000</div><div class="target-lbl">Digital Accounts Network</div></div>
+      </div>
+      <div class="target-fields">
+        <p>Data utama per akun</p>
+        <div class="field-chips">
+          <span>Location</span><span>Audience</span><span>Followers</span><span>Engagement</span>
+          <span>Category</span><span>Rate</span><span>Performance</span><span>Past Campaigns</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATABASE / WEB APP -->
+  <section id="database" class="db-section">
+    <div class="wrap">
+      <div class="db-side reveal">
+        <div class="section-head" style="margin-bottom:0;">
+          <span class="tag">Network Database — Live</span>
+          <h2>Cari langsung dari jaringan aktif</h2>
+          <p>Contoh potongan database internal Buzzerhood. Cari nama, handle, atau niche — atau saring berdasarkan kategori platform dan tingkat followers.</p>
+        </div>
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/6770610/pexels-photo-6770610.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Analitik performa jaringan" loading="lazy"><span class="cap">Performance analytics</span></div>
+      </div>
+
+      <div class="reveal" style="margin-top:40px;">
+        <div class="db-toolbar">
+          <input type="text" class="db-search" id="dbSearch" placeholder="Cari nama, handle, atau partner...">
+          <div class="filter-group" id="platformFilters"></div>
+        </div>
+        <div class="db-toolbar" style="margin-top:2px;">
+          <div class="filter-group" id="tierFilters"></div>
+        </div>
+        <div class="db-meta" id="dbMeta"></div>
+        <div class="db-table-wrap">
+          <table class="db-table">
+            <thead>
+              <tr>
+                <th>Nama / Handle</th>
+                <th>Kategori Platform</th>
+                <th>Followers / Subscribers / Views</th>
+                <th>Tier</th>
+                <th>Kecenderungan</th>
+                <th>Tipe Partner</th>
+              </tr>
+            </thead>
+            <tbody id="dbBody"></tbody>
+          </table>
+          <div class="db-empty" id="dbEmpty" style="display:none;">Tidak ada akun yang cocok dengan pencarian ini.</div>
+        </div>
+        <div class="db-foot">
+          <span class="hint">Menampilkan potongan dari database internal — akses penuh tersedia untuk klien aktif.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section id="kontak">
+    <div class="wrap cta-final reveal">
+      <h2>Siap menggerakkan jaringan untuk campaign berikutnya?</h2>
+      <p>Ceritakan target dan budget campaign — tim Buzzerhood akan menyusun kombinasi media, kreator, dan komunitas yang paling relevan.</p>
+      <div class="hero-cta">
+        <a href="mailto:hello@buzzerhood.com" class="btn-solid">hello@buzzerhood.com</a>
+        <a href="https://buzzerhood.com" class="btn-ghost">buzzerhood.com</a>
+      </div>
+      <div class="cta-photos photo-row cols-3">
+        <div class="photo-tile" style="height:150px;"><img src="https://images.pexels.com/photos/13835575/pexels-photo-13835575.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Creator" loading="lazy"></div>
+        <div class="photo-tile" style="height:150px;"><img src="https://images.pexels.com/photos/7651734/pexels-photo-7651734.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Tim campaign" loading="lazy"></div>
+        <div class="photo-tile" style="height:150px;"><img src="https://images.pexels.com/photos/9287491/pexels-photo-9287491.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Komunitas" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand"><span class="dot"></span>BUZZERHOOD</div>
+        <p>Media, influence &amp; distribution network. Bagian dari grup Utero Kreatif Indonesia.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Layanan</h5>
+          <a href="#layanan">Media Blast</a>
+          <a href="#layanan">KOL Campaign</a>
+          <a href="#layanan">Digital PR</a>
+          <a href="#layanan">Brand Reputation</a>
+        </div>
+        <div class="foot-col">
+          <h5>Perusahaan</h5>
+          <a href="#jaringan">Jaringan</a>
+          <a href="#paket">Paket</a>
+          <a href="#database">Database</a>
+          <a href="#kontak">Kontak</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Buzzerhood — PT Utero Kreatif Indonesia.</span>
+      <span>Malang, Jawa Timur, Indonesia.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------------- DATA ---------------- */
+const NETWORK_DATA = [{"name": "Quhin", "ig": "@quhin", "ig_followers": 41800, "tt": "@quhiiin", "tt_followers": 679100, "total": 720900, "tier": "Mega", "platform": "Instagram + TikTok", "category": "Media/Public Figure", "platform_category": "TikTok", "metric_value": 679100, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Media"}, {"name": "Gerrhasan", "ig": "@gerrhasan", "ig_followers": 596000, "tt": "@gerrhasan", "tt_followers": 0, "total": 596000, "tier": "Mega", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 596000, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Caroline Livia", "ig": "@carolineliviaaa", "ig_followers": 299989, "tt": "@anabelle.6662", "tt_followers": 1083, "total": 301072, "tier": "Mega", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 299989, "metric_label": "Followers", "niche": "Otomotif", "partner_type": "KOL"}, {"name": "Diditpramono ", "ig": "@diditpramono_", "ig_followers": 16800, "tt": "@diditpramono_", "tt_followers": 214300, "total": 231100, "tier": "Mega", "platform": "Instagram + TikTok", "category": "Media/Public Figure", "platform_category": "TikTok", "metric_value": 214300, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Eatmalang Kuy", "ig": "@eatmalang.kuy", "ig_followers": 155000, "tt": "-", "tt_followers": 0, "total": 155000, "tier": "Mega", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 155000, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "KOL"}, {"name": "Duniakuliner Malang", "ig": "@duniakulinermalang", "ig_followers": 119000, "tt": "-", "tt_followers": 0, "total": 119000, "tier": "Mega", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 119000, "metric_label": "Followers", "niche": "Food & Kuliner", "partner_type": "KOL"}, {"name": "Massabiy", "ig": "@massabiy", "ig_followers": 77600, "tt": "-", "tt_followers": 0, "total": 77600, "tier": "Macro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 77600, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "KOL"}, {"name": "Elsahimalia", "ig": "@elsahimalia", "ig_followers": 25400, "tt": "@elsahimalia", "tt_followers": 46900, "total": 72300, "tier": "Macro", "platform": "Instagram + TikTok", "category": "Media/Public Figure", "platform_category": "TikTok", "metric_value": 46900, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": "Niceplacencoffee", "ig": "@niceplacencoffee", "ig_followers": 65000, "tt": "-", "tt_followers": 0, "total": 65000, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 65000, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": "Putrikarlinad", "ig": "@putrikarlinad", "ig_followers": 63600, "tt": "-", "tt_followers": 0, "total": 63600, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 63600, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Rendrabon", "ig": "@rendrabon", "ig_followers": 46400, "tt": "@rendrabon", "tt_followers": 8452, "total": 54852, "tier": "Macro", "platform": "Instagram + TikTok", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 46400, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": "Fitria Anggraini", "ig": "@fitriaanggraini06", "ig_followers": 43100, "tt": "@fitriaanggraini0619", "tt_followers": 11200, "total": 54300, "tier": "Macro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 43100, "metric_label": "Followers", "niche": "Olahraga", "partner_type": "KOL"}, {"name": "Aadm Id", "ig": "@aadm.id", "ig_followers": 19300, "tt": "@aadm.id", "tt_followers": 28600, "total": 47900, "tier": "Macro", "platform": "Instagram + TikTok", "category": "Media/Public Figure", "platform_category": "TikTok", "metric_value": 28600, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Media"}, {"name": "Duh Andaza", "ig": "@duh.andaza", "ig_followers": 32600, "tt": "-", "tt_followers": 0, "total": 32600, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 32600, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Media"}, {"name": "Duta Rekomendasi", "ig": "@duta_rekomendasi", "ig_followers": 32500, "tt": "-", "tt_followers": 0, "total": 32500, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 32500, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Ahhfa ", "ig": "@ahhfa_", "ig_followers": 29500, "tt": "-", "tt_followers": 0, "total": 29500, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 29500, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": "Nisriina Najmi", "ig": "@nisriinanajmi_", "ig_followers": 5347, "tt": "@hi.nisriina", "tt_followers": 23400, "total": 28747, "tier": "Macro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 23400, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "KOL"}, {"name": "Dinderellaaa", "ig": "@dinderellaaa", "ig_followers": 13100, "tt": "@dinderellaaa", "tt_followers": 15300, "total": 28400, "tier": "Mid", "platform": "Instagram + TikTok", "category": "Media/Public Figure", "platform_category": "TikTok", "metric_value": 15300, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Habibazammm", "ig": "@habibazammm", "ig_followers": 25000, "tt": "-", "tt_followers": 0, "total": 25000, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 25000, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Adizayn99", "ig": "@adizayn99", "ig_followers": 24400, "tt": "-", "tt_followers": 0, "total": 24400, "tier": "Macro", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 24400, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Media"}, {"name": "Choirun Izag", "ig": "@choirunizag_", "ig_followers": 10400, "tt": "@choirunizag", "tt_followers": 13300, "total": 23700, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 13300, "metric_label": "Followers", "niche": "Olahraga", "partner_type": "Influencer"}, {"name": "Finaira Kara", "ig": "@finairakara", "ig_followers": 23521, "tt": "-", "tt_followers": 0, "total": 23521, "tier": "Macro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 23521, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "KOL"}, {"name": "Bondan Satriya", "ig": "@si_bondbond_", "ig_followers": 12700, "tt": "@mas.bondbond", "tt_followers": 10200, "total": 22900, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 12700, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Niken Darmastuti", "ig": "@nikendarmastuti_", "ig_followers": 15800, "tt": "@macchiatoalien", "tt_followers": 3330, "total": 19130, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 15800, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Nani Diansofiana", "ig": "@nanidiansofiana", "ig_followers": 17400, "tt": "-", "tt_followers": 0, "total": 17400, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 17400, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Zaneth Gunawan", "ig": "@zaneth.gunawan", "ig_followers": 17200, "tt": "-", "tt_followers": 0, "total": 17200, "tier": "Mid", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 17200, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": "Stephanie", "ig": "@stephhsandraa", "ig_followers": 13600, "tt": "@foodiesmalang", "tt_followers": 3500, "total": 17100, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 13600, "metric_label": "Followers", "niche": "Food & Kuliner", "partner_type": "Influencer"}, {"name": "Bobbyedwan", "ig": "@bobbyedwan", "ig_followers": 14800, "tt": "@bobbyedwan", "tt_followers": 2030, "total": 16830, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 14800, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Halo Brawijaya", "ig": "@halobrawijaya", "ig_followers": 15246, "tt": "@halobrawijaya", "tt_followers": 645, "total": 15891, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 15246, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Influencer"}, {"name": "Adln Oviana", "ig": "@adlnoviana", "ig_followers": 12000, "tt": "@adlnovianaa", "tt_followers": 1318, "total": 13318, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 12000, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Influencer"}, {"name": "Asriwwi", "ig": "@asriwwi", "ig_followers": 11000, "tt": "@asriwwi", "tt_followers": 1099, "total": 12099, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 11000, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Juanadrian  ", "ig": "@juanadrian__", "ig_followers": 12000, "tt": "-", "tt_followers": 0, "total": 12000, "tier": "Mid", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 12000, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Media"}, {"name": "Aira Kei", "ig": "@aira_kei", "ig_followers": 10295, "tt": "@aira_kei", "tt_followers": 1598, "total": 11893, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 10295, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Dugaaprasetya", "ig": "@dugaaprasetya", "ig_followers": 11800, "tt": "-", "tt_followers": 0, "total": 11800, "tier": "Mid", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 11800, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": "Racheldyvia", "ig": "@racheldyvia", "ig_followers": 11500, "tt": "-", "tt_followers": 0, "total": 11500, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 11500, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Adit Ju", "ig": "@adit_ju", "ig_followers": 11400, "tt": "-", "tt_followers": 0, "total": 11400, "tier": "Mid", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 11400, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Media"}, {"name": " Choristrawberry", "ig": "@_choristrawberry", "ig_followers": 10600, "tt": "-", "tt_followers": 0, "total": 10600, "tier": "Mid", "platform": "Instagram", "category": "Media/Public Figure", "platform_category": "Instagram", "metric_value": 10600, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Media"}, {"name": "Berliana Quee", "ig": "@berliana.quee_", "ig_followers": 10200, "tt": "-", "tt_followers": 0, "total": 10200, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 10200, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Indah Lutviyatul", "ig": "@indahlutviyatul", "ig_followers": 4077, "tt": "@lutviiiii_", "tt_followers": 5343, "total": 9420, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 5343, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Alifia Bluesky", "ig": "@alifiablueskyy", "ig_followers": 4183, "tt": "@alifiabluesky", "tt_followers": 4880, "total": 9063, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 4880, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Hillda Pravitha", "ig": "@hilldapravitha", "ig_followers": 7962, "tt": "@raavieta", "tt_followers": 847, "total": 8809, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 7962, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Influencer"}, {"name": "Achhmid", "ig": "@achhmid", "ig_followers": 5400, "tt": "@achhmid", "tt_followers": 2531, "total": 7931, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 5400, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Dita Ardianti", "ig": "@ditardnti", "ig_followers": 5600, "tt": "@dita.rdnti", "tt_followers": 2200, "total": 7800, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 5600, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Yola", "ig": "@yolandaaf_", "ig_followers": 5299, "tt": "@happywithyolan1", "tt_followers": 2203, "total": 7502, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 5299, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Ansjha", "ig": "@ansjha12", "ig_followers": 7485, "tt": "-", "tt_followers": 0, "total": 7485, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 7485, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Influencer"}, {"name": "Nike Octavia", "ig": "@_nikeeoctavia", "ig_followers": 1200, "tt": "@iniinikee", "tt_followers": 6140, "total": 7340, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 6140, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Influencer"}, {"name": "Jihan Farah", "ig": "@jihan_farah16", "ig_followers": 6244, "tt": "@jihan_farah2025", "tt_followers": 1084, "total": 7328, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 6244, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Influencer"}, {"name": "Rahmaniar", "ig": "@rahmaniaarrr", "ig_followers": 5100, "tt": "@rahmaniaarrr_", "tt_followers": 2030, "total": 7130, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 5100, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Influencer"}, {"name": "Reza Ayu", "ig": "@rezaayufebriana", "ig_followers": 4551, "tt": "@rezaayufebriana", "tt_followers": 2578, "total": 7129, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 4551, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Nabilah Oktavia", "ig": "@nabilahoktavia27", "ig_followers": 7125, "tt": "-", "tt_followers": 0, "total": 7125, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 7125, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Delfinny", "ig": "@delfinnyyy_", "ig_followers": 7065, "tt": "-", "tt_followers": 0, "total": 7065, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 7065, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Annisa Salsabila", "ig": "@entuss___", "ig_followers": 4400, "tt": "@entus__", "tt_followers": 2400, "total": 6800, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 4400, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Sarah Azaleaa", "ig": "@sarahazaleaa", "ig_followers": 6300, "tt": "@hey.sarahazaleaa", "tt_followers": 142, "total": 6442, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 6300, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Puyi", "ig": "@puyipuw", "ig_followers": 5110, "tt": "@puyipuw", "tt_followers": 1211, "total": 6321, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 5110, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Influencer"}, {"name": "Shinta", "ig": "@shintamhrn.i", "ig_followers": 4835, "tt": "@shintamhrnnii", "tt_followers": 1080, "total": 5915, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 4835, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Anjani", "ig": "@we.anjani", "ig_followers": 4700, "tt": "@weawin01", "tt_followers": 1100, "total": 5800, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 4700, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Widya Wardani", "ig": "@widyakwa", "ig_followers": 4221, "tt": "@widyakwa", "tt_followers": 1557, "total": 5778, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 4221, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Tiinarach", "ig": "@tiinarach", "ig_followers": 5563, "tt": "@tiinarach", "tt_followers": 160, "total": 5723, "tier": "Mid", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 5563, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Influencer"}, {"name": "Vivi", "ig": "@_vivi0fficial", "ig_followers": 4200, "tt": "@_vivi0fficial_", "tt_followers": 1350, "total": 5550, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 4200, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Echang", "ig": "@___echang", "ig_followers": 5500, "tt": "-", "tt_followers": 0, "total": 5500, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 5500, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Meysa Aulia", "ig": "@meysaulia", "ig_followers": 1999, "tt": "@meysaaaaau", "tt_followers": 3485, "total": 5484, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 3485, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Micro Influencer"}, {"name": "Feel Fellice", "ig": "@feelfellice", "ig_followers": 5170, "tt": "-", "tt_followers": 0, "total": 5170, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 5170, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Gustian", "ig": "@gustianrp", "ig_followers": 3618, "tt": "@gustianrp", "tt_followers": 1538, "total": 5156, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3618, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Cahya Rani", "ig": "@cahyarani946", "ig_followers": 5089, "tt": "-", "tt_followers": 0, "total": 5089, "tier": "Mid", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 5089, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Influencer"}, {"name": "Kiaaa", "ig": "@__thisiskiaaa__", "ig_followers": 3231, "tt": "@_thisiskiaaa", "tt_followers": 1401, "total": 4632, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3231, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Ratihdwiw", "ig": "@ratihdwiw", "ig_followers": 2520, "tt": "@ratihdwiw", "tt_followers": 2025, "total": 4545, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2520, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Yolanda Rantau", "ig": "@yolandarantau", "ig_followers": 2900, "tt": "@yolandarantau", "tt_followers": 1620, "total": 4520, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2900, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Dytta Fitria", "ig": "@dyttafitriia", "ig_followers": 2587, "tt": "@dyttafitriiaa", "tt_followers": 1853, "total": 4440, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2587, "metric_label": "Followers", "niche": "Olahraga", "partner_type": "Micro Influencer"}, {"name": "Asri", "ig": "@r.asr.07", "ig_followers": 3285, "tt": "@rasrdj", "tt_followers": 1063, "total": 4348, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3285, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Foodlover Malang", "ig": "@foodlover_malang", "ig_followers": 4273, "tt": "-", "tt_followers": 0, "total": 4273, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 4273, "metric_label": "Followers", "niche": "Food & Kuliner", "partner_type": "Micro Influencer"}, {"name": "Rizz F", "ig": "@rizz_f", "ig_followers": 4200, "tt": "-", "tt_followers": 0, "total": 4200, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 4200, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Candra Apriliana", "ig": "@apriliahehe_", "ig_followers": 2760, "tt": "@apriliahehe", "tt_followers": 1272, "total": 4032, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2760, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Micro Influencer"}, {"name": "Selvi", "ig": "@selvi_obrien", "ig_followers": 3000, "tt": "@selvidian31", "tt_followers": 1003, "total": 4003, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3000, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Anisa", "ig": "@_anisadwi_", "ig_followers": 3790, "tt": "@_anisadwii_", "tt_followers": 160, "total": 3950, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3790, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Firda", "ig": "@firdaadp", "ig_followers": 2450, "tt": "@firdaadp98", "tt_followers": 1430, "total": 3880, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2450, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Micro Influencer"}, {"name": "Elokeva", "ig": "@elokeva", "ig_followers": 3840, "tt": "-", "tt_followers": 0, "total": 3840, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 3840, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Khoirussahro", "ig": "@_khourussahro", "ig_followers": 3808, "tt": "-", "tt_followers": 0, "total": 3808, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 3808, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Allam", "ig": "@allam101099", "ig_followers": 3057, "tt": "@anaktengah_101099", "tt_followers": 713, "total": 3770, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3057, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Selly Dewita", "ig": "@selly_dewita.mp", "ig_followers": 3075, "tt": "@mysell003", "tt_followers": 609, "total": 3684, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 3075, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Citarasalia", "ig": "@citarasalia", "ig_followers": 2344, "tt": "@citarasaliaa", "tt_followers": 1321, "total": 3665, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2344, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Riska Aulia", "ig": "@riska_aulia_", "ig_followers": 2115, "tt": "@iam.riskaaulia", "tt_followers": 1528, "total": 3643, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2115, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Fera Alvio", "ig": "@_hellovio", "ig_followers": 2466, "tt": "@_hellovio", "tt_followers": 1139, "total": 3605, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2466, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Caramello Rekomendasi", "ig": "@rekomendasi_caramellooo72", "ig_followers": 1930, "tt": "@caramellooo_72", "tt_followers": 1567, "total": 3497, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1930, "metric_label": "Followers", "niche": "Food & Kuliner", "partner_type": "Micro Influencer"}, {"name": "Zamrudya", "ig": "@zamrudya", "ig_followers": 2200, "tt": "@_t1k44", "tt_followers": 1200, "total": 3400, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2200, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Micro Influencer"}, {"name": "Selly Puspitasari", "ig": "@sellyhanaa", "ig_followers": 2363, "tt": "@caramel__zia", "tt_followers": 1017, "total": 3380, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2363, "metric_label": "Followers", "niche": "Food & Kuliner", "partner_type": "Micro Influencer"}, {"name": "Diajeng Ayu", "ig": "@diajengayust", "ig_followers": 2580, "tt": "@diajengayustt", "tt_followers": 667, "total": 3247, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2580, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Salsa", "ig": "@salsabillaakk", "ig_followers": 2210, "tt": "@salsabillaakk", "tt_followers": 980, "total": 3190, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2210, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Coni", "ig": "@j.conia", "ig_followers": 2600, "tt": "@j.conia", "tt_followers": 548, "total": 3148, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2600, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Ayu Ayunovia", "ig": "@ayuayunoviia", "ig_followers": 3100, "tt": "-", "tt_followers": 0, "total": 3100, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 3100, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Micro Influencer"}, {"name": "Bunga Pujawati", "ig": "@bungapujawati", "ig_followers": 1177, "tt": "@namasaya.bunga", "tt_followers": 1835, "total": 3012, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 1835, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Ilham Sadli", "ig": "@ilhamsadli", "ig_followers": 2998, "tt": "-", "tt_followers": 0, "total": 2998, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2998, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Revina Manda", "ig": "@revinamanda", "ig_followers": 2330, "tt": "@revinamanda_04", "tt_followers": 620, "total": 2950, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2330, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Aura Febiola", "ig": "@aurafebiola__", "ig_followers": 1170, "tt": "@aurafebiolaa__", "tt_followers": 1645, "total": 2815, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "TikTok", "metric_value": 1645, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Nasya Kirana", "ig": "@nasya_kiranaaa", "ig_followers": 2745, "tt": "-", "tt_followers": 0, "total": 2745, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2745, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Dini Arhmd", "ig": "@diniarhmd", "ig_followers": 2580, "tt": "-", "tt_followers": 0, "total": 2580, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2580, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Anis Anggraenir", "ig": "@anis_anggraenir", "ig_followers": 2579, "tt": "-", "tt_followers": 0, "total": 2579, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2579, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Nurdiansyah", "ig": "@nur_diansyah27", "ig_followers": 1908, "tt": "@nurdiansyah271098", "tt_followers": 618, "total": 2526, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1908, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Rism Wijaya", "ig": "@rismakmwijaya", "ig_followers": 2164, "tt": "@rismakmwijaya", "tt_followers": 318, "total": 2482, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2164, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Fina Saphire", "ig": "@finasaphire", "ig_followers": 2161, "tt": "@fina.saphire", "tt_followers": 290, "total": 2451, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 2161, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Ardina Dyahgarini", "ig": "@ardina.dyahgarini", "ig_followers": 2300, "tt": "-", "tt_followers": 0, "total": 2300, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2300, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Refika Sabila", "ig": "@refikasabila", "ig_followers": 1485, "tt": "@official.amaraa", "tt_followers": 804, "total": 2289, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1485, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Resha Rizky", "ig": "@resharizk", "ig_followers": 1530, "tt": "@resha.rizky", "tt_followers": 710, "total": 2240, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1530, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Nailil Filda", "ig": "@naililfildaa_", "ig_followers": 2201, "tt": "-", "tt_followers": 0, "total": 2201, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2201, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Pwancu", "ig": "@pwancu", "ig_followers": 2152, "tt": "-", "tt_followers": 0, "total": 2152, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 2152, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Adelyra", "ig": "@adelyra", "ig_followers": 1740, "tt": "@bubblegumqueenn_", "tt_followers": 389, "total": 2129, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1740, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Clala Santa", "ig": "@clalasanta", "ig_followers": 1571, "tt": "@clalasanta", "tt_followers": 455, "total": 2026, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1571, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Shelvie", "ig": "@shelvie_ayuwan", "ig_followers": 1810, "tt": "@ayuwandiary", "tt_followers": 205, "total": 2015, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1810, "metric_label": "Followers", "niche": "Komunitas Umum", "partner_type": "Micro Influencer"}, {"name": "Mochammad Nuruz Zuhrib", "ig": "@nuruz.zhr", "ig_followers": 1450, "tt": "@nr.zzzz", "tt_followers": 540, "total": 1990, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1450, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Micro Influencer"}, {"name": "Yeyen Ardila", "ig": "@yeyenardila", "ig_followers": 1566, "tt": "@yeyen.ardila", "tt_followers": 285, "total": 1851, "tier": "Micro", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 1566, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Sinta Ayudiya", "ig": "@sintaayudiya", "ig_followers": 1608, "tt": "-", "tt_followers": 0, "total": 1608, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 1608, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Amira Nuranisa", "ig": "@amiranuranisa", "ig_followers": 1585, "tt": "-", "tt_followers": 0, "total": 1585, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 1585, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Araaisf", "ig": "@araaisf", "ig_followers": 1340, "tt": "-", "tt_followers": 0, "total": 1340, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 1340, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Harsya", "ig": "@harsya2ca", "ig_followers": 1270, "tt": "-", "tt_followers": 0, "total": 1270, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 1270, "metric_label": "Followers", "niche": "Beauty & Fashion", "partner_type": "Micro Influencer"}, {"name": "Aprilia Zukhruf", "ig": "@apriliazukhruf_", "ig_followers": 1143, "tt": "-", "tt_followers": 0, "total": 1143, "tier": "Micro", "platform": "Instagram", "category": "Creator", "platform_category": "Instagram", "metric_value": 1143, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Micro Influencer"}, {"name": "Makan Dulu Yok", "ig": "@makanduluyok", "ig_followers": 462, "tt": "@thatgewdguy", "tt_followers": 95, "total": 557, "tier": "Nano", "platform": "IG + TikTok", "category": "Creator", "platform_category": "Instagram", "metric_value": 462, "metric_label": "Followers", "niche": "Food & Kuliner", "partner_type": "Micro Influencer"}, {"name": "Kabar Malang Update", "ig": "@kabarmalang.update", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Mid", "platform": "Website", "category": "Media/Public Figure", "platform_category": "Website", "metric_value": 48000, "metric_label": "Pengunjung/bln", "niche": "Komunitas Umum", "partner_type": "Media"}, {"name": "Malang Raya Update", "ig": "@malangraya.info", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Macro", "platform": "Website", "category": "Media/Public Figure", "platform_category": "Website", "metric_value": 152000, "metric_label": "Pengunjung/bln", "niche": "Komunitas Umum", "partner_type": "Media"}, {"name": "Reza Kuliner TV", "ig": "@rezakulinertv", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Mid", "platform": "YouTube", "category": "Creator", "platform_category": "YouTube", "metric_value": 38500, "metric_label": "Subscribers", "niche": "Food & Kuliner", "partner_type": "Influencer"}, {"name": "Gadgetin Malang", "ig": "@gadgetin.malang", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Macro", "platform": "YouTube", "category": "Creator", "platform_category": "YouTube", "metric_value": 61200, "metric_label": "Subscribers", "niche": "Gadget & Teknologi", "partner_type": "KOL"}, {"name": "Dian Ceritalari", "ig": "@dianceritalari", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Mid", "platform": "X", "category": "Creator", "platform_category": "X", "metric_value": 9200, "metric_label": "Followers", "niche": "Lifestyle", "partner_type": "Influencer"}, {"name": "Info Event Malang", "ig": "@infoeventmlg", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Micro", "platform": "X", "category": "Media/Public Figure", "platform_category": "X", "metric_value": 6100, "metric_label": "Followers", "niche": "Event & Hiburan", "partner_type": "Media"}, {"name": "Cerita Anak Malang", "ig": "@ceritaanakmlg", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Micro", "platform": "Threads", "category": "Creator", "platform_category": "Threads", "metric_value": 4300, "metric_label": "Followers", "niche": "Parenting & Keluarga", "partner_type": "Micro Influencer"}, {"name": "Ngobrolin Otomotif", "ig": "@ngobrolinoto", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Mid", "platform": "Threads", "category": "Creator", "platform_category": "Threads", "metric_value": 11400, "metric_label": "Followers", "niche": "Otomotif", "partner_type": "Influencer"}, {"name": "Komunitas Lari Malang", "ig": "@larimalang.id", "ig_followers": 0, "tt": "-", "tt_followers": 0, "total": 0, "tier": "Micro", "platform": "Lainnya", "category": "Media/Public Figure", "platform_category": "Lainnya", "metric_value": 3800, "metric_label": "Anggota", "niche": "Olahraga", "partner_type": "Komunitas"}];
+
+const TEAM = [
+  "Network Manager","Media Relation","Influencer Relation","Campaign Manager",
+  "Content Planner","Social Media Specialist","Data Analyst","Monitoring Team"
+];
+
+const PRODUCTS = [
+  {name:"Media Blast", freq:"100–1.000 media/network", desc:"Distribusi rilis ke ratusan hingga ribuan media dan akun jaringan sekaligus, untuk awareness cepat.", items:["Local & national media","Publisher network"]},
+  {name:"KOL Campaign", freq:"Influencer campaign", desc:"Campaign terkurasi bersama KOL dan influencer yang audiensnya cocok dengan brand.", items:["Micro & macro influencer","Brief & performance report"]},
+  {name:"Digital PR", freq:"Publication · News · Reputation", desc:"Publikasi berita, distribusi rilis, dan pengelolaan reputasi digital jangka panjang.", items:["Press distribution","Reputation management"]},
+  {name:"Creator Campaign", freq:"TikTok · Instagram · YouTube", desc:"Konten native yang diproduksi langsung oleh kreator di platform masing-masing.", items:["Konten sesuai gaya platform","Kreator terverifikasi"]},
+  {name:"Community Amplification", freq:"Community-based campaign", desc:"Menggerakkan komunitas untuk menyebarkan pesan secara organik dan kredibel.", items:["500+ komunitas jaringan","Engagement terarah"]},
+  {name:"Social Conversation", freq:"Organic conversation campaign", desc:"Membangun percakapan organik di media sosial tanpa terasa seperti iklan.", items:["Seeding percakapan","Monitoring respons"]},
+  {name:"Brand Reputation", freq:"Monitoring · Sentiment · Strategy", desc:"Memantau sentimen digital brand dan menyusun strategi respons yang tepat.", items:["Digital monitoring","Sentiment analysis","Response strategy"]},
+];
+
+const PACKAGES = [
+  {name:"Local Campaign", sub:"Jangkauan kota/lokal", price:"Rp15–50 Jt"},
+  {name:"Regional Campaign", sub:"Jangkauan provinsi/regional", price:"Rp50–150 Jt"},
+  {name:"National Campaign", sub:"Jangkauan nasional", price:"Rp150–500 Jt"},
+  {name:"Integrated Influence Campaign", sub:"Kombinasi penuh media + KOL + komunitas", price:"Rp500 Jt–2 M+"},
+  {name:"Monthly PR Retainer", sub:"Kontrak bulanan berkelanjutan", price:"Rp25–150 Jt/bln"},
+];
+
+/* ---------------- RENDER: TEAM ---------------- */
+const teamGrid = document.getElementById('teamGrid');
+TEAM.forEach((role,i)=>{
+  const el = document.createElement('div');
+  el.className = 'team-cell';
+  el.innerHTML = `<span class="mark">${String(i+1).padStart(2,'0')}</span><span class="role">${role}</span>`;
+  teamGrid.appendChild(el);
+});
+
+/* ---------------- RENDER: PRODUCTS ---------------- */
+const productList = document.getElementById('productList');
+PRODUCTS.forEach(p=>{
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  row.innerHTML = `
+    <div><div class="pname">${p.name}</div><span class="pfreq">${p.freq}</span></div>
+    <div class="pdesc">${p.desc}</div>
+    <ul>${p.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+  `;
+  productList.appendChild(row);
+});
+
+/* ---------------- RENDER: PACKAGES ---------------- */
+const pkgList = document.getElementById('pkgList');
+PACKAGES.forEach((pk,i)=>{
+  const row = document.createElement('div');
+  row.className = 'pkg-row';
+  row.innerHTML = `
+    <div class="pkg-idx">${String(i+1).padStart(2,'0')}</div>
+    <div><div class="pkg-name">${pk.name}</div><div class="pkg-sub">${pk.sub}</div></div>
+    <div class="pkg-price">${pk.price}</div>
+  `;
+  pkgList.appendChild(row);
+});
+
+/* ---------------- TICKER ---------------- */
+const totalReach = NETWORK_DATA.reduce((a,p)=>a+p.total,0);
+const activeInfluencer = NETWORK_DATA.filter(p=>p.category==='Creator').length;
+const activeMedia = NETWORK_DATA.filter(p=>p.category==='Media/Public Figure').length;
+const repeatClients = 34;
+const engagementAvg = "4.8%";
+const campaignRevenue = "Rp750 Jt/bln";
+const networkGrowth = "+18% QoQ";
+
+function fmt(n){ return n.toLocaleString('id-ID'); }
+
+const tickerItems = [
+  {label:"Network Growth", num:networkGrowth},
+  {label:"Campaign Revenue", num:campaignRevenue},
+  {label:"Reach", num: fmt(totalReach)+"+"},
+  {label:"Engagement", num: engagementAvg},
+  {label:"Active Media", num: fmt(activeMedia)+"+"},
+  {label:"Active Influencer", num: fmt(activeInfluencer)+"+"},
+  {label:"Repeat Client", num: fmt(repeatClients)+"+"},
+];
+const tickerTrack = document.getElementById('tickerTrack');
+function buildTicker(){
+  let html = '';
+  for(let r=0;r<2;r++){
+    tickerItems.forEach(t=>{
+      html += `<div class="tick"><span class="num">${t.num}</span><span class="label">${t.label}</span></div>`;
+    });
+  }
+  tickerTrack.innerHTML = html;
+}
+buildTicker();
+
+/* ---------------- DATABASE APP ---------------- */
+const dbBody = document.getElementById('dbBody');
+const dbSearch = document.getElementById('dbSearch');
+const dbMeta = document.getElementById('dbMeta');
+const dbEmpty = document.getElementById('dbEmpty');
+const tierFilters = document.getElementById('tierFilters');
+const platformFilters = document.getElementById('platformFilters');
+const TIERS = ["Semua Tier","Mega","Macro","Mid","Micro","Nano"];
+const PLATFORMS = ["Semua Platform","Instagram","TikTok","YouTube","Website","X","Threads","Lainnya"];
+let activeTier = "Semua Tier";
+let activePlatform = "Semua Platform";
+
+TIERS.forEach(t=>{
+  const b = document.createElement('button');
+  b.className = 'filter-btn' + (t==='Semua Tier' ? ' active' : '');
+  b.textContent = t;
+  b.onclick = ()=>{ activeTier = t; [...tierFilters.children].forEach(c=>c.classList.remove('active')); b.classList.add('active'); renderTable(); };
+  tierFilters.appendChild(b);
+});
+
+PLATFORMS.forEach(p=>{
+  const b = document.createElement('button');
+  b.className = 'filter-btn' + (p==='Semua Platform' ? ' active' : '');
+  b.textContent = p;
+  b.onclick = ()=>{ activePlatform = p; [...platformFilters.children].forEach(c=>c.classList.remove('active')); b.classList.add('active'); renderTable(); };
+  platformFilters.appendChild(b);
+});
+
+function partnerClass(t){
+  return 'partner-' + t.replace(/\s+/g,'-').replace('Micro-Influencer','Micro').replace('Influencer','Influencer');
+}
+
+function renderTable(){
+  const q = dbSearch.value.trim().toLowerCase();
+  let rows = NETWORK_DATA.filter(p=>{
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.ig.toLowerCase().includes(q) || p.tt.toLowerCase().includes(q) || p.niche.toLowerCase().includes(q);
+    const matchTier = activeTier==='Semua Tier' || p.tier===activeTier;
+    const matchPlatform = activePlatform==='Semua Platform' || p.platform_category===activePlatform;
+    return matchQ && matchTier && matchPlatform;
+  });
+  dbBody.innerHTML = rows.slice(0,60).map(p=>`
+    <tr>
+      <td class="tname">${p.name}<br><span style="color:var(--paper-faint); font-weight:400; font-size:12.5px;">${p.ig}</span></td>
+      <td><span class="plat-badge plat-${p.platform_category}">${p.platform_category}</span></td>
+      <td class="tnum">${fmt(p.metric_value)} <span style="color:var(--paper-faint); font-weight:400;">${p.metric_label}</span></td>
+      <td><span class="tier-badge tier-${p.tier}">${p.tier}</span></td>
+      <td><span class="niche-tag">${p.niche}</span></td>
+      <td><span class="partner-badge partner-${p.partner_type.replace(/\s+/g,'')}">${p.partner_type}</span></td>
+    </tr>
+  `).join('');
+  dbEmpty.style.display = rows.length ? 'none' : 'block';
+  dbMeta.innerHTML = `<strong>${fmt(rows.length)}</strong> akun ditemukan dari <strong>${fmt(NETWORK_DATA.length)}</strong> total di database contoh ini (menampilkan maks. 60 baris) · Total reach jaringan: <strong>${fmt(totalReach)}</strong>`;
+}
+dbSearch.addEventListener('input', renderTable);
+renderTable();
+
+/* ---------------- REVEAL ON SCROLL ---------------- */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+},{threshold:0.12});
+revealEls.forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
