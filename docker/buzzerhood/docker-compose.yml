@@ -14,10 +14,9 @@ services:
     secrets:
       - postgres_password
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ../../.docker-data/postgres:/var/lib/postgresql/data
     networks:
       - buzzerhood-network
-      - carubra-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d buzzerhood"]
       interval: 10s
@@ -55,7 +54,6 @@ services:
       - "127.0.0.1:3100:3100"
     networks:
       - buzzerhood-network
-      - carubra-network
     user: "10001:10001"
     init: true
     read_only: true
@@ -86,7 +84,6 @@ services:
       - "127.0.0.1:8080:80"
     networks:
       - buzzerhood-network
-      - carubra-network
     read_only: true
     tmpfs:
       - /var/cache/nginx:size=32m,mode=1777
@@ -116,13 +113,6 @@ networks:
       config:
         - subnet: 172.32.0.0/24
   
-  carubra-network:
-    external: true
-
-volumes:
-  postgres_data:
-    driver: local
-
 secrets:
   postgres_password:
     file: ./secrets/postgres_password.txt

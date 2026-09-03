@@ -3,7 +3,13 @@ dist
 .env
 .env.local
 .env.*.local
+.env.production
 !.env.example
+.docker-data/
+backend/.env
+backend/*.pem
+docker/buzzerhood/.env.api
+docker/buzzerhood/secrets/*
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
