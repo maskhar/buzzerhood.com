@@ -1,84 +1,89 @@
 # Buzzerhood Delivery Plan
 
-## Current State
+## Architecture status
 
-- [x] Architecture documentation and initial reviewed SQL design.
-- [ ] [MVP] Confirm blocking product decisions in `docs/PRD.md`.
-- [x] [MVP] Inspect self-hosted Supabase Compose and schema exposure before deployment.
+The target application architecture is now React -> Buzzerhood Backend API -> PostgreSQL schema `buzzerhood`.
 
-## Phase 1 — Foundation
+**Supabase architecture is DEPRECATED FOR BUZZERHOOD APPLICATION ACCESS, but remains active during transition and must not be removed or disabled.** The self-hosted stack is shared with unrelated workloads. PostgreSQL and all existing Buzzerhood data/migrations remain.
 
-- [x] [MVP] Initialize Vite React TypeScript app, strict TypeScript, routing, TanStack Query, linting, and test baseline.
-- [x] [MVP] Add environment validation with browser-safe Supabase URL and anon key only.
-- [x] [MVP] Establish domain folders, shared UI primitives, error boundaries, loading states, and route guards.
+Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 
-## Phase 2 — Schema Foundation
+## Completed foundation retained
 
-- [x] [MVP] Review `database/schema.sql`, split into ordered incremental migrations, and apply first in non-production.
-- [x] [MVP] Configure PostgREST to include `buzzerhood` while preserving existing exposed schemas.
-- [x] [MVP] Verify grants, RLS, profile trigger, and role-based RLS foundation tests. Storage policies and audit engine remain future work.
+- [x] Vite React TypeScript app, routing, TanStack Query, validation, lint/build/test foundations, domain folders, guards, loading/error states.
+- [x] Public website visual/content parity and 124-record legacy network import with preserved source data and metric types.
+- [x] Ordered production migrations `0001`-`0013`, Buzzerhood-owned migration registry, schema exposure, generated Supabase-era types, and targeted deployment history.
+- [x] Identity/profile foundation, system RBAC, organizations/memberships, partner applications/claims/memberships/platforms/metrics/rates, public network projection.
+- [x] Campaigns, briefs, assignments, deliverables, insert-only content versions, reviews, publications, metric snapshots, workflow/history, and safe client/partner/internal projections.
+- [x] Phase 3C partner/client/admin UI and Vitest foundations.
+- [x] Record the Phase 3D disposable GoTrue/PostgREST incompatibility; custom Auth supersedes that acceptance-test dependency.
 
-## Phase 3 — Public Website Migration
+## Phase B0 — Architecture audit and migration blueprint
 
-- [x] [MVP] Migrate public visual parity: hero, team, network composition, services, packages, CTA, contact, footer.
-- [x] [MVP] Import `NETWORK_DATA` as reviewed seed/import input; preserve values and mark anomalies.
-- [x] [MVP] Build network preview search, tier/platform filters, 60-row cap, reduced-motion, and responsive parity.
+- [x] Audit direct/indirect Supabase Auth, PostgREST read/write, RPC, type, environment, Storage, Realtime, Edge Function, and infrastructure dependencies.
+- [x] Map authoritative `auth.uid()` occurrences and database transition impact.
+- [x] Decide NestJS + Fastify + Kysely/pg + Zod backend architecture and initial `/backend` layout without moving the frontend.
+- [x] Design `buzzerhood.users`, profile separation, UUID-preserving migration fallback, Argon2id, access JWT, rotating/revocable refresh sessions, activation/reset, and admin bootstrap boundary.
+- [x] Design server-side RBAC, organization/partner authorization, transaction-local DB context, application/migration roles, and RLS defense-in-depth.
+- [x] Define API v1, frontend strangler migration, Supabase deprecation order, deployment/security/test strategies, rollback and exit criteria.
+- [x] Update `AGENTS.md`, synchronized `AGENT.md`, and this roadmap.
+- [x] Confirm zero production mutation for B0.
 
-## Phase 4 — Authentication and RBAC
+## Backend B1 — Foundation and Auth
 
-- [ ] [MVP] Integrate Supabase Auth sign-in, invite acceptance, session refresh, and profile bootstrap. (Phase 1 only adds session listener and email/password login foundation; invite/profile work remains pending.)
-- [ ] [MVP] Build organization selection, membership administration, and scoped CLIENT/PARTNER/INTERNAL/ADMIN access. (Phase 1 route shells require session only; RBAC remains pending.)
+- [x] Create `/backend` with NestJS, Fastify, strict TypeScript, configuration validation, request IDs/redaction, OpenAPI, Dockerfile, and unit/integration/API test harness.
+- [x] Add Kysely/pg with bounded pool, backend-only DB types, health/readiness, graceful shutdown, and separate migration execution.
+- [x] Re-run production aggregate identity preflight immediately before migration; Scenario A remained valid.
+- [x] Deploy reviewed additive `0014`–`0016` migrations for custom users, refresh sessions, profiles and backend identity security.
+- [x] Create least-privilege `buzzerhood_app`; existing controlled PostgreSQL operator remains the separate migration principal. Runtime has no owner/superuser/BYPASSRLS access.
+- [x] Add `buzzerhood.current_user_id()` and transaction-local `app.user_id`; pass alternating-user one-connection pool isolation.
+- [x] Implement Argon2id registration policy, login, 10-minute EdDSA JWT, rotation/replay revocation, logout/logout-all, `/auth/me`, status/password token boundary, throttling and audit events.
+- [x] Keep provider-neutral verification/reset and safe operator-only first-admin design documented; no hardcoded admin or premature public endpoint.
+- [x] Pass disposable validation and dark-deploy independently; frontend remains on legacy Supabase path.
 
-## Phase 5 — Partner Network
+## Backend B2 — Organizations and Partners
 
-- [ ] [MVP] Build internal partner CRUD, platform accounts, audience metrics, verification, availability, and private rates.
-- [ ] [MVP] Build restricted partner profile and account management workspace.
+- [x] Implement `/me/workspaces`, organizations, member reads, public network, partner applications/claims/profile/platforms/metrics/rates, and admin review APIs.
+- [x] Adapt `0007`-`0011` invariants to Backend actor context in `0017`; retain claim locking, histories, and 124 imported partners.
+- [x] Enforce explicit DTOs, protected-field allowlists, `partners.manage`, active organization/partner membership, and rate/claim/privacy boundaries.
+- [x] Pass fresh/0016-upgrade, cross-tenant, cross-partner, conflict, pool-context, runtime-role RLS, B1 Auth regression, production migration, dark-deploy, and smoke gates.
 
-## Phase 6 — Campaign Workflow
+## Backend B3 — Campaign API
 
-- [ ] [MVP] Build client brief intake and internal review workflow.
-- [ ] [MVP] Build partner selection, assignment, acceptance/decline, deliverables, content versions, revision, approval, publication, and completion.
-- [ ] [MVP] Add private storage upload/signing flow and event audit trail.
+- [x] Expose campaigns/briefs, transitions, assignments/responses, deliverables, submissions/reviews, publications/verification, and metric snapshots through `/api/v1`.
+- [x] Preserve and harden `0012` state machines, locks, immutable content versions/snapshots, activity/history, and privacy through additive migration `0018`.
+- [x] Prove Client A/Client B and Partner A/Partner B isolation, Partner budget/internal-note privacy, no self-approval/verification, and the full brief-to-metric workflow in disposable integration tests.
+- [x] Dark-deploy `buzzerhood-api:b3` and migration `0018` after a validated production backup, with all shared Supabase services and baseline counts preserved.
+- [x] Keep Campaign UI on legacy data functions until B4 cutover criteria pass.
 
-## Phase 7 — Metrics and Reporting
+## Frontend API Migration B4
 
-- [ ] [MVP] Capture verified/self-reported publication metrics with period and source.
-- [ ] [MVP] Generate campaign reports, exports, and client-facing summaries.
+- [ ] Add centralized `src/lib/api/client.ts`, `errors.ts`, `auth.ts`, safe `VITE_API_BASE_URL`, request IDs, normalized errors, credentialed refresh, and one-time serialized retry.
+- [ ] Replace Supabase auth provider/types with memory-only access token plus backend refresh cookie; clear all user cache on logout.
+- [ ] Migrate one vertical slice at a time: me/workspaces, public network, organizations, partners/admin, then campaigns/content/publications/metrics.
+- [ ] Move query keys out of the Supabase namespace while retaining TanStack Query behavior.
+- [ ] Validate UI parity, build/typecheck/lint/tests, CORS/CSRF, refresh races, negative authorization, and browser network traces.
+- [ ] Reach zero direct browser PostgREST/GoTrue business calls before B4 exit; retain previous frontend artifact/compatibility for rollback.
 
-## Phase 8 — Commercial
+## Supabase Retirement B5
 
-- [ ] [MVP] Add quotations, approval, invoices, payment state, partner payouts, and audit events.
-- [ ] [POST-MVP] Add payment gateway integration and automated reconciliation.
+- [ ] Confirm repository and browser traces have no Buzzerhood runtime imports/calls for Supabase Auth, PostgREST, RPC, Storage, Realtime, or Edge Functions.
+- [ ] Remove Buzzerhood frontend `@supabase/supabase-js`, `VITE_SUPABASE_*`, client, generated Supabase types, and legacy data-layer paths.
+- [ ] Through reviewed additive migrations, retire only Buzzerhood's `auth.uid()` coupling, profile trigger/FK compatibility, and obsolete grants after the rollback window.
+- [ ] Preserve shared `auth.users`, GoTrue, PostgREST, Storage, Realtime, Kong, Functions, all unrelated workloads, and PostgreSQL.
+- [ ] Verify shared Supabase service health and unrelated APIs after every narrowly scoped retirement change.
 
-## Phase 9 — Reliability and Production
+## Post-MVP B6
 
-- [ ] [MVP] Add unit, integration, RLS, accessibility, and critical workflow tests.
-- [ ] [MVP] Deploy using targeted self-hosted service steps; verify Auth, Storage, PostgREST, RLS, endpoint health, and logs.
-- [ ] [POST-MVP] Notifications, advanced analytics, recommendation scoring, automations, and social integrations.
+- [ ] Reporting/export and client summaries using existing campaign/publication metrics.
+- [ ] Quotations, invoices, payment state, partner payouts, and financial audit controls.
+- [ ] Transactional email provider, private object storage/signed access, and notifications when product scope is approved.
+- [ ] Advanced observability, analytics, recommendations, automations, social/payment integrations only with demonstrated need.
+- [ ] Continue avoiding premature microservices, Kubernetes, Kafka, Redis/queues, CQRS, and a second database.
 
+## Product decisions still required
 
-## Phase 2A — Pre-Deployment Identity and Security
-
-- [x] [MVP] Create ordered local Buzzerhood migration structure for schema, identity, RBAC, organizations, partner foundation, RLS, deterministic reference seeds, and migration state tracking.
-- [x] [MVP] Prepare `auth.users` → `buzzerhood.profiles` idempotent bootstrap trigger and safe `updated_at` trigger.
-- [x] [MVP] Prepare system RBAC, organization membership lifecycle, scoped RLS helpers, grants, and RLS security test plan.
-- [x] [MVP] Add frontend profile, organization membership, workspace authorization, access-denied, neutral post-login, and cache-clearing logout foundations.
-- [x] [MVP] Complete read-only self-hosted Supabase/PostgREST preflight and deployment runbook.
-- [x] [MVP] Production/self-hosted migration approval and controlled Phase 2B foundation deployment.
-- [x] [MVP] Apply migrations in disposable test and production, run RLS foundation tests, and generate TypeScript database types.
-
-
-
-## Phase 2B — Controlled Database Activation
-
-- [x] [MVP] Create and validate timestamped pre-deployment PostgreSQL backup outside repository.
-- [x] [MVP] Deploy Buzzerhood migrations `0001`–`0006` with `buzzerhood.schema_migrations` tracking.
-- [x] [MVP] Expose `buzzerhood` through PostgREST by append-only `PGRST_DB_SCHEMAS` change and targeted `rest` reload.
-- [x] [MVP] Verify production schema, grants, RLS, RBAC seeds, profile trigger, tenant isolation transaction, and service health.
-- [x] [MVP] Generate and integrate live `buzzerhood` TypeScript database types.
-- [ ] [MVP] Perform authenticated end-to-end login/workspace smoke test using approved existing test account.
-
-## Phase 3 update — 2026-09-02
-- Completed: secure client organization RPC, partner member/claim tables, relational platform/metric/RLS foundation, public network projection, legacy 124-record import.
-- Pending: client organization UI, partner onboarding UI, admin claim-review UI, regenerated complete database TypeScript types, approved real-auth smoke test.
-
+- [ ] [MVP] Decide whether every multi-user partner must have a partner organization.
+- [ ] [MVP] Decide final content approval ownership by campaign (client, internal, or both).
+- [ ] [MVP] Define legal invoice/payout numbering, tax, and initial currency behavior before commercial implementation.
+- [ ] [B1 rollout] Decide whether registration is public, invitation-only, or policy-gated at launch and approve the password/account-activation policy.

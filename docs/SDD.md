@@ -1,5 +1,7 @@
 # SDD — Desain Sistem
 
+> **Phase B0 transition notice (2026-09-02):** The direct Supabase architecture below describes the current/legacy implementation. The approved target is React -> Buzzerhood Backend API (NestJS + Fastify) -> Kysely/pg -> PostgreSQL `buzzerhood`. `docs/BACKEND_ARCHITECTURE.md` and `docs/BACKEND_MIGRATION_PLAN.md` are normative for the transition. No current path is removed in B0.
+
 ## Arsitektur
 
 Frontend modular Vite React berkomunikasi langsung dengan Supabase self-hosted melalui Auth, PostgREST, Storage, serta Edge Function/RPC yang sempit bila diperlukan. PostgreSQL `buzzerhood` adalah schema aplikasi. MVP tidak memakai microservice, queue, Redis, atau backend kedua.

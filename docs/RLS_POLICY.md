@@ -1,8 +1,15 @@
 # Kebijakan RLS
 
+> **Phase B1 (2026-09-02):** backend policies use
+> `buzzerhood.current_user_id()`, preferring transaction-local `app.user_id` and
+> falling back to `auth.uid()`. `buzzerhood_app` has self-only identity/session
+> policies and read-only RBAC reference access, with no BYPASSRLS or ownership.
+
+> **Phase B1 transition notice (2026-09-02):** core policies/helpers resolve through `buzzerhood.current_user_id()`. Its `auth.uid()` fallback preserves current frontend compatibility while Backend traffic uses transaction-local identity.
+
 ## Model Otorisasi
 
-Helper function mengambil akses dari `auth.uid()` dan `buzzerhood.organization_members`. `organization_id`, `partner_id`, role, atau UUID dari client tidak pernah memberi akses.
+Helper function mengambil akses dari `buzzerhood.current_user_id()` dan membership Buzzerhood. `organization_id`, `partner_id`, role, atau UUID dari client tidak pernah memberi akses.
 
 | Aktor | Scope yang diizinkan |
 |---|---|

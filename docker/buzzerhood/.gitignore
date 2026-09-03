@@ -1,0 +1,8 @@
+# .gitignore additions for Docker deployment
+
+# Docker secrets - NEVER commit
+docker/buzzerhood/secrets/
+docker/buzzerhood/.env.api
+
+# Docker volumes and state
+docker/buzzerhood/postgres_data/

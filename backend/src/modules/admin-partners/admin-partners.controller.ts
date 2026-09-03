@@ -1,0 +1,12 @@
+import{Body,Controller,Get,Param,ParseUUIDPipe,Post,Query,Req,UseGuards}from'@nestjs/common';import{ApiBearerAuth,ApiTags}from'@nestjs/swagger';import{PartnersManageGuard}from'../../common/security/partners-manage.guard.js';import{ZodValidationPipe}from'../../common/validation/zod-validation.pipe.js';import{AuthGuard}from'../auth/auth.guard.js';import type{AuthenticatedRequest}from'../auth/auth.types.js';import{adminClaimQuerySchema,adminPartnerQuerySchema,reviewSchema,type AdminClaimQuery,type AdminPartnerQuery,type ReviewInput}from'./admin-partners.schemas.js';import{AdminPartnersService}from'./admin-partners.service.js';
+@ApiTags('admin-partners')@ApiBearerAuth()@UseGuards(AuthGuard,PartnersManageGuard)@Controller('admin')export class AdminPartnersController{
+ constructor(private readonly admin:AdminPartnersService){}
+ @Get('partners')partners(@Req()r:AuthenticatedRequest,@Query(new ZodValidationPipe(adminPartnerQuerySchema))q:AdminPartnerQuery){return this.admin.listPartners(r.authUser.id,q);}
+ @Get('partners/:partnerId')partner(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())id:string){return this.admin.detail(r.authUser.id,id);}
+ @Get('partner-applications')applications(@Req()r:AuthenticatedRequest,@Query(new ZodValidationPipe(adminPartnerQuerySchema))q:AdminPartnerQuery){return this.admin.listApplications(r.authUser.id,q);}
+ @Get('partner-claims')claims(@Req()r:AuthenticatedRequest,@Query(new ZodValidationPipe(adminClaimQuerySchema))q:AdminClaimQuery){return this.admin.listClaims(r.authUser.id,q);}
+ @Post('partner-applications/:id/approve')approveApplication(@Req()r:AuthenticatedRequest,@Param('id',new ParseUUIDPipe())id:string,@Body(new ZodValidationPipe(reviewSchema))b:ReviewInput){return this.admin.reviewApplication(r.authUser.id,id,'approved',b.note);}
+ @Post('partner-applications/:id/reject')rejectApplication(@Req()r:AuthenticatedRequest,@Param('id',new ParseUUIDPipe())id:string,@Body(new ZodValidationPipe(reviewSchema))b:ReviewInput){return this.admin.reviewApplication(r.authUser.id,id,'rejected',b.note);}
+ @Post('partner-claims/:id/approve')approveClaim(@Req()r:AuthenticatedRequest,@Param('id',new ParseUUIDPipe())id:string,@Body(new ZodValidationPipe(reviewSchema))b:ReviewInput){return this.admin.reviewClaim(r.authUser.id,id,'approved',b.note);}
+ @Post('partner-claims/:id/reject')rejectClaim(@Req()r:AuthenticatedRequest,@Param('id',new ParseUUIDPipe())id:string,@Body(new ZodValidationPipe(reviewSchema))b:ReviewInput){return this.admin.reviewClaim(r.authUser.id,id,'rejected',b.note);}
+}

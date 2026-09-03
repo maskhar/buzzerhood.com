@@ -1,0 +1,16 @@
+import{Body,Controller,Delete,Get,Param,ParseUUIDPipe,Patch,Post,Req,UseGuards}from'@nestjs/common';import{ApiBearerAuth,ApiTags}from'@nestjs/swagger';import{ZodValidationPipe}from'../../common/validation/zod-validation.pipe.js';import{AuthGuard}from'../auth/auth.guard.js';import type{AuthenticatedRequest}from'../auth/auth.types.js';import{partnerUpdateSchema,platformCreateSchema,platformUpdateSchema,rateCreateSchema,rateUpdateSchema,type PartnerUpdate,type PlatformCreate,type PlatformUpdate,type RateCreate,type RateUpdate}from'./partners.schemas.js';import{PartnersService}from'./partners.service.js';
+@ApiTags('partners')@ApiBearerAuth()@UseGuards(AuthGuard)@Controller()export class PartnersController{
+ constructor(private readonly partners:PartnersService){}
+ @Get('me/partners')mine(@Req()r:AuthenticatedRequest){return this.partners.listMine(r.authUser.id);}
+ @Get('partners/:partnerId')get(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string){return this.partners.get(r.authUser.id,p);}
+ @Patch('partners/:partnerId')update(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Body(new ZodValidationPipe(partnerUpdateSchema))b:PartnerUpdate){return this.partners.update(r.authUser.id,p,b);}
+ @Get('partners/:partnerId/platforms')platforms(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string){return this.partners.platforms(r.authUser.id,p);}
+ @Post('partners/:partnerId/platforms')createPlatform(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Body(new ZodValidationPipe(platformCreateSchema))b:PlatformCreate){return this.partners.createPlatform(r.authUser.id,p,b);}
+ @Patch('partners/:partnerId/platforms/:platformId')updatePlatform(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Param('platformId',new ParseUUIDPipe())i:string,@Body(new ZodValidationPipe(platformUpdateSchema))b:PlatformUpdate){return this.partners.updatePlatform(r.authUser.id,p,i,b);}
+ @Delete('partners/:partnerId/platforms/:platformId')deletePlatform(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Param('platformId',new ParseUUIDPipe())i:string){return this.partners.deletePlatform(r.authUser.id,p,i);}
+ @Get('partners/:partnerId/metrics')metrics(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string){return this.partners.metrics(r.authUser.id,p);}
+ @Get('partners/:partnerId/rates')rates(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string){return this.partners.rates(r.authUser.id,p);}
+ @Post('partners/:partnerId/rates')createRate(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Body(new ZodValidationPipe(rateCreateSchema))b:RateCreate){return this.partners.createRate(r.authUser.id,p,b);}
+ @Patch('partners/:partnerId/rates/:rateId')updateRate(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Param('rateId',new ParseUUIDPipe())i:string,@Body(new ZodValidationPipe(rateUpdateSchema))b:RateUpdate){return this.partners.updateRate(r.authUser.id,p,i,b);}
+ @Delete('partners/:partnerId/rates/:rateId')deactivateRate(@Req()r:AuthenticatedRequest,@Param('partnerId',new ParseUUIDPipe())p:string,@Param('rateId',new ParseUUIDPipe())i:string){return this.partners.deactivateRate(r.authUser.id,p,i);}
+}

@@ -1,0 +1,18 @@
+import { getBuzzerhoodDb } from '@/lib/supabase/client';
+import type { Campaign, CampaignAssignment, CampaignBrief, CampaignDeliverable, CampaignStatus } from './campaign-types';
+type QueryResult<T> = { data: T | null; error: { message: string } | null };
+type Query = PromiseLike<QueryResult<unknown[]>> & { select: (columns: string) => Query; eq: (column: string, value: string) => Query; order: (column: string, options: { ascending: boolean }) => PromiseLike<QueryResult<unknown[]>>; maybeSingle: () => PromiseLike<QueryResult<unknown>>; };
+type Db = { from: (table:string) => Query; rpc: (name:string,args:Record<string,unknown>) => PromiseLike<{data:unknown;error:{message:string}|null}> };
+const db = () => getBuzzerhoodDb() as unknown as Db;
+async function rpc<T>(name:string,args:Record<string,unknown>):Promise<T>{const result=await db().rpc(name,args);if(result.error)throw new Error(result.error.message);return result.data as T;}
+export const createCampaign=(organizationId:string,name:string,objectiveSummary?:string)=>rpc<string>('create_campaign',{input_organization_id:organizationId,input_name:name,input_objective_summary:objectiveSummary??null});
+export const transitionCampaign=(campaignId:string,to:CampaignStatus,reason?:string)=>rpc<CampaignStatus>('transition_campaign',{input_campaign_id:campaignId,input_to:to,input_reason:reason??null});
+export const respondToAssignment=(assignmentId:string,response:'accepted'|'declined',reason?:string)=>rpc<'accepted'|'declined'>('respond_campaign_assignment',{input_assignment_id:assignmentId,input_response:response,input_reason:reason??null});
+export const submitContentVersion=(deliverableId:string,input:{captionBody:string;conceptNotes?:string;assetReference?:string;contentUrl?:string})=>rpc<string>('submit_content_version',{input_deliverable_id:deliverableId,input_caption_body:input.captionBody,input_concept_notes:input.conceptNotes??null,input_asset_reference:input.assetReference??null,input_content_url:input.contentUrl??null});
+export const getClientCampaigns=async():Promise<Campaign[]>=>{const result=await db().from('client_campaigns').select('*').order('created_at',{ascending:false});if(result.error)throw new Error(result.error.message);return (result.data??[]) as Campaign[]};
+export const getClientCampaignBrief=async(id:string):Promise<CampaignBrief|null>=>{const result=await db().from('client_campaign_briefs').select('*').eq('campaign_id',id).maybeSingle();if(result.error)throw new Error(result.error.message);return result.data as CampaignBrief|null};
+export const getClientCampaignAssignments=async(id:string):Promise<CampaignAssignment[]>=>{const result=await db().from('client_campaign_assignments').select('*').eq('campaign_id',id);if(result.error)throw new Error(result.error.message);return (result.data??[]) as CampaignAssignment[]};
+export const getClientAssignmentDeliverables=async(id:string):Promise<CampaignDeliverable[]>=>{const result=await db().from('client_campaign_deliverables').select('*').eq('assignment_id',id);if(result.error)throw new Error(result.error.message);return (result.data??[]) as CampaignDeliverable[]};
+
+export const getPartnerAssignments=async():Promise<CampaignAssignment[]>=>{const result=await db().from('partner_assignments').select('*');if(result.error)throw new Error(result.error.message);return (result.data??[]) as CampaignAssignment[]};
+export const getPartnerAssignmentDeliverables=async(id:string):Promise<CampaignDeliverable[]>=>{const result=await db().from('partner_deliverables').select('*').eq('assignment_id',id);if(result.error)throw new Error(result.error.message);return (result.data??[]) as CampaignDeliverable[]};

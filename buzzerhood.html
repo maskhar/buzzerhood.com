@@ -431,6 +431,58 @@
 
   .cta-photos{margin-top:56px;}
 
+
+  /* ---------- 4-col comp grid ---------- */
+  .comp-cols.cols-4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:1000px){.comp-cols.cols-4{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.comp-cols.cols-4{grid-template-columns:1fr;}}
+
+  /* ---------- FLOW CHAIN ---------- */
+  .flow-chain{display:flex; align-items:center; gap:0; overflow-x:auto; padding-bottom:10px;}
+  .flow-chain .fnode{flex-shrink:0; padding:11px 18px; border:1px solid var(--line-strong); border-radius:999px; font-size:12.5px; font-weight:700; color:var(--paper-dim); white-space:nowrap; background:var(--surface);}
+  .flow-chain .fnode.hi{border-color:var(--orange); color:var(--orange-2); background:rgba(255,90,31,0.1);}
+  .flow-chain .farrow{flex-shrink:0; color:var(--paper-faint); padding:0 8px; font-size:14px;}
+
+  /* ---------- PARTNER FORM ---------- */
+  .pform-tabs{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px;}
+  .pform-tab{background:transparent; border:1px solid var(--line-strong); color:var(--paper-dim); padding:12px 20px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:'Inter';}
+  .pform-tab.active{background:var(--orange); border-color:var(--orange); color:var(--ink);}
+  .pform-tab:hover:not(.active){border-color:var(--orange-2); color:var(--orange-2);}
+  .pform-card{border:1px solid var(--line); border-radius:18px; background:var(--surface); padding:40px;}
+  @media(max-width:640px){.pform-card{padding:24px;}}
+  .field-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media(max-width:640px){.field-grid{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:13px; font-weight:600; color:var(--paper-dim);}
+  .field label .req{color:var(--orange-2);}
+  .field input[type=text], .field input[type=email], .field input[type=tel], .field input[type=url],
+  .field input[type=number], .field select, .field textarea{
+    background:var(--ink); border:1px solid var(--line-strong); border-radius:10px; padding:13px 15px;
+    color:var(--paper); font-size:14.5px; font-family:'Inter'; width:100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--orange);}
+  .field textarea{resize:vertical; min-height:90px;}
+  .field select{appearance:none; background-image:linear-gradient(45deg, transparent 50%, var(--paper-faint) 50%), linear-gradient(135deg, var(--paper-faint) 50%, transparent 50%); background-position:calc(100% - 20px) center, calc(100% - 15px) center; background-size:5px 5px, 5px 5px; background-repeat:no-repeat;}
+  .check-grid{display:flex; flex-wrap:wrap; gap:10px;}
+  .check-pill{display:flex; align-items:center; gap:8px; border:1px solid var(--line-strong); border-radius:999px; padding:9px 14px; font-size:13px; color:var(--paper-dim); cursor:pointer;}
+  .check-pill input{accent-color:var(--orange);}
+  .check-pill.checked{border-color:var(--orange); color:var(--orange-2); background:rgba(255,90,31,0.08);}
+  .divider-note{font-size:12.5px; color:var(--paper-faint); margin:28px 0 20px; padding-top:20px; border-top:1px solid var(--line); text-transform:uppercase; letter-spacing:0.04em; font-weight:700;}
+  .consent-row{display:flex; align-items:flex-start; gap:10px; margin-top:24px; font-size:13.5px; color:var(--paper-dim);}
+  .consent-row input{margin-top:3px; accent-color:var(--orange); flex-shrink:0;}
+  .form-msg{font-size:13.5px; padding:13px 16px; border-radius:10px; margin-bottom:22px; display:none;
+    background:rgba(255,90,31,0.12); color:var(--orange-2); border:1px solid rgba(255,90,31,0.3);}
+  .form-msg.show{display:block;}
+  .form-success{display:none; text-align:center; padding:70px 20px;}
+  .form-success.show{display:block;}
+  .form-success .ok-badge{width:56px; height:56px; border-radius:50%; background:rgba(255,90,31,0.14); color:var(--orange); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:26px;}
+  .form-success h3{font-family:'Big Shoulders Display'; font-weight:800; font-size:30px; color:var(--paper); text-transform:uppercase;}
+  .form-success p{color:var(--paper-dim); max-width:440px; margin:14px auto 26px; font-size:14.5px;}
+  .pform-submit-row{display:flex; align-items:center; gap:18px; margin-top:28px; flex-wrap:wrap;}
+  .pform-submit-row .hint{font-size:12.5px; color:var(--paper-faint);}
+  .mini-steps{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:40px;}
+
   .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
   .reveal.in{opacity:1; transform:none;}
 
@@ -449,6 +501,7 @@
       <a href="#layanan">Layanan</a>
       <a href="#paket">Paket</a>
       <a href="#database">Database</a>
+      <a href="#daftar">Daftar Partner</a>
       <a href="#kontak">Kontak</a>
     </nav>
     <a href="#kontak" class="nav-cta">Mulai Campaign</a>
@@ -462,9 +515,10 @@
     <div class="hero-bg"><img src="https://images.pexels.com/photos/35381826/pexels-photo-35381826.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="" loading="lazy"></div>
     <div class="hero-grid">
       <div>
-        <span class="eyebrow">Distribution infrastructure, bukan jasa buzzer</span>
+        <span class="eyebrow">Digital Influence, Media &amp; Community Network</span>
         <h1 class="hero-h">Media, <em>Influence</em> &amp; Distribution Network</h1>
-        <p class="lead">Buzzerhood menghubungkan media online, kreator, dan komunitas dalam satu jaringan distribusi terukur — supaya setiap pesan brand sampai ke audiens yang tepat, di platform yang tepat.</p>
+        <p class="lead">Buzzerhood menghubungkan brand, media online, influencer, content creator, komunitas, dan audiens untuk menjalankan campaign secara terukur — bukan sekadar menambah like, comment, atau views.</p>
+        <p class="lead" style="margin-top:10px; font-weight:700; color:var(--paper);">Amplify the Message. Build the Conversation. Create the Impact.</p>
         <div class="hero-cta">
           <a href="#kontak" class="btn-solid">Diskusikan Campaign</a>
           <a href="#database" class="btn-ghost">Lihat Network Database</a>
@@ -515,6 +569,31 @@
     </div>
   </section>
 
+
+  <!-- MASALAH -->
+  <section class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Masalah yang Kami Selesaikan</span>
+      <h2>Ketika campaign butuh dorongan lebih</h2>
+      <p>Buzzerhood hadir untuk brand yang mengalami salah satu, atau beberapa, situasi berikut.</p>
+    </div>
+    <div class="chip-list reveal">
+      <span class="chip">Konten sepi engagement</span>
+      <span class="chip">Campaign kurang mendapat perhatian</span>
+      <span class="chip">Produk baru sulit dikenal</span>
+      <span class="chip">Traffic social media rendah</span>
+      <span class="chip">Launching butuh exposure</span>
+      <span class="chip">Marketplace minim review</span>
+      <span class="chip">Event / live streaming sepi partisipan</span>
+      <span class="chip">Press release kurang tersebar</span>
+      <span class="chip">Butuh percakapan digital</span>
+      <span class="chip">Sulit menjangkau komunitas tertentu</span>
+      <span class="chip">Butuh influencer dalam jumlah besar</span>
+      <span class="chip">Butuh media online untuk publikasi</span>
+      <span class="chip">Butuh campaign serentak di banyak channel</span>
+    </div>
+  </section>
+
   <!-- TEAM -->
   <section class="wrap">
     <div class="head-with-photo reveal">
@@ -532,38 +611,64 @@
   <section id="jaringan" class="wrap">
     <div class="section-head reveal">
       <span class="tag">Komposisi Jaringan</span>
-      <h2>Satu database, tiga lapisan jaringan</h2>
-      <p>Media, platform kreator, dan komunitas — dikurasi dan diperbarui terus-menerus.</p>
+      <h2>Satu database, empat lapisan jaringan</h2>
+      <p>Media, creator, komunitas, dan buzzer network — dikurasi dan diperbarui terus-menerus.</p>
     </div>
-    <div class="comp-cols reveal">
+    <div class="comp-cols cols-4 reveal">
       <div class="comp-col">
         <div class="photo-tile"><img src="https://images.pexels.com/photos/7651804/pexels-photo-7651804.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Jaringan media" loading="lazy"></div>
-        <h4>Media</h4>
+        <h4>Media Network</h4>
         <div class="chip-list">
           <span class="chip">Media Online</span>
-          <span class="chip">Local Media</span>
-          <span class="chip">National Media</span>
+          <span class="chip">Media Lokal</span>
+          <span class="chip">Media Nasional</span>
+          <span class="chip">Media Niche</span>
+          <span class="chip">Portal Berita</span>
+          <span class="chip">Media Kuliner</span>
+          <span class="chip">Media Wisata</span>
+          <span class="chip">Media Teknologi</span>
         </div>
       </div>
       <div class="comp-col">
-        <div class="photo-tile"><img src="https://images.pexels.com/photos/13835575/pexels-photo-13835575.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Kreator platform" loading="lazy"></div>
-        <h4>Platform Creator</h4>
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/13835575/pexels-photo-13835575.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Creator network" loading="lazy"></div>
+        <h4>Creator Network</h4>
         <div class="chip-list">
-          <span class="chip">Instagram Publisher</span>
-          <span class="chip">TikTok Creator</span>
-          <span class="chip">YouTube Creator</span>
-        </div>
-      </div>
-      <div class="comp-col">
-        <div class="photo-tile"><img src="https://images.pexels.com/photos/9287491/pexels-photo-9287491.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Komunitas" loading="lazy"></div>
-        <h4>Orang &amp; Komunitas</h4>
-        <div class="chip-list">
-          <span class="chip">Influencer</span>
-          <span class="chip">Micro Influencer</span>
           <span class="chip">Nano Influencer</span>
-          <span class="chip">Community</span>
+          <span class="chip">Micro Influencer</span>
+          <span class="chip">Mid-tier Influencer</span>
+          <span class="chip">Macro Influencer</span>
+          <span class="chip">Mega Influencer</span>
+          <span class="chip">TikTok Creator</span>
+          <span class="chip">YouTuber</span>
           <span class="chip">KOL</span>
-          <span class="chip">Public Figure</span>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/9287491/pexels-photo-9287491.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Community network" loading="lazy"></div>
+        <h4>Community Network</h4>
+        <div class="chip-list">
+          <span class="chip">Komunitas Kreatif</span>
+          <span class="chip">Komunitas Mahasiswa</span>
+          <span class="chip">Komunitas Musik</span>
+          <span class="chip">Komunitas Olahraga</span>
+          <span class="chip">Komunitas Otomotif</span>
+          <span class="chip">Komunitas Gaming</span>
+          <span class="chip">Komunitas UMKM</span>
+          <span class="chip">Fanbase</span>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="photo-tile"><img src="https://images.pexels.com/photos/6770610/pexels-photo-6770610.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Buzzer network" loading="lazy"></div>
+        <h4>Buzzer Network</h4>
+        <div class="chip-list">
+          <span class="chip">Like</span>
+          <span class="chip">Comment</span>
+          <span class="chip">Share</span>
+          <span class="chip">View</span>
+          <span class="chip">Reply</span>
+          <span class="chip">Mention</span>
+          <span class="chip">Hashtag</span>
+          <span class="chip">Conversation</span>
         </div>
       </div>
     </div>
@@ -573,13 +678,74 @@
   <section id="layanan" class="wrap">
     <div class="head-with-photo reveal">
       <div class="section-head" style="margin-bottom:0;">
-        <span class="tag">Layanan</span>
-        <h2>Tujuh cara menyalurkan pesan brand</h2>
-        <p>Dipilih sesuai tujuan campaign — awareness cepat, reputasi jangka panjang, atau percakapan organik.</p>
+        <span class="tag">Layanan Utama</span>
+        <h2>Tujuh lini layanan Buzzerhood</h2>
+        <p>Dari aktivasi organik sampai campaign custom — dipilih sesuai kebutuhan dan skala brand.</p>
       </div>
       <div class="photo-tile"><img src="https://images.pexels.com/photos/7652054/pexels-photo-7652054.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Tim menyusun layanan campaign" loading="lazy"></div>
     </div>
     <div class="product-list reveal" id="productList" style="margin-top:40px;"></div>
+  </section>
+
+
+  <!-- PRODUK AKTIVASI -->
+  <section class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Produk Aktivasi</span>
+      <h2>Unit aktivasi di dalam setiap layanan</h2>
+      <p>Komponen yang bisa dikombinasikan sesuai kebutuhan campaign.</p>
+    </div>
+    <div class="team-grid reveal">
+      <div class="team-cell"><span class="mark">01</span><span class="role">Social Engagement<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Like · Comment · Share · Save · View · Follow · Mention</span></span></div>
+      <div class="team-cell"><span class="mark">02</span><span class="role">Marketplace<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Review · Rating · Product Interaction · Traffic</span></span></div>
+      <div class="team-cell"><span class="mark">03</span><span class="role">Trending &amp; Conversation<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Hashtag &amp; Keyword Activation · Comment Activation</span></span></div>
+      <div class="team-cell"><span class="mark">04</span><span class="role">Live Activation<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Live Viewer · Live Comment · Webinar Participant</span></span></div>
+      <div class="team-cell"><span class="mark">05</span><span class="role">Creator Campaign<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">KOL · Influencer · Reviewer · Affiliate</span></span></div>
+      <div class="team-cell"><span class="mark">06</span><span class="role">Media Publication<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Press Release · Media Placement · Media Blast · Digital PR</span></span></div>
+      <div class="team-cell"><span class="mark">07</span><span class="role">Community Activation<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Event Participant · Offline Activation · Sampling</span></span></div>
+      <div class="team-cell"><span class="mark">08</span><span class="role">Digital Advertising<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Meta · TikTok · Google · YouTube Ads</span></span></div>
+    </div>
+  </section>
+
+  <!-- CARA KERJA -->
+  <section class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Cara Kerja</span>
+      <h2>Enam langkah dari konsultasi sampai laporan</h2>
+      <p>Proses yang sama untuk setiap skala campaign — lokal maupun nasional.</p>
+    </div>
+    <div class="pkg-list reveal">
+      <div class="pkg-row"><div class="pkg-idx">01</div><div><div class="pkg-name">Consult</div><div class="pkg-sub">Client menyampaikan kebutuhan dan target campaign.</div></div></div>
+      <div class="pkg-row"><div class="pkg-idx">02</div><div><div class="pkg-name">Strategy</div><div class="pkg-sub">Tim menentukan channel, audience, jaringan, dan metode campaign.</div></div></div>
+      <div class="pkg-row"><div class="pkg-idx">03</div><div><div class="pkg-name">Network Matching</div><div class="pkg-sub">Memilih media, influencer, creator, buzzer, atau komunitas yang sesuai.</div></div></div>
+      <div class="pkg-row"><div class="pkg-idx">04</div><div><div class="pkg-name">Campaign</div><div class="pkg-sub">Campaign mulai dijalankan sesuai timeline.</div></div></div>
+      <div class="pkg-row"><div class="pkg-idx">05</div><div><div class="pkg-name">Monitoring</div><div class="pkg-sub">Aktivitas dan performa campaign dipantau secara berkala.</div></div></div>
+      <div class="pkg-row"><div class="pkg-idx">06</div><div><div class="pkg-name">Report</div><div class="pkg-sub">Client mendapatkan laporan hasil campaign.</div></div></div>
+    </div>
+  </section>
+
+  <!-- CAMPAIGN FLOW -->
+  <section class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Campaign Flow</span>
+      <h2>Dari brand sampai konversi</h2>
+      <p>Satu alur distribusi yang menghubungkan seluruh jaringan Buzzerhood.</p>
+    </div>
+    <div class="flow-chain reveal">
+      <span class="fnode">Brand</span><span class="farrow">→</span>
+      <span class="fnode hi">Buzzerhood</span><span class="farrow">→</span>
+      <span class="fnode">Media</span><span class="farrow">·</span>
+      <span class="fnode">Creator</span><span class="farrow">·</span>
+      <span class="fnode">Influencer</span><span class="farrow">·</span>
+      <span class="fnode">Community</span><span class="farrow">·</span>
+      <span class="fnode">Buzzer</span><span class="farrow">→</span>
+      <span class="fnode">Content Distribution</span><span class="farrow">→</span>
+      <span class="fnode">Reach</span><span class="farrow">→</span>
+      <span class="fnode">Conversation</span><span class="farrow">→</span>
+      <span class="fnode">Engagement</span><span class="farrow">→</span>
+      <span class="fnode">Traffic</span><span class="farrow">→</span>
+      <span class="fnode hi">Conversion</span>
+    </div>
   </section>
 
   <!-- PACKAGES -->
@@ -590,6 +756,25 @@
       <p>Harga disesuaikan dengan jangkauan jaringan yang digerakkan dan durasi campaign.</p>
     </div>
     <div class="pkg-list reveal" id="pkgList"></div>
+    <p class="reveal" style="margin-top:20px; font-size:13.5px; color:var(--paper-faint);">Butuh KPI khusus di luar paket di atas? Tim kami menyusun <strong style="color:var(--orange-2);">Custom Campaign</strong> berdasarkan kebutuhan spesifik brand.</p>
+  </section>
+
+  <!-- KENAPA BUZZERHOOD -->
+  <section class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Kenapa Buzzerhood</span>
+      <h2>Tujuh alasan brand memilih kami</h2>
+      <p>Bukan sekadar angka — tapi jaringan yang bisa dipertanggungjawabkan.</p>
+    </div>
+    <div class="team-grid reveal">
+      <div class="team-cell"><span class="mark">1</span><span class="role">Human Network<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Mengutamakan jaringan manusia &amp; akun aktif.</span></span></div>
+      <div class="team-cell"><span class="mark">2</span><span class="role">Multi Channel<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Campaign berjalan lintas platform.</span></span></div>
+      <div class="team-cell"><span class="mark">3</span><span class="role">Scalable<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Dari skala lokal hingga nasional.</span></span></div>
+      <div class="team-cell"><span class="mark">4</span><span class="role">Targeted<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Jaringan dipilih sesuai kebutuhan campaign.</span></span></div>
+      <div class="team-cell"><span class="mark">5</span><span class="role">Fast Activation<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Diaktivasi langsung dari database jaringan.</span></span></div>
+      <div class="team-cell"><span class="mark">6</span><span class="role">Measurable<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Aktivitas dipantau &amp; dilaporkan.</span></span></div>
+      <div class="team-cell"><span class="mark">7</span><span class="role">One Network<br><span style="font-weight:400; color:var(--paper-faint); font-size:12.5px; text-transform:none;">Media, creator, community, buzzer — satu ekosistem.</span></span></div>
+    </div>
   </section>
 
   <!-- TARGET 2027 -->
@@ -610,8 +795,17 @@
       <div class="target-fields">
         <p>Data utama per akun</p>
         <div class="field-chips">
-          <span>Location</span><span>Audience</span><span>Followers</span><span>Engagement</span>
-          <span>Category</span><span>Rate</span><span>Performance</span><span>Past Campaigns</span>
+          <span>Nama / Brand</span><span>Username IG/TikTok/YouTube</span><span>Location</span><span>Followers</span>
+          <span>Engagement</span><span>Category</span><span>Tier</span><span>Rate</span>
+          <span>Contact</span><span>Status</span><span>Campaign History</span>
+        </div>
+      </div>
+      <div class="target-fields">
+        <p>Target client Buzzerhood</p>
+        <div class="field-chips">
+          <span>Brand / Corporate</span><span>UMKM</span><span>Government</span><span>Agency</span>
+          <span>Event Organizer</span><span>Startup</span><span>Public Figure</span><span>Musician / Artist</span>
+          <span>Property</span><span>Hospitality</span><span>F&amp;B</span><span>Tourism</span><span>Education</span>
         </div>
       </div>
     </div>
@@ -661,14 +855,291 @@
     </div>
   </section>
 
+
+  <!-- DAFTAR PARTNER -->
+  <section id="daftar" class="db-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Program Partner</span>
+        <h2>Gabung ke Buzzerhood Network</h2>
+        <p>Terbuka untuk media online, influencer, content creator, komunitas, dan buzzer/digital activator. Partner mendaftar → diverifikasi tim kami → masuk database → mendapat opportunity campaign.</p>
+      </div>
+
+      <div class="mini-steps reveal">
+        <span class="fnode" style="border:1px solid var(--line-strong); border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:700; color:var(--paper-dim);">1. Daftar</span>
+        <span class="farrow">→</span>
+        <span class="fnode" style="border:1px solid var(--line-strong); border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:700; color:var(--paper-dim);">2. Verifikasi</span>
+        <span class="farrow">→</span>
+        <span class="fnode" style="border:1px solid var(--line-strong); border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:700; color:var(--paper-dim);">3. Masuk Database</span>
+        <span class="farrow">→</span>
+        <span class="fnode hi" style="border:1px solid var(--orange); border-radius:999px; padding:10px 18px; font-size:12.5px; font-weight:700; color:var(--orange-2); background:rgba(255,90,31,0.1);">4. Opportunity Campaign</span>
+      </div>
+
+      <div class="reveal">
+        <div class="pform-tabs" id="pformTabs">
+          <button type="button" class="pform-tab active" data-tab="media">Media Online</button>
+          <button type="button" class="pform-tab" data-tab="influencer">Influencer / Creator</button>
+          <button type="button" class="pform-tab" data-tab="komunitas">Komunitas</button>
+          <button type="button" class="pform-tab" data-tab="buzzer">Buzzer / Digital Activator</button>
+        </div>
+
+        <div class="pform-card">
+          <div class="form-msg" id="formMsg"></div>
+
+          <form id="partnerForm">
+            <div class="field-grid">
+              <div class="field">
+                <label>Nama Lengkap / Nama Brand <span class="req">*</span></label>
+                <input type="text" name="nama" placeholder="Nama kamu atau nama brand/media">
+              </div>
+              <div class="field">
+                <label>Email <span class="req">*</span></label>
+                <input type="email" name="email" placeholder="nama@email.com">
+              </div>
+              <div class="field">
+                <label>No. WhatsApp <span class="req">*</span></label>
+                <input type="tel" name="whatsapp" placeholder="08xxxxxxxxxx">
+              </div>
+              <div class="field">
+                <label>Kota / Domisili <span class="req">*</span></label>
+                <input type="text" name="kota" placeholder="Malang, Surabaya, dll">
+              </div>
+            </div>
+
+            <!-- MEDIA ONLINE -->
+            <div class="pform-panel active" data-panel="media">
+              <div class="divider-note">Detail Media</div>
+              <div class="field-grid">
+                <div class="field">
+                  <label>Nama Media / Website <span class="req">*</span></label>
+                  <input type="text" name="media_nama" placeholder="Nama media atau portal">
+                </div>
+                <div class="field">
+                  <label>Link Website <span class="req">*</span></label>
+                  <input type="url" name="media_link" placeholder="https://namamedia.com">
+                </div>
+                <div class="field">
+                  <label>Kategori Media</label>
+                  <select name="media_kategori">
+                    <option>Media Online Nasional</option>
+                    <option>Media Online Lokal / Regional</option>
+                    <option>Portal Berita</option>
+                    <option>Media Niche / Komunitas</option>
+                    <option>Blog</option>
+                    <option>Lainnya</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Rata-rata Pengunjung / Bulan</label>
+                  <select name="media_traffic">
+                    <option>&lt; 10 ribu / bulan</option>
+                    <option>10 – 50 ribu / bulan</option>
+                    <option>50 – 150 ribu / bulan</option>
+                    <option>150 – 500 ribu / bulan</option>
+                    <option>&gt; 500 ribu / bulan</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Fokus Konten / Kecenderungan</label>
+                  <select name="media_niche">
+                    <option>Food &amp; Kuliner</option><option>Lifestyle</option><option>Beauty &amp; Fashion</option>
+                    <option>Travel</option><option>Event &amp; Hiburan</option><option>Olahraga</option>
+                    <option>Gadget &amp; Teknologi</option><option>Parenting &amp; Keluarga</option>
+                    <option>Otomotif</option><option>Komunitas Umum</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Rate Publikasi</label>
+                  <select name="media_rate">
+                    <option>&lt; Rp1 Juta</option><option>Rp1 – 3 Juta</option><option>Rp3 – 7 Juta</option>
+                    <option>Rp7 – 15 Juta</option><option>Rp15 – 30 Juta</option><option>&gt; Rp30 Juta</option>
+                    <option>Nego / Barter</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field full" style="margin-top:20px;">
+                <label>Kanal Media Sosial Pendukung (opsional)</label>
+                <div class="check-grid" data-checkgroup="media_kanal">
+                  <label class="check-pill"><input type="checkbox" name="media_kanal" value="Instagram">Instagram</label>
+                  <label class="check-pill"><input type="checkbox" name="media_kanal" value="Facebook">Facebook</label>
+                  <label class="check-pill"><input type="checkbox" name="media_kanal" value="TikTok">TikTok</label>
+                  <label class="check-pill"><input type="checkbox" name="media_kanal" value="YouTube">YouTube</label>
+                  <label class="check-pill"><input type="checkbox" name="media_kanal" value="X">X (Twitter)</label>
+                  <label class="check-pill"><input type="checkbox" name="media_kanal" value="Threads">Threads</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- INFLUENCER / CREATOR -->
+            <div class="pform-panel" data-panel="influencer">
+              <div class="divider-note">Detail Influencer / Creator</div>
+              <div class="field-grid">
+                <div class="field">
+                  <label>Nama / Brand Akun <span class="req">*</span></label>
+                  <input type="text" name="inf_nama" placeholder="Nama akun / brand personal">
+                </div>
+                <div class="field">
+                  <label>Username / Handle Utama <span class="req">*</span></label>
+                  <input type="text" name="inf_handle" placeholder="@handle">
+                </div>
+                <div class="field">
+                  <label>Jumlah Followers / Subscribers <span class="req">*</span></label>
+                  <input type="number" name="inf_followers" placeholder="cth. 15000">
+                </div>
+                <div class="field">
+                  <label>Kecenderungan Konten / Niche</label>
+                  <select name="inf_niche">
+                    <option>Food &amp; Kuliner</option><option>Lifestyle</option><option>Beauty &amp; Fashion</option>
+                    <option>Travel</option><option>Event &amp; Hiburan</option><option>Olahraga</option>
+                    <option>Gadget &amp; Teknologi</option><option>Parenting &amp; Keluarga</option>
+                    <option>Otomotif</option><option>Komunitas Umum</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Rate per Konten</label>
+                  <select name="inf_rate">
+                    <option>&lt; Rp1 Juta</option><option>Rp1 – 3 Juta</option><option>Rp3 – 7 Juta</option>
+                    <option>Rp7 – 15 Juta</option><option>Rp15 – 30 Juta</option><option>&gt; Rp30 Juta</option>
+                    <option>Nego / Barter</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Link Portfolio / Media Kit (opsional)</label>
+                  <input type="url" name="inf_portfolio" placeholder="https://...">
+                </div>
+              </div>
+              <div class="field full" style="margin-top:20px;">
+                <label>Platform Utama <span class="req">*</span></label>
+                <div class="check-grid" data-checkgroup="inf_platform">
+                  <label class="check-pill"><input type="checkbox" name="inf_platform" value="Instagram">Instagram</label>
+                  <label class="check-pill"><input type="checkbox" name="inf_platform" value="TikTok">TikTok</label>
+                  <label class="check-pill"><input type="checkbox" name="inf_platform" value="YouTube">YouTube</label>
+                  <label class="check-pill"><input type="checkbox" name="inf_platform" value="X">X (Twitter)</label>
+                  <label class="check-pill"><input type="checkbox" name="inf_platform" value="Threads">Threads</label>
+                  <label class="check-pill"><input type="checkbox" name="inf_platform" value="Lainnya">Lainnya</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- KOMUNITAS -->
+            <div class="pform-panel" data-panel="komunitas">
+              <div class="divider-note">Detail Komunitas</div>
+              <div class="field-grid">
+                <div class="field">
+                  <label>Nama Komunitas <span class="req">*</span></label>
+                  <input type="text" name="kom_nama" placeholder="Nama komunitas">
+                </div>
+                <div class="field">
+                  <label>Jumlah Anggota <span class="req">*</span></label>
+                  <input type="number" name="kom_anggota" placeholder="cth. 500">
+                </div>
+                <div class="field">
+                  <label>Jenis Komunitas</label>
+                  <select name="kom_jenis">
+                    <option>Komunitas Kreatif</option><option>Komunitas Mahasiswa</option><option>Komunitas Musik</option>
+                    <option>Komunitas Olahraga</option><option>Komunitas Otomotif</option><option>Komunitas Gaming</option>
+                    <option>Komunitas Lifestyle</option><option>Komunitas UMKM</option><option>Komunitas Lokal</option>
+                    <option>Fanbase</option><option>Lainnya</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Rate Aktivasi</label>
+                  <select name="kom_rate">
+                    <option>&lt; Rp1 Juta</option><option>Rp1 – 3 Juta</option><option>Rp3 – 7 Juta</option>
+                    <option>Rp7 – 15 Juta</option><option>&gt; Rp15 Juta</option><option>Nego / Barter</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field full" style="margin-top:20px;">
+                <label>Platform Utama Komunitas</label>
+                <div class="check-grid" data-checkgroup="kom_platform">
+                  <label class="check-pill"><input type="checkbox" name="kom_platform" value="Instagram">Instagram</label>
+                  <label class="check-pill"><input type="checkbox" name="kom_platform" value="WhatsApp Group">WhatsApp Group</label>
+                  <label class="check-pill"><input type="checkbox" name="kom_platform" value="Discord">Discord</label>
+                  <label class="check-pill"><input type="checkbox" name="kom_platform" value="TikTok">TikTok</label>
+                  <label class="check-pill"><input type="checkbox" name="kom_platform" value="Lainnya">Lainnya</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- BUZZER / DIGITAL ACTIVATOR -->
+            <div class="pform-panel" data-panel="buzzer">
+              <div class="divider-note">Detail Buzzer / Digital Activator</div>
+              <div class="field-grid">
+                <div class="field">
+                  <label>Nama / Username Aktif <span class="req">*</span></label>
+                  <input type="text" name="buz_nama" placeholder="Nama atau username">
+                </div>
+                <div class="field">
+                  <label>Jumlah Akun Dikelola (opsional)</label>
+                  <input type="number" name="buz_akun" placeholder="cth. 5">
+                </div>
+                <div class="field">
+                  <label>Rate per Task</label>
+                  <select name="buz_rate">
+                    <option>&lt; Rp50 Ribu</option><option>Rp50 – 150 Ribu</option><option>Rp150 – 500 Ribu</option>
+                    <option>&gt; Rp500 Ribu</option><option>Nego</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field full" style="margin-top:20px;">
+                <label>Platform Aktif <span class="req">*</span></label>
+                <div class="check-grid" data-checkgroup="buz_platform">
+                  <label class="check-pill"><input type="checkbox" name="buz_platform" value="Instagram">Instagram</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_platform" value="TikTok">TikTok</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_platform" value="X">X (Twitter)</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_platform" value="Threads">Threads</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_platform" value="Lainnya">Lainnya</label>
+                </div>
+              </div>
+              <div class="field full" style="margin-top:20px;">
+                <label>Jenis Aktivitas</label>
+                <div class="check-grid" data-checkgroup="buz_aktivitas">
+                  <label class="check-pill"><input type="checkbox" name="buz_aktivitas" value="Like">Like</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_aktivitas" value="Comment">Comment</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_aktivitas" value="Share">Share</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_aktivitas" value="View">View</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_aktivitas" value="Reply">Reply</label>
+                  <label class="check-pill"><input type="checkbox" name="buz_aktivitas" value="Hashtag">Hashtag</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field full" style="margin-top:28px;">
+              <label>Pesan Tambahan (opsional)</label>
+              <textarea name="pesan" placeholder="Ceritakan hal lain yang perlu tim Buzzerhood tahu..."></textarea>
+            </div>
+
+            <label class="consent-row">
+              <input type="checkbox" id="consentCheck" name="consent">
+              <span>Saya setuju data ini digunakan Buzzerhood untuk keperluan verifikasi dan kerja sama campaign. <span class="req">*</span></span>
+            </label>
+
+            <div class="pform-submit-row">
+              <button type="submit" class="btn-solid">Kirim Pendaftaran</button>
+              <span class="hint">Tim kami akan menghubungi lewat email/WhatsApp dalam 2×24 jam kerja.</span>
+            </div>
+          </form>
+
+          <div class="form-success" id="formSuccess">
+            <div class="ok-badge">✓</div>
+            <h3>Pendaftaran Terkirim</h3>
+            <p id="successText">Terima kasih sudah mendaftar. Tim Buzzerhood akan memverifikasi data kamu sebelum masuk ke Network Database.</p>
+            <button type="button" class="btn-ghost" id="resetFormBtn">Daftar Akun / Media Lain</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FINAL CTA -->
   <section id="kontak">
     <div class="wrap cta-final reveal">
       <h2>Siap menggerakkan jaringan untuk campaign berikutnya?</h2>
       <p>Ceritakan target dan budget campaign — tim Buzzerhood akan menyusun kombinasi media, kreator, dan komunitas yang paling relevan.</p>
       <div class="hero-cta">
-        <a href="mailto:hello@buzzerhood.com" class="btn-solid">hello@buzzerhood.com</a>
-        <a href="https://buzzerhood.com" class="btn-ghost">buzzerhood.com</a>
+        <a href="mailto:hello@dev-buzzerhood.carubra.com" class="btn-solid">hello@dev-buzzerhood.carubra.com</a>
+        <a href="https://dev-buzzerhood.carubra.com" class="btn-ghost">dev-buzzerhood.carubra.com</a>
       </div>
       <div class="cta-photos photo-row cols-3">
         <div class="photo-tile" style="height:150px;"><img src="https://images.pexels.com/photos/13835575/pexels-photo-13835575.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Creator" loading="lazy"></div>
@@ -699,13 +1170,17 @@
           <a href="#jaringan">Jaringan</a>
           <a href="#paket">Paket</a>
           <a href="#database">Database</a>
+          <a href="#daftar">Daftar Partner</a>
           <a href="#kontak">Kontak</a>
         </div>
       </div>
     </div>
-    <div class="foot-bottom">
-      <span>© 2026 Buzzerhood — PT Utero Kreatif Indonesia.</span>
-      <span>Malang, Jawa Timur, Indonesia.</span>
+    <div class="foot-bottom" style="flex-direction:column; align-items:flex-start; gap:14px;">
+      <span style="color:var(--paper-faint);">Buzzerhood Media · Buzzerhood Creator · Buzzerhood Community · Buzzerhood Organic · Buzzerhood Adsense · Buzzerhood Custom · Buzzerhood Mix</span>
+      <div style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 Buzzerhood — PT Utero Kreatif Indonesia.</span>
+        <span>Malang, Jawa Timur, Indonesia.</span>
+      </div>
     </div>
   </div>
 </footer>
@@ -720,13 +1195,13 @@ const TEAM = [
 ];
 
 const PRODUCTS = [
-  {name:"Media Blast", freq:"100–1.000 media/network", desc:"Distribusi rilis ke ratusan hingga ribuan media dan akun jaringan sekaligus, untuk awareness cepat.", items:["Local & national media","Publisher network"]},
-  {name:"KOL Campaign", freq:"Influencer campaign", desc:"Campaign terkurasi bersama KOL dan influencer yang audiensnya cocok dengan brand.", items:["Micro & macro influencer","Brief & performance report"]},
-  {name:"Digital PR", freq:"Publication · News · Reputation", desc:"Publikasi berita, distribusi rilis, dan pengelolaan reputasi digital jangka panjang.", items:["Press distribution","Reputation management"]},
-  {name:"Creator Campaign", freq:"TikTok · Instagram · YouTube", desc:"Konten native yang diproduksi langsung oleh kreator di platform masing-masing.", items:["Konten sesuai gaya platform","Kreator terverifikasi"]},
-  {name:"Community Amplification", freq:"Community-based campaign", desc:"Menggerakkan komunitas untuk menyebarkan pesan secara organik dan kredibel.", items:["500+ komunitas jaringan","Engagement terarah"]},
-  {name:"Social Conversation", freq:"Organic conversation campaign", desc:"Membangun percakapan organik di media sosial tanpa terasa seperti iklan.", items:["Seeding percakapan","Monitoring respons"]},
-  {name:"Brand Reputation", freq:"Monitoring · Sentiment · Strategy", desc:"Memantau sentimen digital brand dan menyusun strategi respons yang tepat.", items:["Digital monitoring","Sentiment analysis","Response strategy"]},
+  {name:"Buzzerhood Organic", freq:"Human-account activation", desc:"Aktivasi akun manusia untuk meningkatkan interaksi secara lebih natural.", items:["Social media campaign","Product launch","Event & awareness campaign"]},
+  {name:"Buzzerhood Creator", freq:"Nano → Mega influencer", desc:"Campaign menggunakan influencer dan content creator, dari nano hingga mega.", items:["Content creation & review","Story, Reels, TikTok","Live & product experience"]},
+  {name:"Buzzerhood Media", freq:"Press · Placement · Digital PR", desc:"Distribusi informasi melalui jaringan media online, lokal, dan nasional.", items:["Press release & media placement","Media blast & article publication","Digital PR"]},
+  {name:"Buzzerhood Community", freq:"Community-based activation", desc:"Aktivasi campaign melalui jaringan komunitas dan interest group.", items:["Event & product activation","Sampling & gathering","Campaign movement"]},
+  {name:"Buzzerhood Adsense", freq:"Meta · TikTok · Google · YouTube", desc:"Memperbesar jangkauan campaign melalui paid distribution di berbagai channel.", items:["Meta & Instagram Ads","TikTok & YouTube Ads","Google Ads"]},
+  {name:"Buzzerhood Custom", freq:"Tailored campaign", desc:"Campaign dirancang berdasarkan kebutuhan khusus client.", items:["Political & public campaign","Product launching & event activation","Corporate & social movement"]},
+  {name:"Buzzerhood Mix", freq:"Media + Creator + Community + Buzzer + Ads", desc:"Menggabungkan beberapa jaringan sekaligus untuk jangkauan maksimal.", items:["Kombinasi lintas jaringan","Strategi terintegrasi","Jangkauan lebih luas"]},
 ];
 
 const PACKAGES = [
@@ -859,6 +1334,147 @@ function renderTable(){
 }
 dbSearch.addEventListener('input', renderTable);
 renderTable();
+
+/* ---------------- PARTNER FORM ---------------- */
+(function(){
+  const tabs = document.querySelectorAll('.pform-tab');
+  const panels = document.querySelectorAll('.pform-panel');
+  let activePanel = 'media';
+
+  tabs.forEach(t=>{
+    t.addEventListener('click', ()=>{
+      tabs.forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      activePanel = t.dataset.tab;
+      panels.forEach(p=> p.classList.toggle('active', p.dataset.panel === activePanel));
+      hideMsg();
+    });
+  });
+
+  // checkbox pill visual state
+  document.querySelectorAll('.check-pill input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      cb.closest('.check-pill').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  const form = document.getElementById('partnerForm');
+  const msg = document.getElementById('formMsg');
+  const successBox = document.getElementById('formSuccess');
+  const successText = document.getElementById('successText');
+  const resetBtn = document.getElementById('resetFormBtn');
+
+  function hideMsg(){ msg.classList.remove('show'); msg.textContent=''; }
+  function showMsg(text){ msg.textContent = text; msg.classList.add('show'); }
+
+  const panelLabels = {
+    media:"Media Online", influencer:"Influencer / Creator",
+    komunitas:"Komunitas", buzzer:"Buzzer / Digital Activator"
+  };
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    hideMsg();
+    const fd = new FormData(form);
+    const nama = (fd.get('nama')||'').trim();
+    const email = (fd.get('email')||'').trim();
+    const wa = (fd.get('whatsapp')||'').trim();
+    const kota = (fd.get('kota')||'').trim();
+    const consent = document.getElementById('consentCheck').checked;
+
+    if(!nama || !email || !wa || !kota){
+      showMsg('Lengkapi dulu Nama, Email, No. WhatsApp, dan Kota/Domisili ya.');
+      return;
+    }
+    const emailOk = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+    if(!emailOk){ showMsg('Format email belum valid.'); return; }
+
+    const activePanelEl = document.querySelector('.pform-panel.active');
+    const lines = [];
+    lines.push('Jenis Pendaftaran: ' + panelLabels[activePanel]);
+    lines.push('Nama / Brand: ' + nama);
+    lines.push('Email: ' + email);
+    lines.push('WhatsApp: ' + wa);
+    lines.push('Kota/Domisili: ' + kota);
+
+    let panelValid = true;
+    let panelValidMsg = '';
+
+    if(activePanel === 'media'){
+      const mn = (fd.get('media_nama')||'').trim();
+      const ml = (fd.get('media_link')||'').trim();
+      if(!mn || !ml){ panelValid=false; panelValidMsg='Isi Nama Media dan Link Website.'; }
+      lines.push('Nama Media/Website: ' + mn);
+      lines.push('Link: ' + ml);
+      lines.push('Kategori Media: ' + fd.get('media_kategori'));
+      lines.push('Traffic/Bulan: ' + fd.get('media_traffic'));
+      lines.push('Fokus Konten: ' + fd.get('media_niche'));
+      lines.push('Rate Publikasi: ' + fd.get('media_rate'));
+      const kanal = fd.getAll('media_kanal');
+      if(kanal.length) lines.push('Kanal Pendukung: ' + kanal.join(', '));
+    } else if(activePanel === 'influencer'){
+      const inN = (fd.get('inf_nama')||'').trim();
+      const inH = (fd.get('inf_handle')||'').trim();
+      const inF = (fd.get('inf_followers')||'').trim();
+      const plats = fd.getAll('inf_platform');
+      if(!inN || !inH || !inF || plats.length===0){ panelValid=false; panelValidMsg='Isi Nama Akun, Handle, Followers, dan pilih minimal 1 Platform Utama.'; }
+      lines.push('Nama/Brand Akun: ' + inN);
+      lines.push('Handle: ' + inH);
+      lines.push('Followers/Subscribers: ' + inF);
+      lines.push('Platform Utama: ' + plats.join(', '));
+      lines.push('Niche: ' + fd.get('inf_niche'));
+      lines.push('Rate per Konten: ' + fd.get('inf_rate'));
+      const port = (fd.get('inf_portfolio')||'').trim();
+      if(port) lines.push('Portfolio: ' + port);
+    } else if(activePanel === 'komunitas'){
+      const kn = (fd.get('kom_nama')||'').trim();
+      const ka = (fd.get('kom_anggota')||'').trim();
+      if(!kn || !ka){ panelValid=false; panelValidMsg='Isi Nama Komunitas dan Jumlah Anggota.'; }
+      lines.push('Nama Komunitas: ' + kn);
+      lines.push('Jumlah Anggota: ' + ka);
+      lines.push('Jenis Komunitas: ' + fd.get('kom_jenis'));
+      lines.push('Rate Aktivasi: ' + fd.get('kom_rate'));
+      const kp = fd.getAll('kom_platform');
+      if(kp.length) lines.push('Platform Komunitas: ' + kp.join(', '));
+    } else if(activePanel === 'buzzer'){
+      const bn = (fd.get('buz_nama')||'').trim();
+      const bp = fd.getAll('buz_platform');
+      if(!bn || bp.length===0){ panelValid=false; panelValidMsg='Isi Nama/Username dan pilih minimal 1 Platform Aktif.'; }
+      lines.push('Nama/Username: ' + bn);
+      lines.push('Platform Aktif: ' + bp.join(', '));
+      const akun = (fd.get('buz_akun')||'').trim();
+      if(akun) lines.push('Jumlah Akun Dikelola: ' + akun);
+      lines.push('Rate per Task: ' + fd.get('buz_rate'));
+      const akt = fd.getAll('buz_aktivitas');
+      if(akt.length) lines.push('Jenis Aktivitas: ' + akt.join(', '));
+    }
+
+    if(!panelValid){ showMsg(panelValidMsg); return; }
+    if(!consent){ showMsg('Centang dulu persetujuan penggunaan data untuk melanjutkan.'); return; }
+
+    const pesan = (fd.get('pesan')||'').trim();
+    if(pesan) lines.push('Pesan Tambahan: ' + pesan);
+
+    const subject = 'Pendaftaran Partner Buzzerhood — ' + panelLabels[activePanel] + ' — ' + nama;
+    const body = lines.join('\\n');
+    const mailto = 'mailto:hello@dev-buzzerhood.carubra.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+    try{ window.location.href = mailto; }catch(err){}
+
+    successText.textContent = 'Terima kasih, ' + nama + '! Data ' + panelLabels[activePanel].toLowerCase() + ' kamu sudah kami terima dan akan diverifikasi tim Buzzerhood sebelum masuk Network Database.';
+    form.style.display = 'none';
+    hideMsg();
+    successBox.classList.add('show');
+  });
+
+  resetBtn.addEventListener('click', ()=>{
+    form.reset();
+    document.querySelectorAll('.check-pill.checked').forEach(p=>p.classList.remove('checked'));
+    form.style.display = 'block';
+    successBox.classList.remove('show');
+    window.scrollTo({top: form.closest('section').offsetTop - 90, behavior:'smooth'});
+  });
+})();
 
 /* ---------------- REVEAL ON SCROLL ---------------- */
 const revealEls = document.querySelectorAll('.reveal');

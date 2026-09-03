@@ -5,6 +5,7 @@ create unique index if not exists partners_legacy_html_source_row_idx
 
 revoke select on buzzerhood.partners, buzzerhood.partner_platform_accounts, buzzerhood.partner_audience_metrics from anon;
 drop policy if exists partners_public_read on buzzerhood.partners;
+drop policy if exists partners_owner_or_admin_read on buzzerhood.partners;
 drop policy if exists partner_accounts_public_read on buzzerhood.partner_platform_accounts;
 drop policy if exists partner_metrics_public_read on buzzerhood.partner_audience_metrics;
 
@@ -43,3 +44,4 @@ create policy partners_owner_or_admin_read on buzzerhood.partners for select to 
   buzzerhood.has_permission('partners.read')
   or exists (select 1 from buzzerhood.partner_members member where member.partner_id = id and member.profile_id = auth.uid())
 );
+

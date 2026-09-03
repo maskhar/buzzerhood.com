@@ -1,0 +1,8 @@
+export const campaignStatuses = ['draft','submitted','internal_review','changes_requested','planning','active','publishing','monitoring','reporting','completed','cancelled','archived'] as const;
+export type CampaignStatus = typeof campaignStatuses[number];
+export type CampaignAssignmentStatus = 'invited'|'accepted'|'declined'|'active'|'completed'|'cancelled';
+export type CampaignDeliverableStatus = 'planned'|'in_progress'|'draft_submitted'|'revision_requested'|'internal_approved'|'client_approved'|'published'|'verified'|'completed'|'cancelled';
+export type Campaign = { id:string; organization_id:string; name:string; reference_code:string|null; status:CampaignStatus; objective_summary:string|null; planned_start:string|null; planned_end:string|null; estimated_budget:number|null; currency:string; created_by:string; created_at:string; updated_at:string };
+export type CampaignBrief = { campaign_id:string; objective:string|null; description:string|null; target_audience:string|null; key_message:string|null; call_to_action:string|null; content_direction:string|null; prohibited_content:string|null; notes:string|null; kpi_expectation:string|null; context:Record<string, unknown>|null };
+export type CampaignAssignment = { id:string; campaign_id:string; partner_id:string; status:CampaignAssignmentStatus; invited_at:string; agreed_fee:number|null; fee_currency:string|null; rate_snapshot:unknown };
+export type CampaignDeliverable = { id:string; assignment_id:string; title:string; description:string|null; platform:string|null; due_date:string|null; quantity:number; status:CampaignDeliverableStatus };

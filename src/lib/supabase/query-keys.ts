@@ -1,5 +1,1 @@
-export const queryKeys = {
-  profile: (userId: string) => ['auth', 'profile', userId] as const,
-  organizations: (userId: string) => ['organizations', 'mine', userId] as const,
-  workspaces: (userId: string) => ['workspaces', userId] as const,
-};
+export const queryKeys = { profile: (userId: string) => ['auth','profile',userId] as const, organizations: (userId: string) => ['organizations','mine',userId] as const, workspaces: (userId: string) => ['workspaces',userId] as const, campaigns: (organizationId?: string) => ['campaigns',organizationId??'all'] as const, campaign: (id: string) => ['campaign',id] as const, campaignAssignments: (id: string) => ['campaign',id,'assignments'] as const, deliverables: (assignmentId: string) => ['assignment',assignmentId,'deliverables'] as const };

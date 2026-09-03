@@ -5,6 +5,30 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   buzzerhood: {
     Tables: {
+      "legacy_network_imports": {
+        Row: {
+          source_key: string;
+          source_row: number;
+          payload: Json;
+          partner_id: string | null;
+          imported_at: string;
+        };
+        Insert: {
+          source_key: string;
+          source_row: number;
+          payload: Json;
+          partner_id?: string | null;
+          imported_at?: string;
+        };
+        Update: {
+          source_key?: string;
+          source_row?: number;
+          payload?: Json;
+          partner_id?: string | null;
+          imported_at?: string;
+        };
+        Relationships: [];
+      };
       "organization_members": {
         Row: {
           id: string;
@@ -68,6 +92,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      "partner_application_reviews": {
+        Row: {
+          id: string;
+          partner_id: string;
+          decision: string;
+          reviewed_by: string;
+          review_note: string | null;
+          reviewed_at: string;
+        };
+        Insert: {
+          id?: string;
+          partner_id: string;
+          decision: string;
+          reviewed_by: string;
+          review_note?: string | null;
+          reviewed_at?: string;
+        };
+        Update: {
+          id?: string;
+          partner_id?: string;
+          decision?: string;
+          reviewed_by?: string;
+          review_note?: string | null;
+          reviewed_at?: string;
+        };
+        Relationships: [];
+      };
       "partner_audience_metrics": {
         Row: {
           id: string;
@@ -101,6 +152,81 @@ export type Database = {
           observed_at?: string;
           metric_source?: string;
           raw_value?: Json | null;
+        };
+        Relationships: [];
+      };
+      "partner_claim_requests": {
+        Row: {
+          id: string;
+          partner_id: string;
+          claimant_profile_id: string;
+          evidence: string;
+          status: string;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          review_note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          partner_id: string;
+          claimant_profile_id: string;
+          evidence: string;
+          status?: string;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          review_note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          partner_id?: string;
+          claimant_profile_id?: string;
+          evidence?: string;
+          status?: string;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          review_note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      "partner_members": {
+        Row: {
+          id: string;
+          partner_id: string;
+          profile_id: string;
+          role: Database["buzzerhood"]["Enums"]["membership_role"];
+          status: Database["buzzerhood"]["Enums"]["membership_status"];
+          invited_by: string | null;
+          joined_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          partner_id: string;
+          profile_id: string;
+          role?: Database["buzzerhood"]["Enums"]["membership_role"];
+          status?: Database["buzzerhood"]["Enums"]["membership_status"];
+          invited_by?: string | null;
+          joined_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          partner_id?: string;
+          profile_id?: string;
+          role?: Database["buzzerhood"]["Enums"]["membership_role"];
+          status?: Database["buzzerhood"]["Enums"]["membership_status"];
+          invited_by?: string | null;
+          joined_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -187,6 +313,10 @@ export type Database = {
           source_data: Json | null;
           created_at: string;
           updated_at: string;
+          partner_kind: string;
+          legal_name: string | null;
+          location: string | null;
+          bio: string | null;
         };
         Insert: {
           id?: string;
@@ -201,6 +331,10 @@ export type Database = {
           source_data?: Json | null;
           created_at?: string;
           updated_at?: string;
+          partner_kind?: string;
+          legal_name?: string | null;
+          location?: string | null;
+          bio?: string | null;
         };
         Update: {
           id?: string;
@@ -215,6 +349,10 @@ export type Database = {
           source_data?: Json | null;
           created_at?: string;
           updated_at?: string;
+          partner_kind?: string;
+          legal_name?: string | null;
+          location?: string | null;
+          bio?: string | null;
         };
         Relationships: [];
       };
@@ -260,6 +398,48 @@ export type Database = {
           avatar_path?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      "public_network_partners": {
+        Row: {
+          id: string | null;
+          display_name: string | null;
+          partner_type: string | null;
+          tier: string | null;
+          category: string | null;
+          niche: string | null;
+          platform: string | null;
+          handle: string | null;
+          metric_type: Database["buzzerhood"]["Enums"]["metric_type"] | null;
+          metric_value: number | null;
+          observed_at: string | null;
+        };
+        Insert: {
+          id?: string | null;
+          display_name?: string | null;
+          partner_type?: string | null;
+          tier?: string | null;
+          category?: string | null;
+          niche?: string | null;
+          platform?: string | null;
+          handle?: string | null;
+          metric_type?: Database["buzzerhood"]["Enums"]["metric_type"] | null;
+          metric_value?: number | null;
+          observed_at?: string | null;
+        };
+        Update: {
+          id?: string | null;
+          display_name?: string | null;
+          partner_type?: string | null;
+          tier?: string | null;
+          category?: string | null;
+          niche?: string | null;
+          platform?: string | null;
+          handle?: string | null;
+          metric_type?: Database["buzzerhood"]["Enums"]["metric_type"] | null;
+          metric_value?: number | null;
+          observed_at?: string | null;
         };
         Relationships: [];
       };

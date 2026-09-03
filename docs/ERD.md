@@ -1,5 +1,7 @@
 # ERD
 
+> **Phase B0 transition notice (2026-09-02):** This diagram is the current Supabase-era model. The future identity edge is `buzzerhood.users -> buzzerhood.profiles` while profile UUIDs and every downstream FK are preserved. See `docs/AUTH_ARCHITECTURE.md`.
+
 ```mermaid
 erDiagram
   auth_users ||--|| profiles : owns

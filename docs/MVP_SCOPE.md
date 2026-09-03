@@ -1,5 +1,7 @@
 # MVP Scope
 
+> **Phase B0 transition notice (2026-09-02):** Replace “Supabase Auth” in the legacy scope below with custom Buzzerhood authentication delivered through the Backend API. Product scope is otherwise preserved.
+
 ## Included
 
 Public marketing parity; organization tenancy; Supabase Auth; membership roles; partner directory; campaign workflow; versioned content review; publication/metrics; reports; manual commercial tracking; private files; audit events; RLS tests.

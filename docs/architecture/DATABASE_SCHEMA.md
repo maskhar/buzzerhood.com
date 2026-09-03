@@ -1,5 +1,14 @@
 # Database Schema
 
+> **Phase B1 (2026-09-02):** migrations 0014–0016 add
+> `buzzerhood.users`, `refresh_sessions`, and `auth_security_events`.
+> `profiles.user_id` uniquely references custom users and equals `profiles.id`
+> when present; it is nullable only for transition compatibility. Password
+> hashes live only in `users`, refresh plaintext is never stored, and all three
+> new tables use forced RLS.
+
+> **Phase B1 transition notice (2026-09-02):** migrations `0001`–`0016` are authoritative. Custom `buzzerhood.users` owns new Backend identities; `auth.uid()` remains only as a transitional compatibility fallback.
+
 ## Rules
 
 All business objects live in `buzzerhood`. System users stay in `auth.users`; files stay in `storage.objects`. Every SQL reference is schema-qualified. Tables with user-facing private data enable RLS.

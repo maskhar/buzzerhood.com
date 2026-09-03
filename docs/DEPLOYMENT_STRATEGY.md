@@ -1,5 +1,7 @@
 # Strategi Deployment
 
+> **Phase B0 transition notice (2026-09-02):** Existing Supabase deployment procedures remain valid for legacy/shared services. The future Buzzerhood API deploys independently as documented in `docs/BACKEND_DEPLOYMENT_PLAN.md`; B0 performs no deployment or infrastructure change.
+
 ## Tahap
 
 1. Local development dengan environment kompatibel Supabase non-production.

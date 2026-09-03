@@ -1,22 +1,37 @@
 # Database Migrations
 
-`database/migrations/` is the authoritative deployment sequence from Phase 2A onward. `database/schema.sql` remains architecture baseline only and must not be applied as a production lifecycle script.
+## Backend B1
 
-## Ordered Migrations
+Production registry now runs through `0016`. Apply migrations with the
+controlled PostgreSQL operator, never `buzzerhood_app`. Create or rotate the
+runtime login separately with `operations/create_buzzerhood_app_role.sql` and a
+psql `app_password` variable; no credential belongs in Git. Migrations
+0014–0016 pass both fresh and 0013-upgrade disposable tests.
 
-1. `0001_create_buzzerhood_schema.sql` — extension, `buzzerhood` schema, enums.
-2. `0002_identity_rbac_organizations.sql` — profiles, RBAC references, organizations, active membership lifecycle.
-3. `0003_partner_foundation.sql` — partner ownership foundation, accounts, metrics, private rate records; no legacy data import.
-4. `0004_security_functions_rls.sql` — profile trigger, scoped security helpers, grants, RLS, timestamps.
-5. `0005_seed_rbac_reference.sql` — deterministic role/permission reference seed; no user assignment.
+`database/migrations/` is the authoritative ordered production history. `database/schema.sql` is a historical architecture baseline and must not be deployed as a lifecycle script. Deployed migrations are immutable; future custom-backend migrations continue at `0014+`.
 
-Do not run migrations against production until Phase 2B approval. See `docs/DATABASE_DEPLOYMENT_RUNBOOK.md`.
+## Ordered migrations
 
-## Tracking Recommendation
+1. `0001_create_buzzerhood_schema.sql` — schema, extension, and initial enums.
+2. `0002_identity_rbac_organizations.sql` — Supabase-era profile FK, RBAC, organizations, memberships.
+3. `0003_partner_foundation.sql` — partner, platform account, metric, and private-rate foundation.
+4. `0004_security_functions_rls.sql` — profile trigger, security helpers, grants, RLS, timestamps.
+5. `0005_seed_rbac_reference.sql` — deterministic roles/permissions; no user assignment.
+6. `0006_migration_tracking.sql` — `buzzerhood.schema_migrations` registry.
+7. `0007_partner_identity_and_client_organizations.sql` — partner memberships/claims and organization/partner transactional RPCs.
+8. `0008_public_network_projection.sql` — public safe network projection and raw-table restriction.
+9. `0009_legacy_network_import.sql` — deterministic 124-row source-preserving partner import.
+10. `0010_operational_partner_review.sql` — partner review history and constrained profile updates.
+11. `0011_review_api_compatibility.sql` — effective partner review/rejection function definitions.
+12. `0012_campaign_engine_core.sql` — campaign/assignment/deliverable/content/publication/metric state and guarded transactions.
+13. `0013_campaign_safe_projections.sql` — client, partner, and internal privacy projections.
 
-Use Supabase migration metadata when current self-hosted deployment supports existing compatible tooling. If unavailable, add a Buzzerhood-owned tracking table in an approved migration. Do not repurpose Docker initialization mounts for live migration tracking.
-# Migration State
+## Registry and deployment
 
-The production self-hosted instance has no `supabase_migrations.schema_migrations` table. `0006_migration_tracking.sql` creates `buzzerhood.schema_migrations` as internal migration metadata.
+The self-hosted instance had no compatible `supabase_migrations.schema_migrations`, so `0006` created `buzzerhood.schema_migrations`. It has no `anon`/`authenticated` grants and has forced RLS. Apply migrations in lexical order through the reviewed deployment runbook, record the exact version/filename, test first on disposable PostgreSQL, and verify backup/recovery for production changes.
 
-This table receives no `anon` or `authenticated` grants. RLS is enabled and forced. Apply migrations in lexical order; before any future migration, inspect this table and add its exact version/filename in a reviewed tracking migration or deployment transaction.
+Production was read-only verified during B0 as having 13 registry rows through `0013`, 124 partners, and 124 legacy import rows. No B0 database mutation occurred.
+
+## Backend transition
+
+Existing `0001`-`0013` SQL remains unchanged. Planned `0014+` migrations add custom Buzzerhood identity, transaction-local backend auth context, and compatible RLS/function definitions. They must preserve all data and UUID references. See `docs/DATABASE_AUTH_CONTEXT.md`, `docs/AUTH_ARCHITECTURE.md`, and `docs/BACKEND_MIGRATION_PLAN.md`.

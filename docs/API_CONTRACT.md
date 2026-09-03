@@ -1,5 +1,7 @@
 # Kontrak API
 
+> **Phase B0 transition notice (2026-09-02):** This file records the current Supabase/PostgREST contract. The target product contract is `docs/API_V1_CONTRACT.md`. Existing calls remain operational during B1-B4 and are retired only after endpoint parity and rollback gates pass.
+
 ## Akses
 
 Browser memakai session Supabase Auth dan PostgREST hanya untuk read/write yang dilindungi RLS. Akses schema aplikasi memakai `supabase.schema('buzzerhood')`. RPC dipakai hanya untuk aksi transaksional multi-langkah atau penerbitan signed URL terkontrol.
