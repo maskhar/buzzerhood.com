@@ -17,9 +17,9 @@ type Session = { id: string; user_id: string; family_id: string; replaced_by_ses
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly database: DatabaseService,
-    private readonly passwords: PasswordService,
-    private readonly tokens: TokenService,
+    @Inject(DatabaseService) private readonly database: DatabaseService,
+    @Inject(PasswordService) private readonly passwords: PasswordService,
+    @Inject(TokenService) private readonly tokens: TokenService,
     @Inject(APP_CONFIGURATION) private readonly config: AppConfiguration
   ) {}
 

@@ -54,6 +54,7 @@ services:
       - "127.0.0.1:3100:3100"
     networks:
       - buzzerhood-network
+      - carubra-network
     user: "10001:10001"
     init: true
     read_only: true
@@ -77,6 +78,8 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile.web
+      args:
+        VITE_API_BASE_URL: http://localhost:3100/api/v1
     image: buzzerhood-web:b4
     container_name: buzzerhood-web
     restart: unless-stopped
@@ -84,6 +87,7 @@ services:
       - "127.0.0.1:8080:80"
     networks:
       - buzzerhood-network
+      - carubra-network
     read_only: true
     tmpfs:
       - /var/cache/nginx:size=32m,mode=1777
@@ -100,18 +104,19 @@ services:
     mem_limit: 128m
     cpus: 0.5
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:80/health"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
 
 networks:
+  carubra-network:
+    name: carubra-network
+    external: true
   buzzerhood-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.32.0.0/24
+    name: buzzerhood-network
+    external: true
   
 secrets:
   postgres_password:

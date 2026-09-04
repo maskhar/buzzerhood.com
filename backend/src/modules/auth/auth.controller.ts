@@ -14,7 +14,7 @@ import type { AuthenticatedRequest, AuthResult } from './auth.types.js';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService, @Inject(APP_CONFIGURATION) private readonly config: AppConfiguration) {}
+  constructor(@Inject(AuthService) private readonly auth: AuthService, @Inject(APP_CONFIGURATION) private readonly config: AppConfiguration) {}
 
   @Post('register') @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async register(@Body(new ZodValidationPipe(registerSchema)) input: RegisterInput, @Res({ passthrough: true }) reply: FastifyReply) {
