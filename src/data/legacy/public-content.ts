@@ -14,8 +14,15 @@ export const problems = [
   'Campaign kurang mendapat perhatian',
   'Produk baru sulit dikenal',
   'Traffic social media rendah',
-  'Butuh jangkauan lebih luas',
-  'Awareness brand masih minim',
+  'Launching butuh exposure',
+  'Marketplace minim review',
+  'Event / live streaming sepi partisipan',
+  'Press release kurang tersebar',
+  'Butuh percakapan digital',
+  'Sulit menjangkau komunitas tertentu',
+  'Butuh influencer dalam jumlah besar',
+  'Butuh media online untuk publikasi',
+  'Butuh campaign serentak di banyak channel',
 ] as const;
 
 export const activationProducts = [
@@ -23,6 +30,10 @@ export const activationProducts = [
   { mark: '02', name: 'Marketplace', desc: 'Review · Rating · Product Interaction · Traffic' },
   { mark: '03', name: 'Trending & Conversation', desc: 'Hashtag & Keyword Activation · Comment Activation' },
   { mark: '04', name: 'Live Activation', desc: 'Live Viewer · Live Comment · Webinar Participant' },
+  { mark: '05', name: 'Creator Campaign', desc: 'KOL · Influencer · Reviewer · Affiliate' },
+  { mark: '06', name: 'Media Publication', desc: 'Press Release · Media Placement · Media Blast · Digital PR' },
+  { mark: '07', name: 'Community Activation', desc: 'Event Participant · Offline Activation · Sampling' },
+  { mark: '08', name: 'Digital Advertising', desc: 'Meta · TikTok · Google · YouTube Ads' },
 ] as const;
 
 export const workflowSteps = [
@@ -39,10 +50,15 @@ export const campaignFlowNodes = [
   'Buzzerhood',
   'Media',
   'Creator',
-  'Komunitas',
+  'Influencer',
+  'Community',
   'Buzzer',
-  'Audiens',
-  'Konversi',
+  'Content Distribution',
+  'Reach',
+  'Conversation',
+  'Engagement',
+  'Traffic',
+  'Conversion',
 ] as const;
 
 export const whyBuzzerhood = [
@@ -50,7 +66,10 @@ export const whyBuzzerhood = [
   { mark: '2', name: 'Multi Channel', desc: 'Campaign berjalan lintas platform.' },
   { mark: '3', name: 'Scalable', desc: 'Dari skala lokal hingga nasional.' },
   { mark: '4', name: 'Targeted', desc: 'Jaringan dipilih sesuai kebutuhan campaign.' },
-  { mark: '5', name: 'Transparent', desc: 'Laporan lengkap dengan data terukur.' },
+  { mark: '5', name: 'Fast Activation', desc: 'Diaktivasi langsung dari database jaringan.' },
+  { mark: '6', name: 'Measurable', desc: 'Aktivitas dipantau & dilaporkan.' },
+  { mark: '7', name: 'One Network', desc: 'Media, creator, community, buzzer — satu ekosistem.' },
+  { mark: '8', name: 'Transparent', desc: 'Laporan lengkap dengan data terukur.' },
   { mark: '6', name: 'Operational Team', desc: 'Tim dedicated untuk setiap campaign.' },
   { mark: '7', name: 'Network Database', desc: 'Akses ke database 5.000+ akun digital.' },
 ] as const;
@@ -74,13 +93,15 @@ export const packages = [
 ] as const;
 
 export const networkComposition = [
-  { num: '01', title: 'Media & Publisher', desc: 'Akun media, website, dan public figure untuk memperluas exposure campaign.' },
-  { num: '02', title: 'KOL & Influencer', desc: 'Creator dengan audiens spesifik dari nano sampai mega tier.' },
-  { num: '03', title: 'Community Network', desc: 'Komunitas lokal dan niche untuk conversation serta credibility layer.' },
+  { num: '01', title: 'Media Network', image: 'https://images.pexels.com/photos/7651804/pexels-photo-7651804.jpeg?auto=compress&cs=tinysrgb&w=700', alt: 'Jaringan media', items: ['Media Online', 'Media Lokal', 'Media Nasional', 'Media Niche', 'Portal Berita', 'Media Kuliner', 'Media Wisata', 'Media Teknologi'] },
+  { num: '02', title: 'Creator Network', image: 'https://images.pexels.com/photos/13835575/pexels-photo-13835575.jpeg?auto=compress&cs=tinysrgb&w=700', alt: 'Creator network', items: ['Nano Influencer', 'Micro Influencer', 'Mid-tier Influencer', 'Macro Influencer', 'Mega Influencer', 'TikTok Creator', 'YouTuber', 'KOL'] },
+  { num: '03', title: 'Community Network', image: 'https://images.pexels.com/photos/9287491/pexels-photo-9287491.jpeg?auto=compress&cs=tinysrgb&w=700', alt: 'Community network', items: ['Komunitas Kreatif', 'Komunitas Mahasiswa', 'Komunitas Musik', 'Komunitas Olahraga', 'Komunitas Otomotif', 'Komunitas Gaming', 'Komunitas UMKM', 'Fanbase'] },
+  { num: '04', title: 'Buzzer Network', image: 'https://images.pexels.com/photos/6770610/pexels-photo-6770610.jpeg?auto=compress&cs=tinysrgb&w=700', alt: 'Buzzer network', items: ['Like', 'Comment', 'Share', 'View', 'Reply', 'Mention', 'Hashtag', 'Conversation'] },
 ] as const;
 
 export const targetStats = [
-  { num: '5.000', label: 'target akun' },
-  { num: '124', label: 'record legacy' },
-  { num: '7', label: 'platform kategori' },
+  { num: '1.000', label: 'media online' },
+  { num: '2.000', label: 'influencer / creator' },
+  { num: '500', label: 'komunitas' },
+  { num: '5.000', label: 'digital accounts network' },
 ] as const;
