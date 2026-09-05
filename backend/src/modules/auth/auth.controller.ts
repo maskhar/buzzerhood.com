@@ -8,7 +8,7 @@ import { ZodValidationPipe } from '../../common/validation/zod-validation.pipe.j
 import { AuthGuard } from './auth.guard.js';
 import { AuthService } from './auth.service.js';
 import { CookieSecurityGuard } from './cookie-security.guard.js';
-import { loginSchema, registerSchema, type LoginInput, type RegisterInput } from './auth.schemas.js';
+import { forgotPasswordSchema, loginSchema, registerSchema, tokenPasswordSchema, type ForgotPasswordInput, type LoginInput, type RegisterInput, type TokenPasswordInput } from './auth.schemas.js';
 import type { AuthenticatedRequest, AuthResult } from './auth.types.js';
 
 @ApiTags('auth')
@@ -25,6 +25,15 @@ export class AuthController {
   async login(@Body(new ZodValidationPipe(loginSchema)) input: LoginInput, @Res({ passthrough: true }) reply: FastifyReply) {
     return this.publish(await this.auth.login(input), reply);
   }
+
+  @Post('activate-partner') @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  activatePartner(@Body(new ZodValidationPipe(tokenPasswordSchema)) input: TokenPasswordInput) { return this.auth.activatePartner(input); }
+
+  @Post('forgot-password') @Throttle({ default: { limit: 3, ttl: 3_600_000 } })
+  forgotPassword(@Body(new ZodValidationPipe(forgotPasswordSchema)) input: ForgotPasswordInput) { return this.auth.forgotPassword(input); }
+
+  @Post('reset-password') @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  resetPassword(@Body(new ZodValidationPipe(tokenPasswordSchema)) input: TokenPasswordInput) { return this.auth.resetPassword(input); }
 
   @Post('refresh') @UseGuards(CookieSecurityGuard) @Throttle({ default: { limit: 20, ttl: 60_000 } })
   async refresh(@Req() request: FastifyRequest, @Res({ passthrough: true }) reply: FastifyReply) {

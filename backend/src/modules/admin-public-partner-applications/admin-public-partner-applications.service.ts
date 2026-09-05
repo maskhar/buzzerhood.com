@@ -4,6 +4,8 @@ import { DatabaseService } from '../../common/database/database.service.js';
 import { EmailService } from '../../common/email/email.service.js';
 import { ApiError } from '../../common/errors/api-error.js';
 import { postgresMessage } from '../../common/errors/postgres-error.js';
+import { randomBytes } from 'node:crypto';
+import { TokenService } from '../../common/security/token.service.js';
 import type { AdminPublicPartnerApplicationQuery } from './admin-public-partner-applications.schemas.js';
 
 type ApplicationRow = {
@@ -15,7 +17,7 @@ type ApplicationRow = {
 export class AdminPublicPartnerApplicationsService {
   private readonly logger = new Logger(AdminPublicPartnerApplicationsService.name);
 
-  constructor(private readonly database: DatabaseService, private readonly email: EmailService) {}
+  constructor(private readonly database: DatabaseService, private readonly email: EmailService, private readonly tokens: TokenService) {}
 
   list(userId: string, query: AdminPublicPartnerApplicationQuery) {
     return this.database.withUserContext(userId, async (transaction) => {
@@ -61,6 +63,21 @@ export class AdminPublicPartnerApplicationsService {
       const message = postgresMessage(error);
       if (/permission denied/i.test(message)) throw new ApiError(403, 'PERMISSION_DENIED', 'Izin tidak mencukupi.');
       throw new ApiError(404, 'PUBLIC_PARTNER_APPLICATION_NOT_FOUND', 'Pendaftaran Partner tidak ditemukan atau tidak lagi pending.');
+    }
+  }
+
+  async invite(userId: string, applicationId: string) {
+    const token = randomBytes(32).toString('base64url');
+    try {
+      const result = await this.database.withUserContext(userId, (transaction) => sql<{ user_id: string; partner_id: string; email: string; display_name: string }>`select * from buzzerhood.create_partner_invitation(${applicationId},${this.tokens.hashRefresh(token)},${new Date(Date.now()+86_400_000)})`.execute(transaction));
+      const created = result.rows[0]; if (!created) throw new Error('Invitation was not created.');
+      await this.email.sendPartnerInvitation({ email: created.email, displayName: created.display_name, token });
+      return { userId: created.user_id, partnerId: created.partner_id, status: 'invited' };
+    } catch (error) {
+      const message = postgresMessage(error);
+      if (/permission denied/i.test(message)) throw new ApiError(403, 'PERMISSION_DENIED', 'Izin tidak mencukupi.');
+      if (/already registered/i.test(message)) throw new ApiError(409, 'PARTNER_INVITATION_CONFLICT', 'Akun atau undangan sudah tersedia.');
+      throw new ApiError(404, 'PUBLIC_PARTNER_APPLICATION_NOT_APPROVED', 'Pendaftaran Partner belum disetujui atau tidak ditemukan.');
     }
   }
 

@@ -33,4 +33,9 @@ export class AdminPublicPartnerApplicationsController {
   reject(@Req() request: AuthenticatedRequest, @Param('applicationId', new ParseUUIDPipe()) applicationId: string, @Body(new ZodValidationPipe(publicPartnerApplicationReviewSchema)) body: PublicPartnerApplicationReview) {
     return this.applications.review(request.authUser.id, applicationId, 'rejected', body.note);
   }
+
+  @Post(':applicationId/invite')
+  invite(@Req() request: AuthenticatedRequest, @Param('applicationId', new ParseUUIDPipe()) applicationId: string) {
+    return this.applications.invite(request.authUser.id, applicationId);
+  }
 }

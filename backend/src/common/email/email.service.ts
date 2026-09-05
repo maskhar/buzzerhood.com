@@ -43,6 +43,16 @@ export class EmailService {
     await this.send({ to: application.email, subject, text: `Halo ${application.fullName},\n\n${decision}${note}\n\nTim Buzzerhood` });
   }
 
+  sendPartnerInvitation(input: { email: string; displayName: string; token: string }): Promise<void> {
+    const url = `${this.config.corsOrigins[0]}/activate-partner?token=${encodeURIComponent(input.token)}`;
+    return this.send({ to: input.email, subject: 'Aktifkan akun Partner Buzzerhood', text: `Halo ${input.displayName},\n\nBuat password melalui tautan berikut:\n${url}\n\nTautan berlaku 24 jam dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
+  }
+
+  sendPasswordReset(input: { email: string; displayName: string | null; token: string }): Promise<void> {
+    const url = `${this.config.corsOrigins[0]}/reset-password?token=${encodeURIComponent(input.token)}`;
+    return this.send({ to: input.email, subject: 'Reset password Buzzerhood', text: `Halo ${input.displayName ?? 'Pengguna Buzzerhood'},\n\nGanti password melalui tautan berikut:\n${url}\n\nTautan berlaku 30 menit dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
+  }
+
   private async sendInternalNotification(application: PublicPartnerApplicationEmail): Promise<void> {
     if (!this.config.email.partnerApplicationNotificationEmail) return;
     await this.send({

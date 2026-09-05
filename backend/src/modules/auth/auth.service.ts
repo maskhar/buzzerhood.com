@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import { sql, type Transaction } from 'kysely';
 import { APP_CONFIGURATION } from '../../common/config/configuration.module.js';
@@ -8,8 +8,9 @@ import type { Database } from '../../common/database/database.types.js';
 import { ApiError } from '../../common/errors/api-error.js';
 import { PasswordService } from '../../common/security/password.service.js';
 import { TokenService } from '../../common/security/token.service.js';
+import { EmailService } from '../../common/email/email.service.js';
 import type { AuthResult, AuthenticatedUser } from './auth.types.js';
-import type { LoginInput, RegisterInput } from './auth.schemas.js';
+import type { ForgotPasswordInput, LoginInput, RegisterInput, TokenPasswordInput } from './auth.schemas.js';
 
 type LoginUser = { id: string; email: string; password_hash: string; status: string };
 type Session = { id: string; user_id: string; family_id: string; replaced_by_session_id: string | null; revoked_at: Date | null; expires_at: Date };
@@ -20,7 +21,8 @@ export class AuthService {
     @Inject(DatabaseService) private readonly database: DatabaseService,
     @Inject(PasswordService) private readonly passwords: PasswordService,
     @Inject(TokenService) private readonly tokens: TokenService,
-    @Inject(APP_CONFIGURATION) private readonly config: AppConfiguration
+    @Inject(APP_CONFIGURATION) private readonly config: AppConfiguration,
+    @Inject(EmailService) private readonly email: EmailService
   ) {}
 
   async register(input: RegisterInput): Promise<AuthResult> {
@@ -50,6 +52,28 @@ export class AuthService {
       await this.event(transaction, user.id, null, 'login_succeeded');
       return this.createLogin(user.id, transaction);
     });
+  }
+
+  async activatePartner(input: TokenPasswordInput) {
+    const passwordHash = await this.passwords.hash(input.password);
+    try { await sql`select buzzerhood.activate_partner_invitation(${this.tokens.hashRefresh(input.token)},${passwordHash})`.execute(this.database.db); }
+    catch { throw new ApiError(400, 'AUTH_INVITATION_INVALID', 'Undangan tidak valid atau sudah kedaluwarsa.'); }
+    return { success: true };
+  }
+
+  async forgotPassword(input: ForgotPasswordInput) {
+    const token = randomBytes(32).toString('base64url');
+    const result = await sql<{ email: string; display_name: string | null }>`select email,display_name from buzzerhood.create_password_reset(${this.normalizeEmail(input.email)},${this.tokens.hashRefresh(token)},${new Date(Date.now()+1_800_000)})`.execute(this.database.db);
+    const target = result.rows[0];
+    if (target) await this.email.sendPasswordReset({ email: target.email, displayName: target.display_name, token });
+    return { status: 'received' };
+  }
+
+  async resetPassword(input: TokenPasswordInput) {
+    const passwordHash = await this.passwords.hash(input.password);
+    try { await sql`select buzzerhood.reset_password(${this.tokens.hashRefresh(input.token)},${passwordHash})`.execute(this.database.db); }
+    catch { throw new ApiError(400, 'AUTH_RESET_INVALID', 'Token reset tidak valid atau sudah kedaluwarsa.'); }
+    return { success: true };
   }
 
   async refresh(plainToken: string | undefined): Promise<AuthResult> {
