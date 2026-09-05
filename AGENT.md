@@ -716,6 +716,8 @@ Do not force push unless explicitly instructed.
 
 Keep commits focused when commits are requested.
 
+Owner directive: after each completed implementation change, run relevant validation, create a focused Git commit with an Indonesian commit message, then push the current branch to the configured GitHub remote. Do not push secrets, unrelated pre-existing changes, or failed validation. Report any missing remote, authentication failure, or push rejection immediately.
+
 ---
 
 # Documentation
@@ -897,7 +899,7 @@ Do not proceed without explicit approval for:
 - Partner application and claim review requires effective `partners.manage`; an `/admin` route prefix is not an authorization mechanism.
 - Keep concurrency-sensitive creation/review/claim operations in reviewed database functions wrapped by business endpoints.
 - Frontend direct Supabase access remains transitional until B4. Do not remove it or point production React traffic at the dark Backend prematurely.
-- Migrations `0001` through `0018` are deployed and immutable; continue at `0019+`.
+- Migrations `0001` through `0019` are deployed and immutable; continue at `0020+`.
 
 # Backend Campaign Rules (Implemented B3)
 
@@ -909,6 +911,17 @@ Do not proceed without explicit approval for:
 - Publication metric snapshots are append-only and require a verified publication; preserve metric type and reporting period.
 - Keep state transitions and concurrency-sensitive version/review/publication invariants in reviewed schema-qualified database functions using `buzzerhood.current_user_id()`.
 - Migration `0018` and image `buzzerhood-api:b3` are deployed dark. Do not cut over or modify frontend Campaign transport before B4.
+
+# Final Principle
+
+## Current Local-Only Backend Boundary (Owner Directive — September 5, 2026)
+
+- Current work scope is local Backend development only.
+- Do not use SSH, SCP, remote shell commands, or remote deployment tools.
+- Do not access, inspect, query, configure, restart, or modify the Supabase server at `20.20.20.173`.
+- Do not access any production service or production database during this local-development phase.
+- Ignore remote deployment steps unless the project owner gives new explicit approval that clearly lifts this boundary.
+- Normal Backend implementation, local disposable database tests, typecheck, lint, unit tests, integration tests, and local builds remain allowed.
 
 # Final Principle
 
