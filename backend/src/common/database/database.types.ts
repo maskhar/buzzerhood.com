@@ -46,6 +46,22 @@ export interface Database {
     metadata: unknown;
     created_at: Generated<Timestamp>;
   };
+  'buzzerhood.public_partner_applications': {
+    id: Generated<string>;
+    full_name: string;
+    email: string;
+    whatsapp: string;
+    city: string;
+    category: 'media' | 'influencer' | 'komunitas' | 'buzzer';
+    message: string | null;
+    details: unknown;
+    status: 'pending' | 'approved' | 'rejected';
+    review_note: string | null;
+    reviewed_by: string | null;
+    reviewed_at: Timestamp | null;
+    created_at: Generated<Timestamp>;
+    updated_at: Generated<Timestamp>;
+  };
   'buzzerhood.user_roles': { profile_id: string; role_id: string; granted_by: string | null; granted_at: Timestamp; revoked_at: Timestamp | null };
   'buzzerhood.roles': { id: string; key: string; label: string; scope: string; created_at: Timestamp };
   'buzzerhood.permissions': { id: string; key: string; description: string; created_at: Timestamp };

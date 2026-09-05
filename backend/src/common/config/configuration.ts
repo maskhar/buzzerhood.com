@@ -29,6 +29,13 @@ const environmentSchema = z.object({
   AUTH_REGISTRATION_MODE: z.enum(['closed', 'open']).default('closed'),
   AUTH_RATE_LIMIT_TTL_MS: integerString(1_000, 3_600_000).default(60_000),
   AUTH_RATE_LIMIT_MAX: integerString(1, 1_000).default(10),
+  SMTP_HOST: z.string().min(1).optional(),
+  SMTP_PORT: integerString(1, 65_535).default(587),
+  SMTP_SECURE: booleanString.default(false),
+  SMTP_USER: z.string().min(1).optional(),
+  SMTP_PASSWORD: z.string().min(1).optional(),
+  SMTP_FROM: z.string().email().optional(),
+  PARTNER_APPLICATION_NOTIFICATION_EMAIL: z.string().email().optional(),
   SWAGGER_ENABLED: booleanString.default(false),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info')
 }).superRefine((value, context) => {
@@ -40,6 +47,10 @@ const environmentSchema = z.object({
   }
   if (value.CORS_ORIGINS.split(',').some((origin) => origin.trim() === '*')) {
     context.addIssue({ code: 'custom', path: ['CORS_ORIGINS'], message: 'Wildcard CORS is forbidden.' });
+  }
+  const smtpValues = [value.SMTP_HOST, value.SMTP_USER, value.SMTP_PASSWORD, value.SMTP_FROM, value.PARTNER_APPLICATION_NOTIFICATION_EMAIL];
+  if (smtpValues.some(Boolean) && smtpValues.some((smtpValue) => !smtpValue)) {
+    context.addIssue({ code: 'custom', path: ['SMTP_HOST'], message: 'SMTP configuration must be complete when email is enabled.' });
   }
 });
 
@@ -74,6 +85,7 @@ export type AppConfiguration = {
   corsOrigins: readonly string[];
   registrationMode: 'closed' | 'open';
   rateLimit: { ttlMs: number; max: number };
+  email: { enabled: boolean; host: string | null; port: number; secure: boolean; user: string | null; password: string | null; from: string | null; partnerApplicationNotificationEmail: string | null };
   swaggerEnabled: boolean;
   logLevel: Environment['LOG_LEVEL'];
 };
@@ -114,6 +126,7 @@ export function loadConfiguration(source: NodeJS.ProcessEnv = process.env): AppC
     corsOrigins: parsed.CORS_ORIGINS.split(',').map((value) => value.trim()).filter(Boolean),
     registrationMode: parsed.AUTH_REGISTRATION_MODE,
     rateLimit: { ttlMs: parsed.AUTH_RATE_LIMIT_TTL_MS, max: parsed.AUTH_RATE_LIMIT_MAX },
+    email: { enabled: Boolean(parsed.SMTP_HOST), host: parsed.SMTP_HOST ?? null, port: parsed.SMTP_PORT, secure: parsed.SMTP_SECURE, user: parsed.SMTP_USER ?? null, password: parsed.SMTP_PASSWORD ?? null, from: parsed.SMTP_FROM ?? null, partnerApplicationNotificationEmail: parsed.PARTNER_APPLICATION_NOTIFICATION_EMAIL ?? null },
     swaggerEnabled: parsed.SWAGGER_ENABLED,
     logLevel: parsed.LOG_LEVEL
   };

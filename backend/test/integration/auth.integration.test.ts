@@ -22,7 +22,7 @@ function makeConfig(): AppConfiguration {
     database: { url: databaseUrl!, poolMin: 0, poolMax: 1, connectionTimeoutMs: 5000, queryTimeoutMs: 10000 },
     jwt: { issuer: 'https://auth.test.buzzerhood.invalid', audience: 'buzzerhood-test', accessTtlSeconds: 600, keyId: 'integration-1', privateKeyPem: pair.privateKey.export({ format: 'pem', type: 'pkcs8' }).toString(), publicKeyPem: pair.publicKey.export({ format: 'pem', type: 'spki' }).toString() },
     refresh: { ttlSeconds: 3600, cookieName: 'buzzerhood_refresh', csrfCookieName: 'buzzerhood_csrf', secure: false, sameSite: 'lax' },
-    corsOrigins: [origin], registrationMode: 'open', rateLimit: { ttlMs: 60_000, max: 100 }, swaggerEnabled: false, logLevel: 'silent'
+    corsOrigins: [origin], registrationMode: 'open', rateLimit: { ttlMs: 60_000, max: 100 }, email: { enabled: false, host: null, port: 587, secure: false, user: null, password: null, from: null, partnerApplicationNotificationEmail: null }, swaggerEnabled: false, logLevel: 'silent'
   };
 }
 function cookies(headers: OutgoingHttpHeaders): { refresh: string; csrf: string; header: string } {
