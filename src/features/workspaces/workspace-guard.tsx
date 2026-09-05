@@ -16,6 +16,7 @@ export function WorkspaceGuard({ kind }: { kind: WorkspaceKind }) {
 export function WorkspaceEntryRedirect() {
   const access = useWorkspaceAccess();
   if (access.isPending) return <LoadingState />;
-  if (access.isError || !access.data?.length) return <AccessDeniedPage workspace="workspace" />;
+  if (access.isError) return <AccessDeniedPage workspace="workspace" />;
+  if (!access.data?.length) return <Navigate to="/workspace" replace />;
   return <Navigate to={`/${access.data[0].kind}`} replace />;
 }

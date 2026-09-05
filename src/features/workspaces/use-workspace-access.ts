@@ -1,31 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import type { WorkspaceAccess } from '@/features/auth/auth-types';
 import { useAuth } from '@/features/auth/use-auth';
-import { queryKeys } from '@/lib/supabase/query-keys';
+import { apiRequest } from '@/lib/api/client';
+import { apiQueryKeys } from '@/lib/api/query-keys';
 
-type WorkspaceMembershipRow = { organization_id: string; organizations: { id: string; name: string; kind: 'client' | 'partner' | 'internal' } | null };
+type WorkspaceResponse = { client: { organizationId: string; name: string; role: string }[]; partner: { partnerId: string; displayName: string; role: string; status: string }[]; admin: boolean };
 
-async function getWorkspaceAccess(userId: string): Promise<WorkspaceAccess[]> {
-  const { getBuzzerhoodDb } = await import('@/lib/supabase/client');
-  const { data, error } = await getBuzzerhoodDb()
-    .from('organization_members')
-    .select('organization_id, organizations(id, name, kind)')
-    .eq('profile_id', userId)
-    .eq('status', 'active');
-  if (error) throw error;
-  return ((data ?? []) as unknown as WorkspaceMembershipRow[]).flatMap((membership) => {
-    const organization = membership.organizations;
-    if (!organization) return [];
-    const kind = organization.kind === 'internal' ? 'admin' : organization.kind;
-    return [{ kind, organizationId: organization.id, organizationName: organization.name }];
-  });
+async function getWorkspaceAccess(): Promise<WorkspaceAccess[]> {
+  const response = await apiRequest<WorkspaceResponse>('/me/workspaces');
+  return [
+    ...response.client.map((workspace) => ({ kind: 'client' as const, organizationId: workspace.organizationId, organizationName: workspace.name })),
+    ...response.partner.map((workspace) => ({ kind: 'partner' as const, organizationId: workspace.partnerId, organizationName: workspace.displayName })),
+    ...(response.admin ? [{ kind: 'admin' as const, organizationName: 'Internal team' }] : []),
+  ];
 }
 
 export function useWorkspaceAccess() {
   const { user } = useAuth();
   return useQuery({
-    queryKey: user ? queryKeys.workspaces(user.id) : ['workspaces', 'anonymous'],
-    queryFn: () => getWorkspaceAccess(user?.id ?? ''),
+    queryKey: user ? apiQueryKeys.workspaces(user.id) : ['api', 'me', 'workspaces', 'anonymous'],
+    queryFn: getWorkspaceAccess,
     enabled: Boolean(user),
   });
 }

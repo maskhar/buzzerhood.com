@@ -1,45 +1,35 @@
 import { useCallback, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
-import type { Session, User } from '@supabase/supabase-js';
 import { useQueryClient } from '@tanstack/react-query';
-import { hasSupabaseConfig } from '@/app/config/environment';
+import { hasApiConfig } from '@/app/config/environment';
 import { AuthContext } from '@/features/auth/auth-context';
-
-async function loadSupabaseClient() {
-  const module = await import('@/lib/supabase/client');
-  return module.getSupabaseClient();
-}
+import { getCurrentUser, login, logout, type BackendUser, type LoginInput } from '@/lib/api/auth';
+import { refreshAccessToken } from '@/lib/api/client';
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient();
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(hasSupabaseConfig);
+  const [user, setUser] = useState<BackendUser | null>(null);
+  const [isLoading, setIsLoading] = useState(hasApiConfig);
 
   useEffect(() => {
-    if (!hasSupabaseConfig) return;
+    if (!hasApiConfig) return;
     let disposed = false;
-    let unsubscribe: (() => void) | undefined;
-    void loadSupabaseClient().then(async (supabase) => {
-      const { data } = await supabase.auth.getSession();
-      if (disposed) return;
-      setSession(data.session);
-      setIsLoading(false);
-      const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
-        setSession(nextSession);
-        if (event === 'SIGNED_OUT') queryClient.clear();
-      });
-      unsubscribe = () => listener.subscription.unsubscribe();
-    });
-    return () => { disposed = true; unsubscribe?.(); };
-  }, [queryClient]);
+    void refreshAccessToken().then(async (token) => {
+      if (!token || disposed) return;
+      try { setUser(await getCurrentUser()); } catch { setUser(null); }
+    }).catch(() => { if (!disposed) setUser(null); }).finally(() => { if (!disposed) setIsLoading(false); });
+    return () => { disposed = true; };
+  }, []);
+
+  const signIn = useCallback(async (input: LoginInput) => {
+    const nextUser = await login(input);
+    setUser(nextUser);
+  }, []);
 
   const signOut = useCallback(async () => {
-    if (!hasSupabaseConfig) return;
-    const supabase = await loadSupabaseClient();
-    await supabase.auth.signOut();
-    queryClient.clear();
+    try { await logout(); }
+    finally { setUser(null); queryClient.clear(); }
   }, [queryClient]);
 
-  const user: User | null = session?.user ?? null;
-  const value = useMemo(() => ({ session, user, isLoading, isConfigured: hasSupabaseConfig, signOut }), [isLoading, session, signOut, user]);
+  const value = useMemo(() => ({ user, isLoading, isConfigured: hasApiConfig, signIn, signOut }), [isLoading, signIn, signOut, user]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
