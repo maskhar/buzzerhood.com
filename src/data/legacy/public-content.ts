@@ -85,11 +85,11 @@ export const products = [
 ] as const;
 
 export const packages = [
-  { name: 'Local Campaign', subtitle: 'Jangkauan kota/lokal', price: 'Rp15–50 Jt' },
-  { name: 'Regional Campaign', subtitle: 'Jangkauan provinsi/regional', price: 'Rp50–150 Jt' },
-  { name: 'National Campaign', subtitle: 'Jangkauan nasional', price: 'Rp150–500 Jt' },
-  { name: 'Integrated Influence Campaign', subtitle: 'Kombinasi penuh media + KOL + komunitas', price: 'Rp500 Jt–2 M+' },
-  { name: 'Monthly PR Retainer', subtitle: 'Kontrak bulanan berkelanjutan', price: 'Rp25–150 Jt/bln' },
+  { name: 'Local Campaign', subtitle: 'Jangkauan kota/lokal', price: 'Rp1–15 Jt' },
+  { name: 'Regional Campaign', subtitle: 'Jangkauan provinsi/regional', price: 'Rp15–50 Jt' },
+  { name: 'National Campaign', subtitle: 'Jangkauan nasional', price: 'Rp50–150 Jt' },
+  { name: 'Integrated Influence Campaign', subtitle: 'Kombinasi penuh media + KOL + komunitas', price: 'Rp150 Jt–Diskusi' },
+  { name: 'Monthly PR Retainer', subtitle: 'Kontrak bulanan berkelanjutan', price: 'Rp5 Jt–Diskusi' },
 ] as const;
 
 export const networkComposition = [

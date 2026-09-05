@@ -72,6 +72,11 @@ Invitation and membership mutation endpoints are marked later until lifecycle/pr
 
 ## Public network and partners
 
+- `POST /public/partner-applications` — public website registration; validates contact and category data, stores the application as `pending`, applies a three-per-hour throttle, and sends internal/applicant email when SMTP is configured. This endpoint never creates an authenticated account or active Partner membership.
+- `GET /admin/public-partner-applications?status=&page=&limit=` — requires partner-management permission; paginated private application queue.
+- `GET /admin/public-partner-applications/:applicationId` — requires partner-management permission; private contact, detail, and review data.
+- `POST /admin/public-partner-applications/:applicationId/approve` — terminal review with optional note. Records reviewer/timestamp but does not create an account, Partner, or membership.
+- `POST /admin/public-partner-applications/:applicationId/reject` — terminal review with optional note.
 - `GET /network?search=&platform=&tier=&cursor=&limit=` — public safe projection only.
 - `GET /network/:partnerId` — public partner detail; excludes rates, claims, memberships, legal/private data, and source payload.
 - `POST /partner-applications` — authenticated; explicit partner kind/profile fields; creates invited ownership pending internal review.

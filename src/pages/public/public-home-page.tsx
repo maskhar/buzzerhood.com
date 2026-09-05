@@ -306,7 +306,11 @@ function SignalGraphic() {
       <span className="node node-b">Media</span>
       <span className="node node-c">KOL</span>
       <span className="node node-d">Community</span>
-      <strong>Distribution OS</strong>
+      <strong>
+        <span>Buzzerhood</span>
+        <span>Distribution</span>
+        <span>Partners System</span>
+      </strong>
     </div>
   );
 }
@@ -315,11 +319,15 @@ function MetricsTicker() {
   return (
     <div className="ticker-band" aria-label="Metrik jaringan">
       <div className="ticker-track">
-        {[...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems].map((item, index) => (
-          <span className="tick" key={`${item.label}-${index}`}>
-            <strong>{item.number}</strong>
-            {item.label}
-          </span>
+        {[0, 1].map((group) => (
+          <div className="ticker-group" key={group} aria-hidden={group === 1}>
+            {tickerItems.map((item) => (
+              <span className="tick" key={group + '-' + item.label}>
+                <strong>{item.number}</strong>
+                {item.label}
+              </span>
+            ))}
+          </div>
         ))}
       </div>
     </div>

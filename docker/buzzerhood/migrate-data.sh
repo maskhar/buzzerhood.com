@@ -5,7 +5,7 @@
 
 # This script should be run AFTER:
 # 1. buzzerhood-postgres container is running
-# 2. Migrations 0001-0018 have been applied
+# 2. Migrations 0001-0019 have been applied
 # 3. buzzerhood_app role has been created
 
 # STEP 1: Export data from Supabase

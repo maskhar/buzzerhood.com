@@ -1,9 +1,16 @@
 import { useState } from 'react';
+import { createPublicPartnerApplication } from './partner-registration-api';
 
 type PartnerCategory = 'media' | 'influencer' | 'komunitas' | 'buzzer';
 
+type SocialAccount = {
+  platform: string;
+  handle: string;
+};
+
 export function PartnerRegistrationForm() {
   const [activeTab, setActiveTab] = useState<PartnerCategory>('media');
+  const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>([{ platform: 'Instagram', handle: '' }]);
   const [formData, setFormData] = useState({
     nama: '',
     email: '',
@@ -14,8 +21,9 @@ export function PartnerRegistrationForm() {
   });
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!formData.consent) {
       setMessage('Harap setujui penggunaan data terlebih dahulu.');
@@ -23,19 +31,35 @@ export function PartnerRegistrationForm() {
     }
     const form = e.currentTarget;
     const formValues = new FormData(form);
-    const data: Record<string, string> = {};
+    const details: Record<string, string | string[]> = {};
     formValues.forEach((value, key) => {
-      data[key] = value.toString();
+      if (['nama', 'email', 'whatsapp', 'kota', 'pesan', 'consent', 'website'].includes(key)) return;
+      const stringValue = value.toString();
+      const current = details[key];
+      details[key] = current === undefined ? stringValue : Array.isArray(current) ? [...current, stringValue] : [current, stringValue];
     });
-    data.category = activeTab;
-    
-    // Temporary mailto fallback
-    const subject = `Partner Registration - ${activeTab}`;
-    const body = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join('\n');
-    window.location.href = `mailto:partner@dev-buzzerhood.carubra.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    setSuccess(true);
-    setMessage('Formulir akan dikirim via email. Tim kami akan menghubungi dalam 2×24 jam kerja.');
+    setSubmitting(true);
+    setMessage('');
+    try {
+      await createPublicPartnerApplication({
+        fullName: formData.nama,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        city: formData.kota,
+        category: activeTab,
+        ...(formData.pesan.trim() ? { message: formData.pesan } : {}),
+        details,
+        consent: true,
+        website: formValues.get('website')?.toString() ?? ''
+      });
+      setSuccess(true);
+      setMessage('Pendaftaran berhasil diterima. Tim kami akan menghubungi dalam 2×24 jam kerja.');
+    } catch (error) {
+      setSuccess(false);
+      setMessage(error instanceof Error ? error.message : 'Pendaftaran gagal dikirim. Coba lagi.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -70,6 +94,7 @@ export function PartnerRegistrationForm() {
 
             {!success && (
               <form onSubmit={handleSubmit}>
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: '1px', height: '1px' }} />
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
                   <label style={{ display: 'grid', gap: '6px' }}>
                     <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)' }}>Nama Lengkap / Nama Brand <span style={{ color: 'var(--orange)' }}>*</span></span>
@@ -90,7 +115,14 @@ export function PartnerRegistrationForm() {
                 </div>
 
                 {activeTab === 'media' && <MediaFields />}
-                {activeTab === 'influencer' && <InfluencerFields />}
+            {activeTab === 'influencer' && (
+              <InfluencerFields
+                accounts={socialAccounts}
+                onAdd={() => setSocialAccounts((accounts) => [...accounts, { platform: 'Instagram', handle: '' }])}
+                onChange={(index, field, value) => setSocialAccounts((accounts) => accounts.map((account, accountIndex) => accountIndex === index ? { ...account, [field]: value } : account))}
+                onRemove={(index) => setSocialAccounts((accounts) => accounts.filter((_, accountIndex) => accountIndex !== index))}
+              />
+            )}
                 {activeTab === 'komunitas' && <KomunitasFields />}
                 {activeTab === 'buzzer' && <BuzzerFields />}
 
@@ -105,7 +137,7 @@ export function PartnerRegistrationForm() {
                 </label>
 
                 <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <button type="submit" className="btn-solid">Kirim Pendaftaran</button>
+                  <button type="submit" className="btn-solid" disabled={submitting}>{submitting ? 'Mengirim...' : 'Kirim Pendaftaran'}</button>
                   <span style={{ fontSize: '12.5px', color: 'var(--paper-faint)', textAlign: 'center' }}>Tim kami akan menghubungi lewat email/WhatsApp dalam 2×24 jam kerja.</span>
                 </div>
               </form>
@@ -156,7 +188,12 @@ function MediaFields() {
   );
 }
 
-function InfluencerFields() {
+function InfluencerFields({ accounts, onAdd, onChange, onRemove }: {
+  accounts: SocialAccount[];
+  onAdd: () => void;
+  onChange: (index: number, field: keyof SocialAccount, value: string) => void;
+  onRemove: (index: number) => void;
+}) {
   return (
     <div style={{ borderTop: '1px solid var(--line)', paddingTop: '20px', marginTop: '20px' }}>
       <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--paper-faint)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Detail Influencer / Creator</h3>
@@ -164,10 +201,6 @@ function InfluencerFields() {
         <label style={{ display: 'grid', gap: '6px' }}>
           <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)' }}>Nama / Brand Akun <span style={{ color: 'var(--orange)' }}>*</span></span>
           <input type="text" name="inf_nama" required placeholder="Nama akun / brand personal" style={{ padding: '12px 14px', border: '1px solid var(--line-strong)', borderRadius: 'var(--radius-m)', background: 'var(--ink)', color: 'var(--paper)' }} />
-        </label>
-        <label style={{ display: 'grid', gap: '6px' }}>
-          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)' }}>Username / Handle Utama <span style={{ color: 'var(--orange)' }}>*</span></span>
-          <input type="text" name="inf_handle" required placeholder="@handle" style={{ padding: '12px 14px', border: '1px solid var(--line-strong)', borderRadius: 'var(--radius-m)', background: 'var(--ink)', color: 'var(--paper)' }} />
         </label>
         <label style={{ display: 'grid', gap: '6px' }}>
           <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)' }}>Jumlah Followers / Subscribers <span style={{ color: 'var(--orange)' }}>*</span></span>
@@ -206,14 +239,23 @@ function InfluencerFields() {
         </label>
       </div>
       <div style={{ marginTop: '16px' }}>
-        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)', display: 'block', marginBottom: '10px' }}>Platform Utama <span style={{ color: 'var(--orange)' }}>*</span></span>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-          {['Instagram', 'TikTok', 'YouTube', 'X (Twitter)', 'Threads', 'Lainnya'].map((platform) => (
-            <label key={platform} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', border: '1px solid var(--line-strong)', borderRadius: '999px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)' }}>
-              <input type="checkbox" name="inf_platform" value={platform} />
-              {platform}
-            </label>
+        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--paper-dim)', display: 'block', marginBottom: '10px' }}>Akun Media Sosial <span style={{ color: 'var(--orange)' }}>*</span></span>
+        <div style={{ display: 'grid', gap: '10px' }}>
+          {accounts.map((account, index) => (
+            <div key={index} style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, 0.7fr) minmax(220px, 1.5fr) auto', gap: '10px', alignItems: 'center' }}>
+              <select value={account.platform} onChange={(event) => onChange(index, 'platform', event.target.value)} aria-label={`Platform akun ${index + 1}`} style={{ padding: '12px 14px', border: '1px solid var(--line-strong)', borderRadius: 'var(--radius-m)', background: 'var(--ink)', color: 'var(--paper)' }}>
+                {['Instagram', 'TikTok', 'YouTube', 'X (Twitter)', 'Threads', 'Lainnya'].map((platform) => <option key={platform}>{platform}</option>)}
+              </select>
+              <input type="text" value={account.handle} onChange={(event) => onChange(index, 'handle', event.target.value)} required placeholder="@username atau URL profil" aria-label={`Username atau URL akun ${index + 1}`} style={{ padding: '12px 14px', border: '1px solid var(--line-strong)', borderRadius: 'var(--radius-m)', background: 'var(--ink)', color: 'var(--paper)' }} />
+              <input type="hidden" name="inf_social_account" value={`${account.platform}: ${account.handle.trim()}`} />
+              {accounts.length > 1 && (
+                <button type="button" onClick={() => onRemove(index)} aria-label={`Hapus akun ${index + 1}`} style={{ minHeight: '42px', padding: '0 14px', border: '1px solid var(--line-strong)', borderRadius: 'var(--radius-m)', background: 'transparent', color: 'var(--paper-dim)', cursor: 'pointer', fontWeight: 700 }}>Hapus</button>
+              )}
+            </div>
           ))}
+          <button type="button" onClick={onAdd} disabled={accounts.length >= 10} style={{ justifySelf: 'start', padding: '10px 16px', border: '1px solid var(--orange)', borderRadius: '999px', background: 'transparent', color: 'var(--orange)', cursor: accounts.length >= 10 ? 'not-allowed' : 'pointer', fontSize: '13px', fontWeight: 700, opacity: accounts.length >= 10 ? 0.5 : 1 }}>
+            + Tambah Akun Sosial
+          </button>
         </div>
       </div>
     </div>

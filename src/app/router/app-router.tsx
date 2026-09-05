@@ -14,14 +14,9 @@ const AdminLayout = lazy(() => import('@/layouts/dashboard-layouts').then((modul
 const ClientOnboardingPage = lazy(() => import('@/pages/onboarding/client-onboarding-page').then((module) => ({ default: module.ClientOnboardingPage })));
 const PartnerRegisterPage = lazy(() => import('@/pages/onboarding/partner-register-page').then((module) => ({ default: module.PartnerRegisterPage })));
 const DashboardPlaceholder = lazy(() => import('@/pages/dashboard/dashboard-placeholder').then((module) => ({ default: module.DashboardPlaceholder })));
-const ClientOverviewPage = lazy(() => import('@/pages/client/client-pages').then((module) => ({ default: module.ClientOverviewPage })));
-const ClientTeamPage = lazy(() => import('@/pages/client/client-pages').then((module) => ({ default: module.ClientTeamPage })));
-const PartnerOverviewPage = lazy(() => import('@/pages/partner/partner-pages').then((module) => ({ default: module.PartnerOverviewPage })));
-const PartnerProfilePage = lazy(() => import('@/pages/partner/partner-pages').then((module) => ({ default: module.PartnerProfilePage })));
-const PartnerPlatformsPage = lazy(() => import('@/pages/partner/partner-pages').then((module) => ({ default: module.PartnerPlatformsPage })));
-const PartnerRatesPage = lazy(() => import('@/pages/partner/partner-pages').then((module) => ({ default: module.PartnerRatesPage })));
-const PartnerMetricsPage = lazy(() => import('@/pages/partner/partner-pages').then((module) => ({ default: module.PartnerMetricsPage })));
-const AdminPartnersPage = lazy(() => import('@/pages/admin/admin-pages').then((module) => ({ default: module.AdminPartnersPage })));
+const WorkspaceDashboardPage = lazy(() => import('@/pages/dashboard/workspace-dashboard-page').then((module) => ({ default: module.WorkspaceDashboardPage })));
+const PublicPartnerApplicationsPage = lazy(() => import('@/pages/admin/public-partner-applications-page').then((module) => ({ default: module.PublicPartnerApplicationsPage })));
+const AdminDashboardPage = lazy(() => import('@/pages/admin/admin-dashboard-page').then((module) => ({ default: module.AdminDashboardPage })));
 
 function load(element: React.ReactNode) { return <Suspense fallback={<LoadingState />}>{element}</Suspense>; }
 function placeholder(title: string) { return load(<DashboardPlaceholder title={title} />); }
@@ -38,9 +33,9 @@ const router = createBrowserRouter([
     { path: '/client/onboarding', element: load(<ClientOnboardingPage />) },
     { path: '/partner/register', element: load(<PartnerRegisterPage />) },
     { path: '/app', element: <WorkspaceEntryRedirect /> },
-    { element: <WorkspaceGuard kind="client" />, children: [{ path: '/client', element: load(<ClientLayout />), children: [{ index: true, element: load(<ClientOverviewPage />) }, { path: 'campaigns', element: placeholder('Campaigns') }, { path: 'metrics', element: load(<PartnerMetricsPage />) }, { path: 'reports', element: placeholder('Reports') }, { path: 'billing', element: placeholder('Billing') }, { path: 'team', element: load(<ClientTeamPage />) }] }] },
-    { element: <WorkspaceGuard kind="partner" />, children: [{ path: '/partner', element: load(<PartnerLayout />), children: [{ index: true, element: load(<PartnerOverviewPage />) }, { path: 'profile', element: load(<PartnerProfilePage />) }, { path: 'platforms', element: load(<PartnerPlatformsPage />) }, { path: 'rates', element: load(<PartnerRatesPage />) }, { path: 'campaigns', element: placeholder('Campaigns') }, { path: 'metrics', element: load(<PartnerMetricsPage />) }, { path: 'earnings', element: placeholder('Earnings') }] }] },
-    { element: <WorkspaceGuard kind="admin" />, children: [{ path: '/admin', element: load(<AdminLayout />), children: [{ index: true, element: load(<AdminPartnersPage />) }, { path: 'clients', element: placeholder('Clients') }, { path: 'partners', element: load(<AdminPartnersPage />) }, { path: 'campaigns', element: placeholder('Campaigns') }, { path: 'metrics', element: load(<PartnerMetricsPage />) }, { path: 'reports', element: placeholder('Reports') }, { path: 'billing', element: placeholder('Billing') }, { path: 'users', element: placeholder('Users') }, { path: 'settings', element: placeholder('Settings') }] }] },
+    { element: <WorkspaceGuard kind="client" />, children: [{ path: '/client', element: load(<ClientLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="client" />) }, { path: '*', element: placeholder('Client operation page') }] }] },
+    { element: <WorkspaceGuard kind="partner" />, children: [{ path: '/partner', element: load(<PartnerLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="partner" />) }, { path: '*', element: placeholder('Partner operation page') }] }] },
+    { element: <WorkspaceGuard kind="admin" />, children: [{ path: '/admin', element: load(<AdminLayout />), children: [{ index: true, element: load(<AdminDashboardPage />) }, { path: 'partner-applications', element: load(<PublicPartnerApplicationsPage />) }, { path: '*', element: placeholder('Admin operation page') }] }] },
   ] },
   { path: '*', element: <Navigate to="/" replace /> },
 ]);
