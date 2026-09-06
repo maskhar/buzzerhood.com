@@ -138,7 +138,7 @@ export class AuthService {
 
   async updateProfile(user: AuthenticatedUser, input: UpdateProfileInput) {
     await this.database.withUserContext(user.id, async (transaction) => {
-      await sql`update buzzerhood.profiles set display_name=${input.displayName},updated_at=now() where id=${user.id}`.execute(transaction);
+      await sql`update buzzerhood.profiles set display_name=${input.displayName} where id=${user.id}`.execute(transaction);
       await this.event(transaction, user.id, null, 'profile_updated');
     });
     return this.me(user);

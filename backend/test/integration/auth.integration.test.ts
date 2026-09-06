@@ -65,6 +65,9 @@ describe('B1 auth and database context', () => {
     const me = await app.inject({ method: 'GET', url: '/api/v1/auth/me', headers: { authorization: `Bearer ${loginBody.accessToken}` } });
     expect(me.statusCode).toBe(200); expect(me.json<{ email: string; roles: string[] }>().email).toBe(email); expect(me.json<{ roles: string[] }>().roles).toEqual([]);
 
+    const profile = await app.inject({ method: 'PATCH', url: '/api/v1/auth/profile', headers: { authorization: `Bearer ${loginBody.accessToken}` }, payload: { displayName: 'Nama Baru' } });
+    expect(profile.statusCode).toBe(200); expect(profile.json<{ profile: { displayName: string } }>().profile.displayName).toBe('Nama Baru');
+
     const refresh = await app.inject({ method: 'POST', url: '/api/v1/auth/refresh', headers: { origin, cookie: loginCookies.header, 'x-csrf-token': loginCookies.csrf } });
     expect(refresh.statusCode).toBe(201); const rotatedCookies = cookies(refresh.headers);
     const replay = await app.inject({ method: 'POST', url: '/api/v1/auth/refresh', headers: { origin, cookie: loginCookies.header, 'x-csrf-token': loginCookies.csrf } });
