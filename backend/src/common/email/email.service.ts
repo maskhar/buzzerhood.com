@@ -60,6 +60,11 @@ export class EmailService {
     return this.send({ to: input.email, subject: 'Aktifkan akun Partner Buzzerhood', text: `Halo ${input.displayName},\n\nBuat password melalui tautan berikut:\n${url}\n\nTautan berlaku 24 jam dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
   }
 
+  sendAccountInvitation(input: { email: string; displayName: string; token: string }): Promise<void> {
+    const url = `${this.config.corsOrigins[0]}/activate-partner?token=${encodeURIComponent(input.token)}`;
+    return this.send({ to: input.email, subject: 'Aktifkan akun Buzzerhood', text: `Halo ${input.displayName},\n\nAkun Buzzerhood Anda telah dibuat. Buat password melalui tautan berikut:\n${url}\n\nTautan berlaku 24 jam dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
+  }
+
   sendPasswordReset(input: { email: string; displayName: string | null; token: string }): Promise<void> {
     const url = `${this.config.corsOrigins[0]}/reset-password?token=${encodeURIComponent(input.token)}`;
     return this.send({ to: input.email, subject: 'Reset password Buzzerhood', text: `Halo ${input.displayName ?? 'Pengguna Buzzerhood'},\n\nGanti password melalui tautan berikut:\n${url}\n\nTautan berlaku 30 menit dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
