@@ -84,6 +84,32 @@ Current owner directive, September 6, 2026:
 - Local disposable PostgreSQL containers and test databases are allowed.
 - GitHub push remains allowed after successful validation.
 
+
+## Local Docker Deployment
+
+Current Buzzerhood runtime is local Docker on this computer.
+
+Primary local Compose file:
+
+- `docker/buzzerhood/docker-compose.yml`
+
+Local containers:
+
+- `buzzerhood-postgres` uses image `postgres:17-alpine`, database `buzzerhood`, internal port `5432`, data volume `.docker-data/postgres`.
+- `buzzerhood-api` uses image `buzzerhood-api:b4`, exposes `127.0.0.1:3100->3100`, and depends on local Postgres health.
+- `buzzerhood-web` uses image `buzzerhood-web:b4`, exposes `127.0.0.1:8080->80`.
+
+Local networks:
+
+- `buzzerhood-network`
+- `carubra-network`
+
+Operational rules:
+
+- Treat this local Docker stack as the active API/WEB/Postgres deployment target for development and verification.
+- Do not use `backend/deploy/compose.yaml` as the default deployment path unless owner explicitly re-approves it.
+- Local Docker inspection, rebuild, restart, migration testing, and health checks are allowed when needed.
+- Preserve local database data unless owner explicitly approves destructive reset or volume removal.
 ## Database Schema
 
 All Buzzerhood business objects use PostgreSQL schema `buzzerhood`.
