@@ -22,7 +22,7 @@ async function bootstrap(): Promise<void> {
     await app.register(cookie);
     await app.register(helmet, config.swaggerEnabled ? { contentSecurityPolicy: false } : {});
     console.log('[Bootstrap] Configuring CORS...');
-    app.enableCors({ origin: [...config.corsOrigins], credentials: true, allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'X-Request-ID'], exposedHeaders: ['X-Request-ID'] });
+    app.enableCors({ origin: [...config.corsOrigins], credentials: true, methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'X-Request-ID'], exposedHeaders: ['X-Request-ID'] });
     app.getHttpAdapter().getInstance().addHook('onSend', (request, reply, _payload, done) => { void reply.header('x-request-id', request.id); done(); });
     console.log('[Bootstrap] Setting up filters and prefix...');
     app.useGlobalFilters(new ApiExceptionFilter());
