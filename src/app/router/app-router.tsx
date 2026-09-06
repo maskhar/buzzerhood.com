@@ -6,6 +6,7 @@ import { WorkspaceEntryRedirect, WorkspaceGuard } from '@/features/workspaces/wo
 
 const PublicHomePage = lazy(() => import('@/pages/public/public-home-page').then((module) => ({ default: module.PublicHomePage })));
 const LoginPage = lazy(() => import('@/pages/public/login-page').then((module) => ({ default: module.LoginPage })));
+const AccountPasswordPage = lazy(() => import('@/pages/public/account-password-page').then((module) => ({ default: module.AccountPasswordPage })));
 const CampaignRequestPage = lazy(() => import('@/pages/public/campaign-request-page').then((module) => ({ default: module.CampaignRequestPage })));
 const WorkspacePage = lazy(() => import('@/pages/workspace/workspace-page').then((module) => ({ default: module.WorkspacePage })));
 const ClientLayout = lazy(() => import('@/layouts/dashboard-layouts').then((module) => ({ default: module.ClientLayout })));
@@ -30,6 +31,8 @@ const router = createBrowserRouter([
   { path: '/partner/register-info', element: load(<CampaignRequestPage partner />) },
   { path: '/campaign-request', element: load(<CampaignRequestPage />) },
   { path: '/login', element: load(<LoginPage />) },
+  { path: '/reset-password', element: load(<AccountPasswordPage />) },
+  { path: '/activate-partner', element: load(<AccountPasswordPage />) },
   { element: <ProtectedRoute />, children: [
     { path: '/workspace', element: load(<WorkspacePage />) },
     { path: '/client/onboarding', element: load(<ClientOnboardingPage />) },

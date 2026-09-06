@@ -48,6 +48,7 @@ export function PublicPartnerApplicationsPage() {
         queryClient.invalidateQueries({ queryKey: apiQueryKeys.publicPartnerApplications('rejected') }),
         queryClient.invalidateQueries({ queryKey: apiQueryKeys.publicPartnerApplication(selectedId) }),
       ]);
+      setStatus(decision);
     } catch (error) {
       setMessage(errorMessage(error));
     } finally {
