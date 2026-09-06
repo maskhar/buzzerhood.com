@@ -113,6 +113,10 @@ describe('public partner applications API', () => {
     expect(list.statusCode).toBe(200);
     expect(list.json<{ data: Array<{ id: string; email: string }> }>().data).toContainEqual(expect.objectContaining({ id: applicationId, email: 'partner-accepted@example.com' }));
 
+    const activeList = await app.inject({ method: 'GET', url: '/api/v1/admin/public-partner-applications?status=pending&archived=false', headers: { authorization: `Bearer ${reviewerToken}` } });
+    expect(activeList.statusCode).toBe(200);
+    expect(activeList.json<{ data: Array<{ id: string }> }>().data).toContainEqual(expect.objectContaining({ id: applicationId }));
+
     const detail = await app.inject({ method: 'GET', url: `/api/v1/admin/public-partner-applications/${applicationId}`, headers: { authorization: `Bearer ${reviewerToken}` } });
     expect(detail.statusCode).toBe(200);
     expect(detail.json()).toMatchObject({ id: applicationId, status: 'pending', details: { niche: 'Lifestyle' } });

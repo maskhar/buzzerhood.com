@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
+const booleanQuery = z.enum(['true', 'false']).transform((value) => value === 'true');
+
 export const adminPublicPartnerApplicationQuerySchema = z.object({
   status: z.enum(['pending', 'approved', 'rejected']).optional(),
-  archived: z.coerce.boolean().default(false),
+  archived: booleanQuery.default(false),
   page: z.coerce.number().int().min(1).max(10_000).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(25)
 }).strict();
