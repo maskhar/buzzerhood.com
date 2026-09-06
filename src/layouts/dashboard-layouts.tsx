@@ -9,4 +9,4 @@ function DashboardLayout({ title, links, children }: DashboardLayoutProps) {
 }
 export function ClientLayout() { return <DashboardLayout title="Client workspace" links={[{ to: '/client', label: 'Dashboard' }]} />; }
 export function PartnerLayout() { return <DashboardLayout title="Partner workspace" links={[{ to: '/partner', label: 'Dashboard' }]} />; }
-export function AdminLayout() { return <DashboardLayout title="Admin workspace" links={[{ to: '/admin', label: 'Dashboard' }, { to: '/admin/partner-applications', label: 'Program Partner' }]} />; }
+export function AdminLayout() { return <DashboardLayout title="Admin workspace" links={[{ to: '/admin', label: 'Dashboard' }, { to: '/admin/partner-applications', label: 'Program Partner' }, { to: '/admin/users', label: 'Users' }]} />; }

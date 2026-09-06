@@ -18,6 +18,7 @@ import { EmailModule } from './common/email/email.module.js';
 import { PublicPartnerApplicationsModule } from './modules/public-partner-applications/public-partner-applications.module.js';
 import { AdminPublicPartnerApplicationsModule } from './modules/admin-public-partner-applications/admin-public-partner-applications.module.js';
 import { AdminEmailModule } from './modules/admin-email/admin-email.module.js';
+import { AdminUsersModule } from './modules/admin-users/admin-users.module.js';
 
 @Module({})
 export class AppModule {
@@ -28,7 +29,7 @@ export class AppModule {
         AppConfigurationModule.register(configuration), DatabaseModule, SecurityModule, EmailModule,
         ThrottlerModule.forRoot([{ ttl: configuration.rateLimit.ttlMs, limit: configuration.rateLimit.max }]),
         HealthModule, AuthModule, WorkspacesModule, OrganizationsModule, NetworkModule,
-        PartnerOnboardingModule, PartnersModule, AdminPartnersModule, CampaignsModule, PublicPartnerApplicationsModule, AdminPublicPartnerApplicationsModule, AdminEmailModule
+        PartnerOnboardingModule, PartnersModule, AdminPartnersModule, CampaignsModule, PublicPartnerApplicationsModule, AdminPublicPartnerApplicationsModule, AdminEmailModule, AdminUsersModule
       ],
       providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }]
     };
