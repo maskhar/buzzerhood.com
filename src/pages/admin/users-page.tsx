@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { createAdminUser, deleteAdminUser, listAdminUsers, sendAdminUserPasswordReset, setAdminUserActive } from '@/features/admin/users-api';
+import { createAdminUser, deleteAdminUser, listAdminUsers, sendAdminUserPasswordReset, setAdminUserActive, setAdminUserRole } from '@/features/admin/users-api';
 import { apiErrorMessage } from '@/lib/api/errors';
+import './users-role.css';
 
 type AdminRole = 'internal_team' | 'admin' | 'super_admin';
 
@@ -54,6 +55,19 @@ export function UsersPage() {
     }
   }
 
+  async function changeRole(id: string, nextRole: AdminRole) {
+    setBusy(true);
+    try {
+      await setAdminUserRole(id, nextRole);
+      setMessage(`Role user berhasil diubah menjadi ${roleLabels[nextRole]}.`);
+      await refresh();
+    } catch (error) {
+      setMessage(apiErrorMessage(error, 'Role user gagal diubah.'));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function reset(id: string, emailAddress: string) {
     if (!window.confirm(`Kirim tautan reset password ke ${emailAddress}?`)) return;
     setBusy(true);
@@ -93,6 +107,6 @@ export function UsersPage() {
 
     {message ? <p className="admin-feedback" role="status">{message}</p> : null}
 
-    <section className="admin-user-list"><div className="admin-user-list-heading"><div><span className="admin-step">02</span><div><h2>Daftar user</h2><p>{users.data ? `${users.data.length} akun terdaftar` : 'Memuat akun…'}</p></div></div></div><div className="db-table-wrap">{users.data ? <table className="db-table admin-users-table"><thead><tr><th>User</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>{users.data.map((user) => <tr key={user.id}><td><strong>{user.displayName || 'Tanpa nama'}</strong><span>{user.email}</span></td><td><div className="role-tags">{user.roles.length ? user.roles.map((item) => <span key={item}>{roleLabels[item] ?? item}</span>) : <span>Belum ada role</span>}</div></td><td><span className={`user-status user-status-${user.status}`}>{user.status.replace('_', ' ')}</span></td><td><div className="table-actions"><button className="btn-ghost compact-button" disabled={busy} onClick={() => void status(user.id, user.status !== 'active')}>{user.status === 'active' ? 'Nonaktifkan' : 'Aktifkan'}</button><button className="btn-ghost compact-button" disabled={busy || user.status !== 'active'} onClick={() => void reset(user.id, user.email)}>Reset password</button><button className="btn-danger compact-button" disabled={busy} onClick={() => void remove(user.id, user.email)}>Hapus</button></div></td></tr>)}</tbody></table> : <p className="db-empty">Memuat user…</p>}</div></section>
+    <section className="admin-user-list"><div className="admin-user-list-heading"><div><span className="admin-step">02</span><div><h2>Daftar user</h2><p>{users.data ? `${users.data.length} akun terdaftar` : 'Memuat akun…'}</p></div></div></div><div className="db-table-wrap">{users.data ? <table className="db-table admin-users-table"><thead><tr><th>User</th><th>Role / akses</th><th>Status</th><th>Aksi</th></tr></thead><tbody>{users.data.map((user) => <tr key={user.id}><td><strong>{user.displayName || 'Tanpa nama'}</strong><span>{user.email}</span></td><td>{user.partnerMembershipCount > 0 ? <div className="partner-access-label"><strong>Partner workspace</strong><span>Dikelola melalui Program Partner</span></div> : <label className="user-role-control"><span className="sr-only">Ubah role {user.email}</span><select disabled={busy} value={(user.roles[0] as AdminRole | undefined) ?? ''} onChange={(event) => void changeRole(user.id, event.target.value as AdminRole)}><option value="" disabled>Belum ada role</option>{roleOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>}</td><td><span className={`user-status user-status-${user.status}`}>{user.status.replace('_', ' ')}</span></td><td><div className="table-actions"><button className="btn-ghost compact-button" disabled={busy} onClick={() => void status(user.id, user.status !== 'active')}>{user.status === 'active' ? 'Nonaktifkan' : 'Aktifkan'}</button><button className="btn-ghost compact-button" disabled={busy || user.status !== 'active'} onClick={() => void reset(user.id, user.email)}>Reset password</button><button className="btn-danger compact-button" disabled={busy} onClick={() => void remove(user.id, user.email)}>Hapus</button></div></td></tr>)}</tbody></table> : <p className="db-empty">Memuat user…</p>}</div></section>
   </section>;
 }

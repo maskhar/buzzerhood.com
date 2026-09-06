@@ -57,6 +57,16 @@ Later-but-required account lifecycle: `POST /auth/forgot-password`, `POST /auth/
 ## Me/workspaces
 
 - `GET /me/workspaces` — active client, partner, and authorized internal workspace summaries derived server-side.
+
+## Admin user management
+
+- `GET /admin/users` — list akun internal untuk pemegang permission `users.manage`; respons menandai akun yang memiliki Partner membership.
+- `POST /admin/users/:id/role` — body role internal; mengganti satu role sistem secara auditable. Aktor tidak dapat mengubah role sendiri; pengelolaan Super Admin memerlukan aktor Super Admin.
+- Akun dengan Partner membership tidak dapat menerima role sistem dari endpoint ini. Akses Partner berasal dari `partner_members`, bukan `user_roles`.
+
+## Public Partner application lifecycle
+
+Pendaftaran publik hanya membuat application. Setelah Internal menyetujui melalui Program Partner, Backend membuat atau mereaktivasi identitas Partner dan mengirim undangan aktivasi bila diperlukan. Identity tersebut menerima Partner workspace melalui `partner_members`; approval tidak memberikan role internal atau Admin.
 - `GET /me/partner-applications` — current user's applications and review status.
 - `GET /me/partner-claims` — current user's claim status; evidence exposure is limited to owner/admin need.
 
