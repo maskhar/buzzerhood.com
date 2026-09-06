@@ -18,6 +18,7 @@ const WorkspaceDashboardPage = lazy(() => import('@/pages/dashboard/workspace-da
 const PublicPartnerApplicationsPage = lazy(() => import('@/pages/admin/public-partner-applications-page').then((module) => ({ default: module.PublicPartnerApplicationsPage })));
 const AdminDashboardPage = lazy(() => import('@/pages/admin/admin-dashboard-page').then((module) => ({ default: module.AdminDashboardPage })));
 const UsersPage = lazy(() => import('@/pages/admin/users-page').then((module) => ({ default: module.UsersPage })));
+const AdminSettingsPage = lazy(() => import('@/pages/admin/admin-settings-page').then((module) => ({ default: module.AdminSettingsPage })));
 
 function load(element: React.ReactNode) { return <Suspense fallback={<LoadingState />}>{element}</Suspense>; }
 function placeholder(title: string) { return load(<DashboardPlaceholder title={title} />); }
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
     { path: '/app', element: <WorkspaceEntryRedirect /> },
     { element: <WorkspaceGuard kind="client" />, children: [{ path: '/client', element: load(<ClientLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="client" />) }, { path: '*', element: placeholder('Client operation page') }] }] },
     { element: <WorkspaceGuard kind="partner" />, children: [{ path: '/partner', element: load(<PartnerLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="partner" />) }, { path: '*', element: placeholder('Partner operation page') }] }] },
-    { element: <WorkspaceGuard kind="admin" />, children: [{ path: '/admin', element: load(<AdminLayout />), children: [{ index: true, element: load(<AdminDashboardPage />) }, { path: 'partner-applications', element: load(<PublicPartnerApplicationsPage />) }, { path: 'users', element: load(<UsersPage />) }, { path: '*', element: placeholder('Admin operation page') }] }] },
+    { element: <WorkspaceGuard kind="admin" />, children: [{ path: '/admin', element: load(<AdminLayout />), children: [{ index: true, element: load(<AdminDashboardPage />) }, { path: 'partner-applications', element: load(<PublicPartnerApplicationsPage />) }, { path: 'users', element: load(<UsersPage />) }, { path: 'settings', element: load(<AdminSettingsPage />) }, { path: '*', element: placeholder('Admin operation page') }] }] },
   ] },
   { path: '*', element: <Navigate to="/" replace /> },
 ]);
