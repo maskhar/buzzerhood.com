@@ -21,3 +21,9 @@ export async function addPartnerAccount(i:{partner_id:string;platform:string;han
 export async function deletePartnerAccount(partnerId:string,id:string){await apiRequest('/partners/'+partnerId+'/platforms/'+id,{method:'DELETE'});}
 export async function addPartnerRate(i:{partner_id:string;service_type:string;amount:number;currency:string;effective_from:string;is_active:boolean}){await apiRequest('/partners/'+i.partner_id+'/rates',{method:'POST',body:{serviceType:i.service_type,amount:i.amount,currency:i.currency,effectiveFrom:i.effective_from||undefined}});}
 export async function deactivatePartnerRate(partnerId:string,id:string){await apiRequest('/partners/'+partnerId+'/rates/'+id,{method:'DELETE'});}
+export type AdminPartner={id:string;displayName:string;kind:string;partnerType:string|null;status:string;isPublic:boolean;createdAt:string};
+export type AdminPartnerApplication={id:string;displayName:string;kind:string;partnerType:string|null;category:string|null;niche:string|null;location:string|null;bio:string|null;status:string;applicantDisplayName:string|null;createdAt:string};
+export type AdminPartnerClaim={id:string;partnerId:string;partnerDisplayName:string;claimantProfileId:string;claimantDisplayName:string|null;evidence:string;status:string;reviewNote:string|null;createdAt:string;reviewedAt:string|null};
+export async function listAdminPartners(){return (await apiRequest<{data:AdminPartner[]}>('/admin/partners?page=1&limit=50')).data;}
+export async function listPendingPartnerApplications(){return apiRequest<AdminPartnerApplication[]>('/admin/partner-applications?status=pending&page=1&limit=50');}
+export async function listPendingPartnerClaims(){return apiRequest<AdminPartnerClaim[]>('/admin/partner-claims?status=pending&page=1&limit=50');}
