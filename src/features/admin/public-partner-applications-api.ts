@@ -15,15 +15,18 @@ export type PublicPartnerApplication = {
   reviewNote: string | null;
   reviewedBy: string | null;
   reviewedAt: string | null;
+  archivedAt: string | null;
+  archivedBy: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
 type PageMeta = { page: number; limit: number; total: number; hasNext: boolean };
 
-export async function listPublicPartnerApplications(status: PublicPartnerApplicationStatus) {
-  return apiRequest<{ data: PublicPartnerApplication[]; meta: PageMeta }>(`/admin/public-partner-applications?status=${status}&page=1&limit=100`);
+export async function listPublicPartnerApplications(status: PublicPartnerApplicationStatus, archived = false) {
+  return apiRequest<{ data: PublicPartnerApplication[]; meta: PageMeta }>(`/admin/public-partner-applications?status=${status}&archived=${archived}&page=1&limit=100`);
 }
+export function setPublicPartnerApplicationArchived(applicationId: string, archived: boolean) { return apiRequest<{ id: string; archived: boolean }>(`/admin/public-partner-applications/${applicationId}/${archived ? 'archive' : 'restore'}`, { method: 'POST' }); }
 
 export async function getPublicPartnerApplication(applicationId: string) {
   return apiRequest<PublicPartnerApplication>(`/admin/public-partner-applications/${applicationId}`);

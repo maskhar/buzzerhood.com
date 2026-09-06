@@ -38,4 +38,7 @@ export class AdminPublicPartnerApplicationsController {
   invite(@Req() request: AuthenticatedRequest, @Param('applicationId', new ParseUUIDPipe()) applicationId: string) {
     return this.applications.invite(request.authUser.id, applicationId);
   }
+
+  @Post(':applicationId/archive') archive(@Req() request: AuthenticatedRequest, @Param('applicationId', new ParseUUIDPipe()) applicationId: string) { return this.applications.setArchived(request.authUser.id, applicationId, true); }
+  @Post(':applicationId/restore') restore(@Req() request: AuthenticatedRequest, @Param('applicationId', new ParseUUIDPipe()) applicationId: string) { return this.applications.setArchived(request.authUser.id, applicationId, false); }
 }

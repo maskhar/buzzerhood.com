@@ -59,6 +59,8 @@ export interface Database {
     review_note: string | null;
     reviewed_by: string | null;
     reviewed_at: Timestamp | null;
+    archived_at: Timestamp | null;
+    archived_by: string | null;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
   };

@@ -126,6 +126,8 @@ describe('public partner applications API', () => {
 
     expect((await app.inject({ method: 'POST', url: `/api/v1/admin/public-partner-applications/${applicationId}/reject`, headers: { authorization: `Bearer ${reviewerToken}` }, payload: {} })).statusCode).toBe(404);
     const partnerCount = await admin.query<{ count: string }>("select count(*)::text count from buzzerhood.partners where display_name='Partner accepted'");
-    expect(partnerCount.rows[0]?.count).toBe('0');
+    expect(partnerCount.rows[0]?.count).toBe('1');
+    const invitation = await admin.query<{ status: string; token_count: string }>("select m.status::text, count(t.id)::text token_count from buzzerhood.partner_members m join buzzerhood.profiles p on p.id=m.profile_id join buzzerhood.users u on u.id=p.user_id left join buzzerhood.account_action_tokens t on t.user_id=u.id and t.kind='partner_invitation' where u.normalized_email='partner-accepted@example.com' group by m.status");
+    expect(invitation.rows).toEqual([{ status: 'invited', token_count: '1' }]);
   });
 });

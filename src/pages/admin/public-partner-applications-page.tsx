@@ -6,6 +6,7 @@ import {
   getPublicPartnerApplication,
   listPublicPartnerApplications,
   reviewPublicPartnerApplication,
+  setPublicPartnerApplicationArchived,
   type PublicPartnerApplicationStatus,
 } from '@/features/admin/public-partner-applications-api';
 
@@ -24,12 +25,13 @@ function errorMessage(error: unknown) {
 
 export function PublicPartnerApplicationsPage() {
   const [status, setStatus] = useState<PublicPartnerApplicationStatus>('pending');
+  const [archived, setArchived] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const queryClient = useQueryClient();
-  const applications = useQuery({ queryKey: apiQueryKeys.publicPartnerApplications(status), queryFn: () => listPublicPartnerApplications(status) });
+  const applications = useQuery({ queryKey: [...apiQueryKeys.publicPartnerApplications(status), archived], queryFn: () => listPublicPartnerApplications(status, archived) });
   const selected = useQuery({ queryKey: apiQueryKeys.publicPartnerApplication(selectedId ?? 'none'), queryFn: () => getPublicPartnerApplication(selectedId ?? ''), enabled: Boolean(selectedId) });
 
   async function review(decision: 'approved' | 'rejected') {
@@ -52,14 +54,16 @@ export function PublicPartnerApplicationsPage() {
       setSubmitting(false);
     }
   }
+  async function archive(nextArchived: boolean) { if (!selectedId) return; setSubmitting(true); try { await setPublicPartnerApplicationArchived(selectedId, nextArchived); setMessage(nextArchived ? 'Pendaftaran diarsipkan.' : 'Pendaftaran dipulihkan.'); await queryClient.invalidateQueries({ queryKey: ['api', 'admin', 'public-partner-applications'] }); } catch (error) { setMessage(errorMessage(error)); } finally { setSubmitting(false); } }
 
   return <section className="admin-review-page">
     <p className="eyebrow">PROGRAM PARTNER</p>
     <h1>Review pendaftaran Partner</h1>
-    <p className="muted">Pendaftaran publik tersimpan sebagai <code>pending</code>. Approval tidak membuat akun, Partner, atau membership otomatis.</p>
+    <p className="muted">Approval membuat akun Partner berstatus invited dan mengirim email untuk membuat password. Archive dapat dipulihkan.</p>
     <div className="admin-review-tabs" role="tablist" aria-label="Status pendaftaran">
       {statuses.map((item) => <button key={item} type="button" className={item === status ? 'active' : ''} onClick={() => { setStatus(item); setSelectedId(null); setMessage(''); }}>{statusLabels[item]}</button>)}
     </div>
+    <label><input type="checkbox" checked={archived} onChange={(event) => { setArchived(event.target.checked); setSelectedId(null); }} /> Tampilkan arsip</label>
     {message ? <p className="form-message" role="status">{message}</p> : null}
     <div className="admin-review-layout">
       <div className="db-table-wrap">
@@ -76,7 +80,8 @@ export function PublicPartnerApplicationsPage() {
           <p className="eyebrow">{statusLabels[selected.data.status]}</p>
           <h2>{selected.data.fullName}</h2>
           <dl className="review-details"><div><dt>Email</dt><dd>{selected.data.email}</dd></div><div><dt>WhatsApp</dt><dd>{selected.data.whatsapp}</dd></div><div><dt>Kota</dt><dd>{selected.data.city}</dd></div><div><dt>Kategori</dt><dd>{selected.data.category}</dd></div><div><dt>Pesan</dt><dd>{selected.data.message || '-'}</dd></div><div><dt>Detail</dt><dd>{Object.entries(selected.data.details).map(([key, value]) => <span key={key}>{key}: {Array.isArray(value) ? value.join(', ') : value}</span>)}</dd></div></dl>
-          {selected.data.status === 'pending' ? <div className="review-action"><label htmlFor="review-note">Catatan review</label><textarea id="review-note" value={note} onChange={(event) => setNote(event.target.value)} maxLength={2000} placeholder="Opsional untuk approval; jelaskan alasan jika ditolak." /><div><button type="button" className="btn-ghost" disabled={submitting} onClick={() => void review('rejected')}>Tolak</button><button type="button" className="btn-solid" disabled={submitting} onClick={() => void review('approved')}>Setujui</button></div></div> : <div className="review-result"><strong>Keputusan: {statusLabels[selected.data.status]}</strong><span>{selected.data.reviewNote || 'Tanpa catatan review.'}</span><span>{formatDate(selected.data.reviewedAt)}</span></div>}
+          {selected.data.status === 'pending' ? <div className="review-action"><label htmlFor="review-note">Catatan review</label><textarea id="review-note" value={note} onChange={(event) => setNote(event.target.value)} maxLength={2000} placeholder="Opsional untuk approval; jelaskan alasan jika ditolak." /><div><button type="button" className="btn-ghost" disabled={submitting} onClick={() => void review('rejected')}>Tolak</button><button type="button" className="btn-solid" disabled={submitting} onClick={() => void review('approved')}>Setujui & kirim undangan</button></div></div> : <div className="review-result"><strong>Keputusan: {statusLabels[selected.data.status]}</strong><span>{selected.data.reviewNote || 'Tanpa catatan review.'}</span><span>{formatDate(selected.data.reviewedAt)}</span></div>}
+          <button type="button" className="btn-ghost" disabled={submitting} onClick={() => void archive(!selected.data.archivedAt)}>{selected.data.archivedAt ? 'Pulihkan dari arsip' : 'Arsipkan pendaftaran'}</button>
         </> : null}
       </aside>
     </div>
