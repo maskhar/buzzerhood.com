@@ -13,16 +13,18 @@ export function AdminDashboardPage() {
   const rejected = useQuery({ queryKey: apiQueryKeys.publicPartnerApplications(statuses[2]), queryFn: () => listPublicPartnerApplications(statuses[2]) });
   const hasError = pending.isError || approved.isError || rejected.isError;
 
-  return <section>
-    <p className="eyebrow">SUPER ADMIN DASHBOARD</p>
-    <h1>Selamat datang, {user?.displayName || user?.email}</h1>
-    <p className="muted">Pantau pendaftaran Program Partner dan lakukan review melalui Backend API.</p>
-    <div className="operational-grid">
-      <article><span>Menunggu review</span><strong>{pending.data?.meta.total ?? '—'}</strong></article>
-      <article><span>Disetujui</span><strong>{approved.data?.meta.total ?? '—'}</strong></article>
-      <article><span>Ditolak</span><strong>{rejected.data?.meta.total ?? '—'}</strong></article>
-    </div>
+  const displayName = user?.displayName || 'Super Admin';
+  const metrics = [
+    { label: 'Menunggu review', value: pending.data?.meta.total ?? '—', detail: 'Perlu keputusan Anda', to: '/admin/partner-applications', className: 'metric-card-pending' },
+    { label: 'Disetujui', value: approved.data?.meta.total ?? '—', detail: 'Akun Partner telah diproses', to: '/admin/partner-applications', className: 'metric-card-approved' },
+    { label: 'Ditolak', value: rejected.data?.meta.total ?? '—', detail: 'Riwayat keputusan tersimpan', to: '/admin/partner-applications', className: 'metric-card-rejected' },
+  ];
+
+  return <section className="admin-dashboard">
+    <div className="admin-dashboard-hero"><div><p className="eyebrow">SUPER ADMIN DASHBOARD</p><h1>Selamat datang, <span>{displayName}</span></h1><p>Pantau pendaftaran Partner, kelola akses user, dan cek konfigurasi operasional dari satu tempat.</p></div><aside className="dashboard-health"><span>Status sistem</span><strong>Terhubung</strong><small>Backend API dan workspace siap digunakan.</small></aside></div>
+    <div className="metric-grid" aria-label="Ringkasan pendaftaran Partner">{metrics.map((metric) => <Link className={`metric-card ${metric.className}`} key={metric.label} to={metric.to}><span>{metric.label}</span><strong>{metric.value}</strong><small>{metric.detail}</small></Link>)}</div>
     {hasError ? <p className="form-message">Sebagian ringkasan gagal dimuat. Buka Program Partner untuk mencoba ulang.</p> : null}
-    <div className="ops-list admin-shortcuts"><article><strong>Program Partner</strong><span>Review pendaftaran, keputusan approval, arsip, dan undangan akun Partner.</span><Link className="btn-solid" to="/admin/partner-applications">Buka review queue</Link></article><article><strong>User Management</strong><span>Undang user, nonaktifkan akses, kirim reset password, atau hapus akun kosong.</span><Link className="btn-solid" to="/admin/users">Kelola user</Link></article><article><strong>Settings</strong><span>Periksa koneksi SMTP dan kirim email tes tanpa menampilkan secret server.</span><Link className="btn-solid" to="/admin/settings">Buka settings</Link></article></div>
+    <div className="dashboard-section-heading"><div><p className="eyebrow">OPERASI UTAMA</p><h2>Mulai dari sini</h2></div><p>Pilih area kerja sesuai tugas yang ingin dikerjakan hari ini.</p></div>
+    <div className="admin-shortcuts"><article><span className="shortcut-number">01 · Review</span><strong>Program Partner</strong><span>Review pendaftaran, keputusan approval, arsip, dan undangan akun Partner.</span><Link className="btn-solid" to="/admin/partner-applications">Buka review queue</Link></article><article><span className="shortcut-number">02 · Akses</span><strong>User Management</strong><span>Undang user, nonaktifkan akses, kirim reset password, atau hapus akun kosong.</span><Link className="btn-solid" to="/admin/users">Kelola user</Link></article><article><span className="shortcut-number">03 · Operasional</span><strong>Settings</strong><span>Periksa koneksi SMTP dan kirim email tes tanpa menampilkan secret server.</span><Link className="btn-solid" to="/admin/settings">Buka settings</Link></article></div>
   </section>;
 }
