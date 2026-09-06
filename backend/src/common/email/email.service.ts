@@ -33,6 +33,18 @@ export class EmailService {
     await Promise.allSettled([this.sendInternalNotification(application), this.sendApplicantConfirmation(application)]);
   }
 
+  async diagnostics() {
+    if (!this.transporter) return { configured: false, verified: false, reason: 'SMTP belum dikonfigurasi.' };
+    try { await this.transporter.verify(); return { configured: true, verified: true, reason: null }; }
+    catch { return { configured: true, verified: false, reason: 'Koneksi SMTP atau sertifikat TLS tidak valid.' }; }
+  }
+
+  async sendTestEmail(recipient: string): Promise<{ delivered: boolean }> {
+    if (!this.transporter || !this.config.email.from) return { delivered: false };
+    try { await this.transporter.sendMail({ from: this.config.email.from, to: recipient, subject: 'Tes email Buzzerhood', text: 'Tes konfigurasi SMTP Buzzerhood berhasil.' }); return { delivered: true }; }
+    catch { return { delivered: false }; }
+  }
+
   async sendPartnerApplicationDecision(application: PublicPartnerApplicationDecisionEmail): Promise<void> {
     const approved = application.status === 'approved';
     const subject = approved ? 'Pendaftaran Buzzerhood Network disetujui' : 'Pendaftaran Buzzerhood Network belum dapat disetujui';
