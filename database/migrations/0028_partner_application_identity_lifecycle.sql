@@ -5,14 +5,14 @@ create or replace function buzzerhood.normalize_partner_whatsapp(value text) ret
 $$;
 
 alter table buzzerhood.public_partner_applications
-  add column normalized_email text generated always as (lower(btrim(email))) stored,
-  add column normalized_whatsapp text generated always as (buzzerhood.normalize_partner_whatsapp(whatsapp)) stored,
-  add column partner_id uuid references buzzerhood.partners(id);
-alter table buzzerhood.partners add column archived_at timestamptz, add column archived_by uuid references buzzerhood.profiles(id);
+  add column if not exists normalized_email text generated always as (lower(btrim(email))) stored,
+  add column if not exists normalized_whatsapp text generated always as (buzzerhood.normalize_partner_whatsapp(whatsapp)) stored,
+  add column if not exists partner_id uuid references buzzerhood.partners(id);
+alter table buzzerhood.partners add column if not exists archived_at timestamptz, add column if not exists archived_by uuid references buzzerhood.profiles(id);
 update buzzerhood.public_partner_applications application set partner_id=partner.id from buzzerhood.partners partner where partner.source_data->>'public_partner_application_id'=application.id::text;
-create unique index public_partner_applications_active_email_idx on buzzerhood.public_partner_applications(normalized_email) where archived_at is null and status in ('pending','approved');
-create unique index public_partner_applications_active_whatsapp_idx on buzzerhood.public_partner_applications(normalized_whatsapp) where archived_at is null and status in ('pending','approved');
-create index public_partner_applications_partner_idx on buzzerhood.public_partner_applications(partner_id) where partner_id is not null;
+create unique index if not exists public_partner_applications_active_email_idx on buzzerhood.public_partner_applications(normalized_email) where archived_at is null and status in ('pending','approved');
+create unique index if not exists public_partner_applications_active_whatsapp_idx on buzzerhood.public_partner_applications(normalized_whatsapp) where archived_at is null and status in ('pending','approved');
+create index if not exists public_partner_applications_partner_idx on buzzerhood.public_partner_applications(partner_id) where partner_id is not null;
 
 create or replace function buzzerhood.review_public_partner_application(input_application_id uuid,input_decision text,input_review_note text default null) returns uuid language plpgsql set search_path='' as $$
 declare actor_id uuid:=buzzerhood.current_user_id(); begin
