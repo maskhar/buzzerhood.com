@@ -59,6 +59,7 @@ Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 ## Frontend API Migration B4
 
 - [x] Implement and locally validate first public-registration slice: reviewed additive migration 0019, public submission with strict validation/honeypot/throttle/optional SMTP, private partner-management review queue and terminal approval/rejection audit, React registration-form transport, Super Admin review UI, status dashboard, and approval/rejection email templates. Approval does not auto-create identity, Partner, or membership. Backend migration/API deployed September 5, 2026; public frontend artifact remains on prior transport until its own release.
+- [x] Add local Partner identity deduplication and reversible approved-Partner archive lifecycle.
 - [ ] Apply reviewed migration 0020_public_partner_applications_rls_hardening.sql after the local-only boundary is explicitly lifted. It removes fail-open app-role reads when `app.user_id` is absent; local regression coverage passes.
 - [x] Add centralized `src/lib/api/client.ts`, `errors.ts`, `auth.ts`, safe `VITE_API_BASE_URL`, normalized errors, credentialed refresh, and one-time serialized retry. Access token remains memory-only; CSRF continuity is tab-scoped.
 - [x] Replace Supabase Auth provider/types for Login and protected routing with Backend Auth, memory-only access token, rotating refresh cookie, session restore, and full query-cache clearing on logout.

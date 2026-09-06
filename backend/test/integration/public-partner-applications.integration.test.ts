@@ -29,8 +29,9 @@ function config(): AppConfiguration {
 }
 
 function payload(suffix: string) {
+  const phoneSuffix = [...suffix].reduce((value, character) => ((value * 31) + character.charCodeAt(0)) % 1_000_000_000, 0).toString().padStart(9, '0');
   return {
-    fullName: `Partner ${suffix}`, email: `partner-${suffix}@example.com`, whatsapp: '+628123456789', city: 'Jakarta', category: 'influencer',
+    fullName: `Partner ${suffix}`, email: `partner-${suffix}@example.com`, whatsapp: `+628${phoneSuffix}`, city: 'Jakarta', category: 'influencer',
     message: 'Saya ingin bergabung.', details: { platforms: ['Instagram', 'TikTok'], niche: 'Lifestyle' }, consent: true
   };
 }
@@ -97,6 +98,24 @@ describe('public partner applications API', () => {
     expect(invalid.json<{ error: { requestId: string } }>().error.requestId).toBeTruthy();
   });
 
+  it('blocks duplicate active email and normalized WhatsApp but allows rejected applications to reapply', async () => {
+    const original = payload('identity-check');
+    expect((await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '198.51.100.11', payload: original })).statusCode).toBe(201);
+
+    const duplicateEmail = await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '198.51.100.12', payload: { ...payload('identity-email'), email: `  ${original.email.toUpperCase()}  ` } });
+    expect(duplicateEmail.statusCode).toBe(409);
+    expect(duplicateEmail.json<{ error: { code: string } }>().error.code).toBe('PARTNER_APPLICATION_EMAIL_EXISTS');
+
+    const duplicateWhatsapp = await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '198.51.100.13', payload: { ...payload('identity-phone'), whatsapp: original.whatsapp.replace('+62', '0') } });
+    expect(duplicateWhatsapp.statusCode).toBe(409);
+    expect(duplicateWhatsapp.json<{ error: { code: string } }>().error.code).toBe('PARTNER_APPLICATION_WHATSAPP_EXISTS');
+
+    const rejected = await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '198.51.100.14', payload: payload('rejected-reapply') });
+    const rejectedId = rejected.json<{ id: string }>().id;
+    expect((await app.inject({ method: 'POST', url: `/api/v1/admin/public-partner-applications/${rejectedId}/reject`, headers: { authorization: `Bearer ${reviewerToken}` }, payload: { note: 'Belum sesuai.' } })).statusCode).toBe(201);
+    expect((await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '198.51.100.15', payload: payload('rejected-reapply') })).statusCode).toBe(201);
+  });
+
   it('throttles fourth request from one address', async () => {
     for (const suffix of ['one', 'two', 'three']) {
       expect((await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '192.0.2.10', payload: payload(suffix) })).statusCode).toBe(201);
@@ -133,5 +152,32 @@ describe('public partner applications API', () => {
     expect(partnerCount.rows[0]?.count).toBe('1');
     const invitation = await admin.query<{ status: string; token_count: string }>("select m.status::text, count(t.id)::text token_count from buzzerhood.partner_members m join buzzerhood.profiles p on p.id=m.profile_id join buzzerhood.users u on u.id=p.user_id left join buzzerhood.account_action_tokens t on t.user_id=u.id and t.kind='partner_invitation' where u.normalized_email='partner-accepted@example.com' group by m.status");
     expect(invitation.rows).toEqual([{ status: 'invited', token_count: '1' }]);
+  });
+
+  it('archives approved Partner access, reuses identity on approval, and blocks conflicting restore', async () => {
+    const linked = await admin.query<{ partner_id: string }>('select partner_id from buzzerhood.public_partner_applications where id=$1', [applicationId]);
+    const partnerId = linked.rows[0]?.partner_id;
+    expect(partnerId).toBeTruthy();
+    await admin.query("update buzzerhood.users users set status='active' from buzzerhood.partner_members members where members.profile_id=users.id and members.partner_id=$1", [partnerId]);
+    await admin.query("update buzzerhood.partner_members set status='active',joined_at=now() where partner_id=$1", [partnerId]);
+
+    expect((await app.inject({ method: 'POST', url: `/api/v1/admin/public-partner-applications/${applicationId}/archive`, headers: { authorization: `Bearer ${reviewerToken}` } })).statusCode).toBe(201);
+    const archived = await admin.query<{ archived: boolean; member_status: string }>('select partners.archived_at is not null archived,members.status::text member_status from buzzerhood.partners partners join buzzerhood.partner_members members on members.partner_id=partners.id where partners.id=$1', [partnerId]);
+    expect(archived.rows).toEqual([{ archived: true, member_status: 'suspended' }]);
+
+    const repeatedPayload = { ...payload('accepted'), whatsapp: payload('accepted').whatsapp.replace('+62', '0') };
+    const repeated = await app.inject({ method: 'POST', url: '/api/v1/public/partner-applications', remoteAddress: '198.51.100.16', payload: repeatedPayload });
+    expect(repeated.statusCode).toBe(201);
+    const repeatedId = repeated.json<{ id: string }>().id;
+    expect((await app.inject({ method: 'POST', url: `/api/v1/admin/public-partner-applications/${repeatedId}/approve`, headers: { authorization: `Bearer ${reviewerToken}` }, payload: {} })).statusCode).toBe(201);
+
+    const reused = await admin.query<{ partner_id: string; member_status: string; archived: boolean }>('select application.partner_id,members.status::text member_status,partners.archived_at is not null archived from buzzerhood.public_partner_applications application join buzzerhood.partners partners on partners.id=application.partner_id join buzzerhood.partner_members members on members.partner_id=partners.id where application.id=$1', [repeatedId]);
+    expect(reused.rows).toEqual([{ partner_id: partnerId, member_status: 'active', archived: false }]);
+    const partnerCount = await admin.query<{ count: string }>("select count(*)::text count from buzzerhood.partners where display_name='Partner accepted'");
+    expect(partnerCount.rows[0]?.count).toBe('1');
+
+    const restore = await app.inject({ method: 'POST', url: `/api/v1/admin/public-partner-applications/${applicationId}/restore`, headers: { authorization: `Bearer ${reviewerToken}` } });
+    expect(restore.statusCode).toBe(409);
+    expect(restore.json<{ error: { code: string } }>().error.code).toBe('PARTNER_APPLICATION_RESTORE_CONFLICT');
   });
 });
