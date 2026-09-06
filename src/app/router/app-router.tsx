@@ -20,6 +20,7 @@ const PublicPartnerApplicationsPage = lazy(() => import('@/pages/admin/public-pa
 const AdminDashboardPage = lazy(() => import('@/pages/admin/admin-dashboard-page').then((module) => ({ default: module.AdminDashboardPage })));
 const UsersPage = lazy(() => import('@/pages/admin/users-page').then((module) => ({ default: module.UsersPage })));
 const AdminSettingsPage = lazy(() => import('@/pages/admin/admin-settings-page').then((module) => ({ default: module.AdminSettingsPage })));
+const ProfilePage = lazy(() => import('@/pages/profile/profile-page').then((module) => ({ default: module.ProfilePage })));
 
 function load(element: React.ReactNode) { return <Suspense fallback={<LoadingState />}>{element}</Suspense>; }
 function placeholder(title: string) { return load(<DashboardPlaceholder title={title} />); }
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
   { path: '/activate-partner', element: load(<AccountPasswordPage />) },
   { element: <ProtectedRoute />, children: [
     { path: '/workspace', element: load(<WorkspacePage />) },
+    { path: '/profile', element: load(<ProfilePage />) },
     { path: '/client/onboarding', element: load(<ClientOnboardingPage />) },
     { path: '/partner/register', element: load(<PartnerRegisterPage />) },
     { path: '/app', element: <WorkspaceEntryRedirect /> },

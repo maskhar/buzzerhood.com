@@ -7,5 +7,6 @@ export type AuthContextValue = {
   isConfigured: boolean;
   signIn: (input: LoginInput) => Promise<void>;
   signOut: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 };
 export const AuthContext = createContext<AuthContextValue | null>(null);

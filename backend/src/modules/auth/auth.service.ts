@@ -10,7 +10,7 @@ import { PasswordService } from '../../common/security/password.service.js';
 import { TokenService } from '../../common/security/token.service.js';
 import { EmailService } from '../../common/email/email.service.js';
 import type { AuthResult, AuthenticatedUser } from './auth.types.js';
-import type { ForgotPasswordInput, LoginInput, RegisterInput, TokenPasswordInput } from './auth.schemas.js';
+import type { ForgotPasswordInput, LoginInput, RegisterInput, TokenPasswordInput, UpdateProfileInput } from './auth.schemas.js';
 
 type LoginUser = { id: string; email: string; password_hash: string; status: string };
 type Session = { id: string; user_id: string; family_id: string; replaced_by_session_id: string | null; revoked_at: Date | null; expires_at: Date };
@@ -134,6 +134,14 @@ export class AuthService {
       if (!row) throw new ApiError(401, 'AUTH_INVALID_TOKEN', 'Token akses tidak valid.');
       return { id: row.id, email: row.email, profile: { displayName: row.display_name, avatarPath: row.avatar_path }, roles: roles.rows.map((x) => x.key), permissions: permissions.rows.map((x) => x.key) };
     });
+  }
+
+  async updateProfile(user: AuthenticatedUser, input: UpdateProfileInput) {
+    await this.database.withUserContext(user.id, async (transaction) => {
+      await sql`update buzzerhood.profiles set display_name=${input.displayName},updated_at=now() where id=${user.id}`.execute(transaction);
+      await this.event(transaction, user.id, null, 'profile_updated');
+    });
+    return this.me(user);
   }
 
   private async createLogin(userId: string, transaction?: Transaction<Database>): Promise<AuthResult> {

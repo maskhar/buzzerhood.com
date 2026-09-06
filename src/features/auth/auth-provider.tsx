@@ -30,6 +30,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     finally { setUser(null); queryClient.clear(); }
   }, [queryClient]);
 
-  const value = useMemo(() => ({ user, isLoading, isConfigured: hasApiConfig, signIn, signOut }), [isLoading, signIn, signOut, user]);
+  const refreshUser = useCallback(async () => { setUser(await getCurrentUser()); }, []);
+
+  const value = useMemo(() => ({ user, isLoading, isConfigured: hasApiConfig, signIn, signOut, refreshUser }), [isLoading, refreshUser, signIn, signOut, user]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

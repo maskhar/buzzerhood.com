@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -8,7 +8,7 @@ import { ZodValidationPipe } from '../../common/validation/zod-validation.pipe.j
 import { AuthGuard } from './auth.guard.js';
 import { AuthService } from './auth.service.js';
 import { CookieSecurityGuard } from './cookie-security.guard.js';
-import { forgotPasswordSchema, loginSchema, registerSchema, tokenPasswordSchema, type ForgotPasswordInput, type LoginInput, type RegisterInput, type TokenPasswordInput } from './auth.schemas.js';
+import { forgotPasswordSchema, loginSchema, registerSchema, tokenPasswordSchema, updateProfileSchema, type ForgotPasswordInput, type LoginInput, type RegisterInput, type TokenPasswordInput, type UpdateProfileInput } from './auth.schemas.js';
 import type { AuthenticatedRequest, AuthResult } from './auth.types.js';
 
 @ApiTags('auth')
@@ -52,6 +52,9 @@ export class AuthController {
 
   @Get('me') @UseGuards(AuthGuard) @ApiBearerAuth()
   me(@Req() request: AuthenticatedRequest) { return this.auth.me(request.authUser); }
+
+  @Patch('profile') @UseGuards(AuthGuard) @ApiBearerAuth()
+  updateProfile(@Req() request: AuthenticatedRequest, @Body(new ZodValidationPipe(updateProfileSchema)) input: UpdateProfileInput) { return this.auth.updateProfile(request.authUser, input); }
 
   private publish(result: AuthResult, reply: FastifyReply) {
     const options = { path: '/api/v1/auth', secure: this.config.refresh.secure, sameSite: this.config.refresh.sameSite, maxAge: this.config.refresh.ttlSeconds } as const;
