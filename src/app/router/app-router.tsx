@@ -21,6 +21,9 @@ const AdminDashboardPage = lazy(() => import('@/pages/admin/admin-dashboard-page
 const UsersPage = lazy(() => import('@/pages/admin/users-page').then((module) => ({ default: module.UsersPage })));
 const AdminSettingsPage = lazy(() => import('@/pages/admin/admin-settings-page').then((module) => ({ default: module.AdminSettingsPage })));
 const ProfilePage = lazy(() => import('@/pages/profile/profile-page').then((module) => ({ default: module.ProfilePage })));
+const ClientCampaignsPage = lazy(() => import('@/pages/campaigns/campaign-pages').then((module) => ({ default: module.ClientCampaignsPage })));
+const PartnerCampaignsPage = lazy(() => import('@/pages/campaigns/campaign-pages').then((module) => ({ default: module.PartnerCampaignsPage })));
+const AdminCampaignsPage = lazy(() => import('@/pages/campaigns/campaign-pages').then((module) => ({ default: module.AdminCampaignsPage })));
 
 function load(element: React.ReactNode) { return <Suspense fallback={<LoadingState />}>{element}</Suspense>; }
 function placeholder(title: string) { return load(<DashboardPlaceholder title={title} />); }
@@ -40,14 +43,11 @@ const router = createBrowserRouter([
     { path: '/client/onboarding', element: load(<ClientOnboardingPage />) },
     { path: '/partner/register', element: load(<PartnerRegisterPage />) },
     { path: '/app', element: <WorkspaceEntryRedirect /> },
-    { element: <WorkspaceGuard kind="client" />, children: [{ path: '/client', element: load(<ClientLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="client" />) }, { path: '*', element: placeholder('Client operation page') }] }] },
-    { element: <WorkspaceGuard kind="partner" />, children: [{ path: '/partner', element: load(<PartnerLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="partner" />) }, { path: '*', element: placeholder('Partner operation page') }] }] },
-    { element: <WorkspaceGuard kind="admin" />, children: [{ path: '/admin', element: load(<AdminLayout />), children: [{ index: true, element: load(<AdminDashboardPage />) }, { path: 'partner-applications', element: load(<PublicPartnerApplicationsPage />) }, { path: 'users', element: load(<UsersPage />) }, { path: 'settings', element: load(<AdminSettingsPage />) }, { path: '*', element: placeholder('Admin operation page') }] }] },
+    { element: <WorkspaceGuard kind="client" />, children: [{ path: '/client', element: load(<ClientLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="client" />) }, { path: 'campaigns', element: load(<ClientCampaignsPage />) }, { path: '*', element: placeholder('Client operation page') }] }] },
+    { element: <WorkspaceGuard kind="partner" />, children: [{ path: '/partner', element: load(<PartnerLayout />), children: [{ index: true, element: load(<WorkspaceDashboardPage kind="partner" />) }, { path: 'campaigns', element: load(<PartnerCampaignsPage />) }, { path: '*', element: placeholder('Partner operation page') }] }] },
+    { element: <WorkspaceGuard kind="admin" />, children: [{ path: '/admin', element: load(<AdminLayout />), children: [{ index: true, element: load(<AdminDashboardPage />) }, { path: 'campaigns', element: load(<AdminCampaignsPage />) }, { path: 'partner-applications', element: load(<PublicPartnerApplicationsPage />) }, { path: 'users', element: load(<UsersPage />) }, { path: 'settings', element: load(<AdminSettingsPage />) }, { path: '*', element: placeholder('Admin operation page') }] }] },
   ] },
   { path: '*', element: <Navigate to="/" replace /> },
 ]);
 
 export function AppRouter() { return <RouterProvider router={router} />; }
-
-
-
