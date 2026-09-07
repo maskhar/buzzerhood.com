@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/features/auth/use-auth';
-import { getMyOrganizationMemberships } from '@/features/organizations/organization-api';
-import { queryKeys } from '@/lib/supabase/query-keys';
+import { getMyOrganizations } from '@/features/organizations/organization-api';
+import { apiQueryKeys } from '@/lib/api/query-keys';
 
-export function useMyOrganizationMemberships() {
+export function useMyOrganizations() {
   const { user } = useAuth();
   return useQuery({
-    queryKey: user ? queryKeys.organizations(user.id) : ['organizations', 'mine', 'anonymous'],
-    queryFn: () => getMyOrganizationMemberships(user?.id ?? ''),
+    queryKey: user ? apiQueryKeys.organizations(user.id) : ['api', 'organizations', 'anonymous'],
+    queryFn: getMyOrganizations,
     enabled: Boolean(user),
   });
 }
