@@ -1,12 +1,10 @@
-import type { Profile } from '@/features/auth/auth-types';
+import { apiRequest } from '@/lib/api/client';
 
-export async function getCurrentProfile(userId: string): Promise<Profile | null> {
-  const { getBuzzerhoodDb } = await import('@/lib/supabase/client');
-  const { data, error } = await getBuzzerhoodDb()
-    .from('profiles')
-    .select('id, display_name, avatar_path, created_at, updated_at')
-    .eq('id', userId)
-    .maybeSingle();
-  if (error) throw error;
-  return data as Profile | null;
+export type CurrentProfile = { id: string; displayName: string | null; avatarPath: string | null };
+
+type AuthMeResponse = { id: string; profile?: { displayName?: string | null; avatarPath?: string | null } };
+
+export async function getCurrentProfile(): Promise<CurrentProfile | null> {
+  const user = await apiRequest<AuthMeResponse>('/auth/me');
+  return user.profile ? { id: user.id, displayName: user.profile.displayName ?? null, avatarPath: user.profile.avatarPath ?? null } : null;
 }

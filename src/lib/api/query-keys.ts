@@ -1,4 +1,5 @@
 export const apiQueryKeys = {
+  profile: (userId: string) => ['api', 'auth', 'profile', userId] as const,
   organizations: (userId: string) => ['api', 'organizations', userId] as const,
   organizationMembers: (organizationId: string) => ['api', 'organizations', organizationId, 'members'] as const,
   workspaces: (userId: string) => ['api', 'me', 'workspaces', userId] as const,
