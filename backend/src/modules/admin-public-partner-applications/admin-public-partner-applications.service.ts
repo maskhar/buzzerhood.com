@@ -71,10 +71,10 @@ export class AdminPublicPartnerApplicationsService {
   async invite(userId: string, applicationId: string) {
     const token = randomBytes(32).toString('base64url');
     try {
-      const result = await this.database.withUserContext(userId, (transaction) => sql<{ user_id: string; partner_id: string; email: string; display_name: string; invitation_required: boolean }>`select * from buzzerhood.create_partner_invitation(${applicationId},${this.tokens.hashRefresh(token)},${new Date(Date.now()+86_400_000)})`.execute(transaction));
+      const result = await this.database.withUserContext(userId, (transaction) => sql<{ user_id: string; partner_id: string; email: string; display_name: string; invitation_required: boolean; account_active: boolean }>`select * from buzzerhood.create_partner_invitation(${applicationId},${this.tokens.hashRefresh(token)},${new Date(Date.now()+86_400_000)})`.execute(transaction));
       const created = result.rows[0]; if (!created) throw new Error('Invitation was not created.');
       if (created.invitation_required) await this.email.sendPartnerInvitation({ email: created.email, displayName: created.display_name, token });
-      return { userId: created.user_id, partnerId: created.partner_id, status: created.invitation_required ? 'invited' : 'reactivated' };
+      return { userId: created.user_id, partnerId: created.partner_id, status: created.account_active ? 'active' : created.invitation_required ? 'invited' : 'reactivated' };
     } catch (error) {
       const message = postgresMessage(error);
       if (/permission denied/i.test(message)) throw new ApiError(403, 'PERMISSION_DENIED', 'Izin tidak mencukupi.');

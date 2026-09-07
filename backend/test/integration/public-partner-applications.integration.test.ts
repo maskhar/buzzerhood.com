@@ -152,6 +152,12 @@ describe('public partner applications API', () => {
     expect(partnerCount.rows[0]?.count).toBe('1');
     const invitation = await admin.query<{ status: string; token_count: string }>("select m.status::text, count(t.id)::text token_count from buzzerhood.partner_members m join buzzerhood.profiles p on p.id=m.profile_id join buzzerhood.users u on u.id=p.user_id left join buzzerhood.account_action_tokens t on t.user_id=u.id and t.kind='partner_invitation' where u.normalized_email='partner-accepted@example.com' group by m.status");
     expect(invitation.rows).toEqual([{ status: 'invited', token_count: '1' }]);
+
+    const resent = await app.inject({ method: 'POST', url: `/api/v1/admin/public-partner-applications/${applicationId}/invite`, headers: { authorization: `Bearer ${reviewerToken}` } });
+    expect(resent.statusCode).toBe(201);
+    expect(resent.json()).toMatchObject({ status: 'invited' });
+    const resentInvitation = await admin.query<{ status: string; token_count: string }>("select m.status::text, count(t.id)::text token_count from buzzerhood.partner_members m join buzzerhood.profiles p on p.id=m.profile_id join buzzerhood.users u on u.id=p.user_id left join buzzerhood.account_action_tokens t on t.user_id=u.id and t.kind='partner_invitation' where u.normalized_email='partner-accepted@example.com' group by m.status");
+    expect(resentInvitation.rows).toEqual([{ status: 'invited', token_count: '2' }]);
   });
 
   it('archives approved Partner access, reuses identity on approval, and blocks conflicting restore', async () => {

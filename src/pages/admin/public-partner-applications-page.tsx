@@ -57,7 +57,7 @@ export function PublicPartnerApplicationsPage() {
     }
   }
   async function archive(nextArchived: boolean) { if (!selectedId) return; setSubmitting(true); try { await setPublicPartnerApplicationArchived(selectedId, nextArchived); setMessage(nextArchived ? 'Pendaftaran diarsipkan.' : 'Pendaftaran dipulihkan.'); await queryClient.invalidateQueries({ queryKey: ['api', 'admin', 'public-partner-applications'] }); } catch (error) { setMessage(errorMessage(error)); } finally { setSubmitting(false); } }
-  async function resendInvitation() { if (!selectedId || !selected.data || selected.data.status !== 'approved' || selected.data.archivedAt) return; setSubmitting(true); setMessage(''); try { const result = await invitePublicPartnerApplication(selectedId); setMessage(result.status === 'reactivated' ? 'Akses Partner dipulihkan.' : 'Undangan Partner dikirim ulang.'); await queryClient.invalidateQueries({ queryKey: apiQueryKeys.publicPartnerApplication(selectedId) }); } catch (error) { setMessage(errorMessage(error)); } finally { setSubmitting(false); } }
+  async function resendInvitation() { if (!selectedId || !selected.data || selected.data.status !== 'approved' || selected.data.archivedAt) return; setSubmitting(true); setMessage(''); try { const result = await invitePublicPartnerApplication(selectedId); setMessage(result.status === 'active' ? 'Akun Partner sudah aktif.' : result.status === 'reactivated' ? 'Akses Partner dipulihkan.' : 'Undangan Partner dikirim ulang.'); await queryClient.invalidateQueries({ queryKey: apiQueryKeys.publicPartnerApplication(selectedId) }); } catch (error) { setMessage(errorMessage(error)); } finally { setSubmitting(false); } }
 
   return <section className="admin-review-page">
     <p className="eyebrow">PROGRAM PARTNER</p>

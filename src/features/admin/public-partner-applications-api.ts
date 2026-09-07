@@ -33,7 +33,7 @@ export async function getPublicPartnerApplication(applicationId: string) {
 }
 
 export function invitePublicPartnerApplication(applicationId: string) {
-  return apiRequest<{ userId: string; partnerId: string; status: 'invited' | 'reactivated' }>(`/admin/public-partner-applications/${applicationId}/invite`, { method: 'POST' });
+  return apiRequest<{ userId: string; partnerId: string; status: 'invited' | 'reactivated' | 'active' }>(`/admin/public-partner-applications/${applicationId}/invite`, { method: 'POST' });
 }
 
 export async function reviewPublicPartnerApplication(applicationId: string, decision: Exclude<PublicPartnerApplicationStatus, 'pending'>, note: string) {
