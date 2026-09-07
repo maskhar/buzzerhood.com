@@ -158,6 +158,12 @@ describe('public partner applications API', () => {
     expect(resent.json()).toMatchObject({ status: 'invited' });
     const resentInvitation = await admin.query<{ status: string; token_count: string }>("select m.status::text, count(t.id)::text token_count from buzzerhood.partner_members m join buzzerhood.profiles p on p.id=m.profile_id join buzzerhood.users u on u.id=p.user_id left join buzzerhood.account_action_tokens t on t.user_id=u.id and t.kind='partner_invitation' where u.normalized_email='partner-accepted@example.com' group by m.status");
     expect(resentInvitation.rows).toEqual([{ status: 'invited', token_count: '2' }]);
+    const invitedDetail = await app.inject({ method: 'GET', url: `/api/v1/admin/public-partner-applications/${applicationId}`, headers: { authorization: `Bearer ${reviewerToken}` } });
+    expect(invitedDetail.json()).toMatchObject({ invitationStatus: 'invited' });
+    await admin.query("update buzzerhood.users users set status='active' from buzzerhood.profiles profiles join buzzerhood.partner_members members on members.profile_id=profiles.id where profiles.user_id=users.id and members.partner_id=(select partner_id from buzzerhood.public_partner_applications where id=$1)", [applicationId]);
+    await admin.query("update buzzerhood.partner_members set status='active',joined_at=now() where partner_id=(select partner_id from buzzerhood.public_partner_applications where id=$1)", [applicationId]);
+    const activeDetail = await app.inject({ method: 'GET', url: `/api/v1/admin/public-partner-applications/${applicationId}`, headers: { authorization: `Bearer ${reviewerToken}` } });
+    expect(activeDetail.json()).toMatchObject({ invitationStatus: 'active' });
   });
 
   it('archives approved Partner access, reuses identity on approval, and blocks conflicting restore', async () => {

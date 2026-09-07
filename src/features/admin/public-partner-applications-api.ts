@@ -1,6 +1,7 @@
 import { apiRequest } from '@/lib/api/client';
 
 export type PublicPartnerApplicationStatus = 'pending' | 'approved' | 'rejected';
+export type PublicPartnerInvitationStatus = 'not_created' | 'invited' | 'active' | 'attention';
 
 export type PublicPartnerApplication = {
   id: string;
@@ -12,6 +13,7 @@ export type PublicPartnerApplication = {
   message: string | null;
   details: Record<string, string | string[]>;
   status: PublicPartnerApplicationStatus;
+  invitationStatus: PublicPartnerInvitationStatus;
   reviewNote: string | null;
   reviewedBy: string | null;
   reviewedAt: string | null;

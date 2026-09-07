@@ -84,7 +84,8 @@ Invitation and membership mutation endpoints are marked later until lifecycle/pr
 
 - `POST /public/partner-applications` — public registration. Normalized email and WhatsApp must be unique among non-archived `pending` or `approved` applications. Rejected or archived applications may be submitted again. Conflicts return `409 PARTNER_APPLICATION_EMAIL_EXISTS` or `409 PARTNER_APPLICATION_WHATSAPP_EXISTS`.
 - `GET /admin/public-partner-applications?status=&page=&limit=` — requires partner-management permission; paginated private application queue.
-- `GET /admin/public-partner-applications/:applicationId` — requires partner-management permission; private contact, detail, and review data.
+- `GET /admin/public-partner-applications/:applicationId` — requires partner-management permission; private contact, detail, review data, and server-derived invitation/access state.
+- Admin application DTO includes `invitationStatus`: `not_created`, `invited`, `active`, or `attention`; status is derived server-side from the Partner owner membership and identity state.
 - `POST /admin/public-partner-applications/:applicationId/approve` — terminal review with optional note. Creates an invitation-backed Partner identity, or reactivates archived identity with the same normalized email and WhatsApp.
 - `POST /admin/public-partner-applications/:applicationId/reject` — terminal review with optional note.
 - Archive approved applications suspends active Partner membership without deleting history. Restore checks active email/WhatsApp conflicts and returns `409 PARTNER_APPLICATION_RESTORE_CONFLICT` when blocked.

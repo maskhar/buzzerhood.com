@@ -10,7 +10,7 @@ import type { AdminPublicPartnerApplicationQuery } from './admin-public-partner-
 
 type ApplicationRow = {
   id: string; full_name: string; email: string; whatsapp: string; city: string; category: string; message: string | null; details: unknown;
-  status: string; review_note: string | null; reviewed_by: string | null; reviewed_at: Date | null; archived_at: Date | null; archived_by: string | null; created_at: Date; updated_at: Date;
+  status: string; partner_id: string | null; member_status: string | null; user_status: string | null; review_note: string | null; reviewed_by: string | null; reviewed_at: Date | null; archived_at: Date | null; archived_by: string | null; created_at: Date; updated_at: Date;
 };
 
 @Injectable()
@@ -25,7 +25,7 @@ export class AdminPublicPartnerApplicationsService {
       const offset = (query.page - 1) * query.limit;
       const archived = query.archived;
       const count = await sql<{ total: string }>`select count(*)::text total from buzzerhood.public_partner_applications where status=${status} and (${archived} = (archived_at is not null))`.execute(transaction);
-      const rows = await sql<ApplicationRow>`select id,full_name,email,whatsapp,city,category,message,details,status,review_note,reviewed_by,reviewed_at,archived_at,archived_by,created_at,updated_at from buzzerhood.public_partner_applications where status=${status} and (${archived} = (archived_at is not null)) order by created_at desc limit ${query.limit} offset ${offset}`.execute(transaction);
+      const rows = await sql<ApplicationRow>`select application.id,application.full_name,application.email,application.whatsapp,application.city,application.category,application.message,application.details,application.status,application.partner_id,owner.member_status,owner.user_status,application.review_note,application.reviewed_by,application.reviewed_at,application.archived_at,application.archived_by,application.created_at,application.updated_at from buzzerhood.public_partner_applications application left join lateral (select member_status,user_status from buzzerhood.admin_partner_application_access_status(application.partner_id)) owner on true where application.status=${status} and (${archived} = (application.archived_at is not null)) order by application.created_at desc limit ${query.limit} offset ${offset}`.execute(transaction);
       const total = Number(count.rows[0]?.total ?? 0);
       return { data: rows.rows.map((row) => this.dto(row)), meta: { page: query.page, limit: query.limit, total, hasNext: offset + rows.rows.length < total } };
     });
@@ -33,7 +33,7 @@ export class AdminPublicPartnerApplicationsService {
 
   detail(userId: string, applicationId: string) {
     return this.database.withUserContext(userId, async (transaction) => {
-      const result = await sql<ApplicationRow>`select id,full_name,email,whatsapp,city,category,message,details,status,review_note,reviewed_by,reviewed_at,archived_at,archived_by,created_at,updated_at from buzzerhood.public_partner_applications where id=${applicationId}`.execute(transaction);
+      const result = await sql<ApplicationRow>`select application.id,application.full_name,application.email,application.whatsapp,application.city,application.category,application.message,application.details,application.status,application.partner_id,owner.member_status,owner.user_status,application.review_note,application.reviewed_by,application.reviewed_at,application.archived_at,application.archived_by,application.created_at,application.updated_at from buzzerhood.public_partner_applications application left join lateral (select member_status,user_status from buzzerhood.admin_partner_application_access_status(application.partner_id)) owner on true where application.id=${applicationId}`.execute(transaction);
       if (!result.rows[0]) throw new ApiError(404, 'PUBLIC_PARTNER_APPLICATION_NOT_FOUND', 'Pendaftaran Partner tidak ditemukan.');
       return this.dto(result.rows[0]);
     });
@@ -96,12 +96,13 @@ export class AdminPublicPartnerApplicationsService {
   }
 
   private async detailInTransaction(transaction: Parameters<DatabaseService['withUserContext']>[1] extends (transaction: infer T) => unknown ? T : never, applicationId: string) {
-    const result = await sql<ApplicationRow>`select id,full_name,email,whatsapp,city,category,message,details,status,review_note,reviewed_by,reviewed_at,archived_at,archived_by,created_at,updated_at from buzzerhood.public_partner_applications where id=${applicationId}`.execute(transaction);
+    const result = await sql<ApplicationRow>`select application.id,application.full_name,application.email,application.whatsapp,application.city,application.category,application.message,application.details,application.status,application.partner_id,owner.member_status,owner.user_status,application.review_note,application.reviewed_by,application.reviewed_at,application.archived_at,application.archived_by,application.created_at,application.updated_at from buzzerhood.public_partner_applications application left join lateral (select member_status,user_status from buzzerhood.admin_partner_application_access_status(application.partner_id)) owner on true where application.id=${applicationId}`.execute(transaction);
     if (!result.rows[0]) throw new ApiError(404, 'PUBLIC_PARTNER_APPLICATION_NOT_FOUND', 'Pendaftaran Partner tidak ditemukan.');
     return this.dto(result.rows[0]);
   }
 
   private dto(row: ApplicationRow) {
-    return { id: row.id, fullName: row.full_name, email: row.email, whatsapp: row.whatsapp, city: row.city, category: row.category, message: row.message, details: row.details, status: row.status, reviewNote: row.review_note, reviewedBy: row.reviewed_by, reviewedAt: row.reviewed_at, archivedAt: row.archived_at, archivedBy: row.archived_by, createdAt: row.created_at, updatedAt: row.updated_at };
+    const invitationStatus = !row.partner_id ? 'not_created' : row.member_status === 'invited' && row.user_status === 'pending_activation' ? 'invited' : row.member_status === 'active' && row.user_status === 'active' ? 'active' : 'attention';
+    return { id: row.id, fullName: row.full_name, email: row.email, whatsapp: row.whatsapp, city: row.city, category: row.category, message: row.message, details: row.details, status: row.status, invitationStatus, reviewNote: row.review_note, reviewedBy: row.reviewed_by, reviewedAt: row.reviewed_at, archivedAt: row.archived_at, archivedBy: row.archived_by, createdAt: row.created_at, updatedAt: row.updated_at };
   }
 }
