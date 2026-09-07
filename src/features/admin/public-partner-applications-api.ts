@@ -32,6 +32,10 @@ export async function getPublicPartnerApplication(applicationId: string) {
   return apiRequest<PublicPartnerApplication>(`/admin/public-partner-applications/${applicationId}`);
 }
 
+export function invitePublicPartnerApplication(applicationId: string) {
+  return apiRequest<{ userId: string; partnerId: string; status: 'invited' | 'reactivated' }>(`/admin/public-partner-applications/${applicationId}/invite`, { method: 'POST' });
+}
+
 export async function reviewPublicPartnerApplication(applicationId: string, decision: Exclude<PublicPartnerApplicationStatus, 'pending'>, note: string) {
   const action = decision === 'approved' ? 'approve' : 'reject';
   return apiRequest<PublicPartnerApplication>(`/admin/public-partner-applications/${applicationId}/${action}`, {

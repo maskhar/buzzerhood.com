@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { clearAuthTokens, storeAuthTokens } from '@/lib/api/client';
-import { reviewPublicPartnerApplication } from '@/features/admin/public-partner-applications-api';
+import { invitePublicPartnerApplication, reviewPublicPartnerApplication } from '@/features/admin/public-partner-applications-api';
 
 describe('public partner application API', () => {
   afterEach(() => {
@@ -18,5 +18,9 @@ describe('public partner application API', () => {
 
     expect(fetchMock.mock.calls[0]?.[0]).toBe('http://localhost:3100/api/v1/admin/public-partner-applications/application-id/approve');
     expect(fetchMock.mock.calls[1]?.[0]).toBe('http://localhost:3100/api/v1/admin/public-partner-applications/application-id/reject');
+
+    await invitePublicPartnerApplication('application-id');
+    expect(fetchMock.mock.calls[2]?.[0]).toBe('http://localhost:3100/api/v1/admin/public-partner-applications/application-id/invite');
+    expect(fetchMock.mock.calls[2]?.[1]).toMatchObject({ method: 'POST' });
   });
 });

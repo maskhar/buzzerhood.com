@@ -4,6 +4,7 @@ import { ApiClientError } from '@/lib/api/errors';
 import { apiQueryKeys } from '@/lib/api/query-keys';
 import {
   getPublicPartnerApplication,
+  invitePublicPartnerApplication,
   listPublicPartnerApplications,
   reviewPublicPartnerApplication,
   setPublicPartnerApplicationArchived,
@@ -56,6 +57,7 @@ export function PublicPartnerApplicationsPage() {
     }
   }
   async function archive(nextArchived: boolean) { if (!selectedId) return; setSubmitting(true); try { await setPublicPartnerApplicationArchived(selectedId, nextArchived); setMessage(nextArchived ? 'Pendaftaran diarsipkan.' : 'Pendaftaran dipulihkan.'); await queryClient.invalidateQueries({ queryKey: ['api', 'admin', 'public-partner-applications'] }); } catch (error) { setMessage(errorMessage(error)); } finally { setSubmitting(false); } }
+  async function resendInvitation() { if (!selectedId || !selected.data || selected.data.status !== 'approved' || selected.data.archivedAt) return; setSubmitting(true); setMessage(''); try { const result = await invitePublicPartnerApplication(selectedId); setMessage(result.status === 'reactivated' ? 'Akses Partner dipulihkan.' : 'Undangan Partner dikirim ulang.'); await queryClient.invalidateQueries({ queryKey: apiQueryKeys.publicPartnerApplication(selectedId) }); } catch (error) { setMessage(errorMessage(error)); } finally { setSubmitting(false); } }
 
   return <section className="admin-review-page">
     <p className="eyebrow">PROGRAM PARTNER</p>
@@ -82,6 +84,7 @@ export function PublicPartnerApplicationsPage() {
           <h2>{selected.data.fullName}</h2>
           <dl className="review-details"><div><dt>Email</dt><dd>{selected.data.email}</dd></div><div><dt>WhatsApp</dt><dd>{selected.data.whatsapp}</dd></div><div><dt>Kota</dt><dd>{selected.data.city}</dd></div><div><dt>Kategori</dt><dd>{selected.data.category}</dd></div><div><dt>Pesan</dt><dd>{selected.data.message || '-'}</dd></div><div><dt>Detail</dt><dd>{Object.entries(selected.data.details).map(([key, value]) => <span key={key}>{key}: {Array.isArray(value) ? value.join(', ') : value}</span>)}</dd></div></dl>
           {selected.data.status === 'pending' ? <div className="review-action"><label htmlFor="review-note">Catatan review</label><textarea id="review-note" value={note} onChange={(event) => setNote(event.target.value)} maxLength={2000} placeholder="Opsional untuk approval; jelaskan alasan jika ditolak." /><div><button type="button" className="btn-ghost" disabled={submitting} onClick={() => void review('rejected')}>Tolak</button><button type="button" className="btn-solid" disabled={submitting} onClick={() => void review('approved')}>Setujui & kirim undangan</button></div></div> : <div className="review-result"><strong>Keputusan: {statusLabels[selected.data.status]}</strong><span>{selected.data.reviewNote || 'Tanpa catatan review.'}</span><span>{formatDate(selected.data.reviewedAt)}</span></div>}
+          {selected.data.status === 'approved' && !selected.data.archivedAt ? <button type="button" className="btn-solid" disabled={submitting} onClick={() => void resendInvitation()}>Kirim ulang undangan</button> : null}
           <button type="button" className="btn-ghost" disabled={submitting} onClick={() => void archive(!selected.data.archivedAt)}>{selected.data.archivedAt ? 'Pulihkan dari arsip' : 'Arsipkan pendaftaran'}</button>
         </> : null}
       </aside>
