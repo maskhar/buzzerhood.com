@@ -120,7 +120,8 @@ services:
         condition: service_healthy
       web:
         condition: service_healthy
-    command: ["sh", "-ec", "exec cloudflared tunnel run --token \"$(cat /run/secrets/cloudflare_tunnel_token)\""]
+    entrypoint: ["/bin/sh", "-ec"]
+    command: ["exec cloudflared tunnel run --token \"$(cat /run/secrets/cloudflare_tunnel_token)\""]
     secrets:
       - cloudflare_tunnel_token
     networks:
