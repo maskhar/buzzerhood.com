@@ -77,6 +77,7 @@ EOF
 echo ""
 echo "Step 8: Apply migrations"
 cd $REPO_DIR/database/migrations
+docker exec -i buzzerhood-postgres psql -v ON_ERROR_STOP=1 -U postgres -d buzzerhood < "$REPO_DIR/database/bootstrap/standalone-postgres-compat.sql"
 for migration in *.sql; do
     echo "Applying $migration..."
     docker exec -i buzzerhood-postgres psql -U postgres -d buzzerhood < "$migration"

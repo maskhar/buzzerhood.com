@@ -26,9 +26,10 @@ try {
   run('docker', ['exec', name, 'createdb', '-U', 'postgres', 'fresh']);
   run('docker', ['exec', name, 'createdb', '-U', 'postgres', 'upgrade']);
   const bootstrap = readFileSync(resolve(import.meta.dirname, '../test/fixtures/bootstrap.sql'), 'utf8');
+  const compatibility = readFileSync(resolve(root, 'database/bootstrap/standalone-postgres-compat.sql'), 'utf8');
   const latest = Math.max(...migrations(1, 9999).map((file) => Number(file.slice(0, 4))));
-  psql('fresh', bootstrap); apply('fresh', migrations(1, latest));
-  psql('upgrade', bootstrap); apply('upgrade', migrations(1, 17)); apply('upgrade', migrations(18, latest));
+  psql('fresh', `${compatibility}\n${bootstrap}`); apply('fresh', migrations(1, latest));
+  psql('upgrade', `${compatibility}\n${bootstrap}`); apply('upgrade', migrations(1, 17)); apply('upgrade', migrations(18, latest));
   const port = run('docker', ['port', name, '5432/tcp']).split(':').at(-1);
   const env = { ...process.env, TEST_DATABASE_URL: `postgresql://buzzerhood_app:integration_app_password@127.0.0.1:${port}/upgrade`, TEST_ADMIN_DATABASE_URL: `postgresql://postgres:integration_postgres_password@127.0.0.1:${port}/upgrade` };
   const tests = spawnSync(process.execPath, [resolve(import.meta.dirname, '../node_modules/vitest/vitest.mjs'), 'run', '--config', resolve(import.meta.dirname, '../vitest.integration.config.ts')], { stdio: 'inherit', env });
