@@ -1,6 +1,6 @@
 # Buzzerhood Platform
 
-## Backend Phase B1
+## Backend
 
 The production-capable API foundation lives in `backend/`: NestJS 11 on Fastify,
 Kysely/pg, strict Zod configuration, Ed25519 access JWTs, Argon2id credentials,
@@ -8,9 +8,7 @@ rotating hashed refresh sessions, existing-table RBAC, and transaction-local
 PostgreSQL identity context. API routes use `/api/v1`; `/health` and `/ready` are
 outside the prefix. Production registration and Swagger are closed.
 
-The API is dark-deployed independently at `/home/maskhar/docker/buzzerhood-api`
-and listens only on server localhost port 3100. The React application remains on
-its transitional Supabase path until B4.
+Local Docker runs `buzzerhood-api`, `buzzerhood-web`, and `buzzerhood-postgres`. Browser traffic uses the Buzzerhood Backend API; Buzzerhood does not use Supabase at application runtime.
 
 Buzzerhood is a **Media, Influence & Distribution Network** evolving into a Campaign & Distribution Operating System.
 
@@ -22,7 +20,7 @@ Target:
 Vite React -> Buzzerhood Backend API -> PostgreSQL schema buzzerhood
 ```
 
-The Backend (NestJS + TypeScript + Fastify + Kysely/pg) is planned for Phase B1 and is not implemented yet. The current React application still uses the self-hosted Supabase client for Auth, PostgREST, and RPC during the controlled B1-B4 transition. B0 removes nothing.
+The Backend (NestJS + TypeScript + Fastify + Kysely/pg) is implemented. The React application uses the centralized Backend API client for authentication and business data; it does not call Supabase Auth, PostgREST, or RPC.
 
 Read `docs/BACKEND_ARCHITECTURE.md`, `docs/BACKEND_MIGRATION_PLAN.md`, and `docs/SUPABASE_DEPENDENCY_AUDIT.md` before backend work.
 
@@ -31,7 +29,7 @@ Read `docs/BACKEND_ARCHITECTURE.md`, `docs/BACKEND_MIGRATION_PLAN.md`, and `docs
 - Vite + React + TypeScript
 - React Router + TanStack Query
 - React Hook Form + Zod
-- Transitional self-hosted Supabase client
+- Centralized Buzzerhood Backend API client
 
 ## Setup
 
@@ -56,10 +54,9 @@ npm run build
 ## Database and identity
 
 - Business data source: PostgreSQL schema `buzzerhood`.
-- Authoritative ordered migrations: `database/migrations/0001` through `0017`; future migrations continue at `0018+`.
+- Authoritative ordered migrations: `database/migrations/0001` through `0032`; future migrations continue from the next available version.
 - Historical baseline only: `database/schema.sql`; never deploy it as a lifecycle script.
-- Transitional identity: shared `auth.users` with `buzzerhood.profiles` bootstrap.
-- Target identity: `buzzerhood.users` behind the Buzzerhood API, with UUID-preserving profile migration if linked users exist at cutover.
+- Identity: `buzzerhood.users` behind the Buzzerhood API, with `buzzerhood.profiles` for business/profile data.
 - Production includes the 124-row legacy network import, Campaign Engine schema, custom Backend identity, and B2 Organization/Partner API grants and policies.
 
 ## Current application capabilities
@@ -70,9 +67,7 @@ npm run build
 - Admin partner application/claim review.
 - Campaign schema/RPC/projection foundations for campaigns, assignments, deliverables, content versions/reviews, publications, metrics, and workflow history.
 
-Current partner/admin browser screens call RLS-protected Buzzerhood tables and guarded RPCs without a service-role key. These calls are transitional and will be replaced by resource-oriented API endpoints.
-
-Backend B2 is dark-deployed as `buzzerhood-api:b2` on `127.0.0.1:3100`. Its business endpoints cover workspace resolution, organizations, the restricted public Network, Partner applications/claims, private Partner profiles/platforms/metrics/rates, and permission-checked admin review. Campaign HTTP APIs remain B3 scope; the React frontend remains on its transitional Supabase path until B4.
+Browser screens use resource-oriented Backend API DTOs. The API covers authentication, workspaces, organizations, public Network, Partner onboarding, Partner/Admin review, user administration, and campaign workflow.
 
 ## Type generation
 

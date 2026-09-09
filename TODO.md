@@ -67,12 +67,12 @@ Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 - [x] Migrate authentication, me/workspaces, profile, Client organization membership, Partner onboarding, Partner/Admin operations, and campaign workflow slices to Backend API DTOs.
 - [x] Move active query keys into `src/lib/api/query-keys.ts` while retaining TanStack Query behavior.
 - [ ] [Release gate] Validate UI parity, build/typecheck/lint/tests, CORS/CSRF, refresh races, negative authorization, migration fresh/upgrade paths, and browser network traces.
-- [ ] [Release gate] Confirm browser runtime has zero direct PostgREST/GoTrue business calls; retain previous frontend artifact/compatibility for rollback.
+- [x] [Release gate] Confirm browser runtime has zero direct PostgREST/GoTrue business calls; retain previous frontend artifact/compatibility for rollback.
 - [x] Reconcile local migration registry entries 0029-0031 with recovered source migrations; all versioned functions and grants are present.
 
 ## Supabase Retirement B5
 
-- [ ] Confirm repository and browser traces have no Buzzerhood runtime imports/calls for Supabase Auth, PostgREST, RPC, Storage, Realtime, or Edge Functions.
+- [x] Confirm repository and browser traces have no Buzzerhood runtime imports/calls for Supabase Auth, PostgREST, RPC, Storage, Realtime, or Edge Functions.
 - [x] Remove Buzzerhood frontend `@supabase/supabase-js`, `VITE_SUPABASE_*`, client, generated Supabase types, and legacy data-layer paths.
 - [ ] Through reviewed additive migrations, retire only Buzzerhood's `auth.uid()` coupling, profile trigger/FK compatibility, and obsolete grants after the rollback window.
 - [ ] Preserve shared `auth.users`, GoTrue, PostgREST, Storage, Realtime, Kong, Functions, all unrelated workloads, and PostgreSQL.
