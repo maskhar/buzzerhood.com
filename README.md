@@ -41,7 +41,7 @@ cp .env.example .env
 npm run dev
 ```
 
-During transition, browser `.env` uses only `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. The target browser setting is `VITE_API_BASE_URL`. Never expose a service role, database password/URL, JWT signing key, refresh secret, or SSH credential in `VITE_*` or frontend code.
+Browser uses only `VITE_API_BASE_URL`; Supabase browser credentials are no longer part of frontend configuration. Never expose a service role, database password/URL, JWT signing key, refresh secret, or SSH credential in `VITE_*` or frontend code.
 
 ## Commands
 
@@ -76,7 +76,7 @@ Backend B2 is dark-deployed as `buzzerhood-api:b2` on `127.0.0.1:3100`. Its busi
 
 ## Type generation
 
-`src/lib/supabase/database.types.ts` remains a transitional frontend database interface. Backend-only Kysely types are generated from the migrated schema; frontend contracts must use API DTO/Zod/OpenAPI types rather than raw database rows after B4 cutover.
+Frontend contracts use Backend API DTO/Zod/OpenAPI types. Database types remain backend-only and are not shipped to browsers.
 
 ## Self-hosted safety
 

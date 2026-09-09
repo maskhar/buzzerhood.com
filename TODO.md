@@ -73,7 +73,7 @@ Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 ## Supabase Retirement B5
 
 - [ ] Confirm repository and browser traces have no Buzzerhood runtime imports/calls for Supabase Auth, PostgREST, RPC, Storage, Realtime, or Edge Functions.
-- [ ] Remove Buzzerhood frontend `@supabase/supabase-js`, `VITE_SUPABASE_*`, client, generated Supabase types, and legacy data-layer paths.
+- [x] Remove Buzzerhood frontend `@supabase/supabase-js`, `VITE_SUPABASE_*`, client, generated Supabase types, and legacy data-layer paths.
 - [ ] Through reviewed additive migrations, retire only Buzzerhood's `auth.uid()` coupling, profile trigger/FK compatibility, and obsolete grants after the rollback window.
 - [ ] Preserve shared `auth.users`, GoTrue, PostgREST, Storage, Realtime, Kong, Functions, all unrelated workloads, and PostgreSQL.
 - [ ] Verify shared Supabase service health and unrelated APIs after every narrowly scoped retirement change.

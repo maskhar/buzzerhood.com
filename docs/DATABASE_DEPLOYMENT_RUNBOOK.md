@@ -60,8 +60,7 @@ Do not execute this runbook without explicit Phase 2B approval.
 
 ## 10. Generate Database Types
 
-- Use non-Vite local tool secret such as `SUPABASE_DB_URL` outside source control.
-- Generate TypeScript schema types into `src/lib/supabase/database.types.ts` after deployment verification.
+- Generate backend-only Kysely types after deployment verification.`n- Frontend contracts use API DTOs and must not receive database schema types or database credentials.
 - Do not commit database passwords or connection strings.
 
 ## 11. Application Smoke Test

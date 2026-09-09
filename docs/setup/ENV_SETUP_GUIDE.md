@@ -51,11 +51,7 @@ Vite memuat file .env dengan prioritas (tertinggi ke terendah):
 **Isi**:
 ```env
 # Backend API endpoint
-VITE_API_URL=http://localhost:3100
-
-# Supabase (transitional)
-VITE_SUPABASE_URL=https://supabase.carubra.com
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+VITE_API_BASE_URL=http://localhost:3100/api/v1
 ```
 
 **Kapan digunakan**: Saat menjalankan 

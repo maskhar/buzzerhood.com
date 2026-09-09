@@ -9,14 +9,14 @@ Supabase is deprecated as the **Buzzerhood browser application backend**, not as
 | PostgreSQL | Source of truth, schema `buzzerhood` | Keep | Never | Not removable. |
 | Migration registry | `buzzerhood.schema_migrations`, `0001`-`0013` | Keep; continue `0014+` | B1 onward | Historical migrations immutable. |
 | Supabase Auth / GoTrue | Browser login/session; profile trigger coupled to `auth.users` | Custom `buzzerhood.users` + backend auth | B1 build, B4 cutover, B5 retire | Auth acceptance, activation/reset path, session revocation, and rollback proven. Service remains for other apps. |
-| Supabase JS Auth | Directly used by provider/login | Backend `/auth/*` | B4/B5 | No imports or runtime calls. |
+| Supabase JS Auth | Removed from Buzzerhood frontend | Backend `/auth/*` | B5 frontend cleanup complete | No imports or runtime calls. |
 | PostgREST business reads | Direct tables/views from browser | Resource-oriented REST API | B2-B4 | All query functions migrated and authorization tests pass. |
 | PostgREST business writes | Partner/account/rate direct mutations | Explicit backend commands | B2/B4 | No browser `.insert/.update/.delete`. |
 | PostgREST RPC | Partner and campaign workflow RPC calls | Domain endpoints invoking/adapting safe DB invariants | B2-B4 | No browser `.rpc`; endpoint parity and state-machine tests pass. |
 | `auth.uid()` RLS | Helpers, policies, and actor writes in `0004`, `0007`, `0008`, `0010`/`0011`, `0012` | Transaction-local `buzzerhood.current_user_id()` | B1-B5 | Backend context tests and legacy compatibility/cutover complete. |
 | `anon`/`authenticated` grants | PostgREST roles | Dedicated least-privilege `buzzerhood_app` | B1-B5 | Browser PostgREST traffic eliminated; shared grants changed only through reviewed migration. |
-| Generated Supabase DB types | Frontend file; stale for `0012`-`0013` | Backend Kysely DB types + API DTOs | B1/B4/B5 | Frontend has no raw DB types. |
-| `VITE_SUPABASE_*` | Required by current browser client | `VITE_API_BASE_URL` | B4/B5 | No legacy runtime path. |
+| Generated Supabase DB types | Removed from Buzzerhood frontend | Backend Kysely DB types + API DTOs | B5 frontend cleanup complete | Frontend has no raw DB types. |
+| `VITE_SUPABASE_*` | Removed from Buzzerhood frontend configuration | `VITE_API_BASE_URL` | B5 frontend cleanup complete | No legacy runtime path. |
 | Supabase Storage | Planned only; no operational call | Defer; object-storage port, S3-compatible option later | Later | File domain requirements and migration plan approved. Shared service untouched. |
 | Supabase Realtime | No application usage; transitive package only | Do not rebuild by default | B5 | Package removal follows Supabase JS removal. |
 | Edge Functions | No Buzzerhood usage | Backend handles future server logic | B5 | Confirm no new Buzzerhood functions were introduced. Shared functions untouched. |
