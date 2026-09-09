@@ -75,20 +75,7 @@ cp docker/buzzerhood/.env.api.example docker/buzzerhood/.env.api
 Edit .env.api and replace:
 - REPLACE_WITH_APP_PASSWORD with a strong password for buzzerhood_app role
 
-### 5. Dedicated Cloudflare Tunnel Token
-
-Create token file on deployment host. Never commit this file:
-
-```bash
-printf '%s' 'PASTE_NEW_BUZZERHOOD_TUNNEL_TOKEN' > docker/buzzerhood/secrets/cloudflare-tunnel-token.txt
-chmod 600 docker/buzzerhood/secrets/cloudflare-tunnel-token.txt
-```
-
-`buzzerhood-cloudflared` reads this Docker secret and connects only to
-`carubra-network`. Cloudflare ingress services must use `http://buzzerhood-web`
-and `http://buzzerhood-api:3100`.
-
-### 6. Frontend Environment (Build-time)
+### 5. Frontend Environment (Build-time)
 
 Create .env.production in repository root:
 
@@ -156,9 +143,15 @@ curl http://127.0.0.1:8080/health
 curl http://127.0.0.1:8080/
 ```
 
-## Reverse Proxy Configuration
+## External Routing
 
-The containers bind to localhost only. Configure your reverse proxy for HTTPS termination.
+Cloudflare Tunnel and public DNS are external infrastructure managed outside
+the Buzzerhood Docker Compose project. This Compose stack manages only
+`buzzerhood-web`, `buzzerhood-api`, and `buzzerhood-postgres`.
+
+External routing may reach `buzzerhood-web` and `buzzerhood-api` through
+`carubra-network`. PostgreSQL remains on `buzzerhood-network` only and is
+never exposed through public routing.
 
 ## Data Migration from Supabase
 
