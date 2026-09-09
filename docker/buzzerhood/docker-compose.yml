@@ -79,7 +79,7 @@ services:
       context: ../../
       dockerfile: Dockerfile.web
       args:
-        VITE_API_BASE_URL: http://127.0.0.1:3100/api/v1
+        VITE_API_BASE_URL: https://api.buzzerhood.com/api/v1
     image: buzzerhood-web:b4
     container_name: buzzerhood-web
     restart: unless-stopped
