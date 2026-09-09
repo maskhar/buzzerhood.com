@@ -60,14 +60,15 @@ Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 
 - [x] Implement and locally validate first public-registration slice: reviewed additive migration 0019, public submission with strict validation/honeypot/throttle/optional SMTP, private partner-management review queue and terminal approval/rejection audit, React registration-form transport, Super Admin review UI, status dashboard, and approval/rejection email templates. Approval does not auto-create identity, Partner, or membership. Backend migration/API deployed September 5, 2026; public frontend artifact remains on prior transport until its own release.
 - [x] Add local Partner identity deduplication and reversible approved-Partner archive lifecycle.
-- [ ] Apply reviewed migration 0020_public_partner_applications_rls_hardening.sql after the local-only boundary is explicitly lifted. It removes fail-open app-role reads when `app.user_id` is absent; local regression coverage passes.
+- [x] Apply and locally validate migration `0020_public_partner_applications_rls_hardening.sql`; it removes fail-open app-role reads when `app.user_id` is absent.
 - [x] Add centralized `src/lib/api/client.ts`, `errors.ts`, `auth.ts`, safe `VITE_API_BASE_URL`, normalized errors, credentialed refresh, and one-time serialized retry. Access token remains memory-only; CSRF continuity is tab-scoped.
 - [x] Replace Supabase Auth provider/types for Login and protected routing with Backend Auth, memory-only access token, rotating refresh cookie, session restore, and full query-cache clearing on logout.
 - [x] Migrate `me/workspaces`, workspace guards, workspace selection, and initial Client/Partner/Admin dashboards to Backend API DTOs. Keep non-migrated operation routes as explicit placeholders.
-- [ ] Migrate one vertical slice at a time: me/workspaces, public network, organizations, partners/admin, then campaigns/content/publications/metrics.
-- [ ] Move query keys out of the Supabase namespace while retaining TanStack Query behavior.
-- [ ] Validate UI parity, build/typecheck/lint/tests, CORS/CSRF, refresh races, negative authorization, and browser network traces.
-- [ ] Reach zero direct browser PostgREST/GoTrue business calls before B4 exit; retain previous frontend artifact/compatibility for rollback.
+- [x] Migrate authentication, me/workspaces, profile, Client organization membership, Partner onboarding, Partner/Admin operations, and campaign workflow slices to Backend API DTOs.
+- [x] Move active query keys into `src/lib/api/query-keys.ts` while retaining TanStack Query behavior.
+- [ ] [Release gate] Validate UI parity, build/typecheck/lint/tests, CORS/CSRF, refresh races, negative authorization, migration fresh/upgrade paths, and browser network traces.
+- [ ] [Release gate] Confirm browser runtime has zero direct PostgREST/GoTrue business calls; retain previous frontend artifact/compatibility for rollback.
+- [x] Recover versioned source migrations 0030-0032 and align them with local migration registry.
 
 ## Supabase Retirement B5
 

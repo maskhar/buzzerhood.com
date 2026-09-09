@@ -4,11 +4,11 @@
 
 ## Included
 
-Public marketing parity; organization tenancy; Supabase Auth; membership roles; partner directory; campaign workflow; versioned content review; publication/metrics; reports; manual commercial tracking; private files; audit events; RLS tests.
+Public marketing parity; organization tenancy; custom Buzzerhood Backend API authentication; membership roles; reviewed public Partner applications that do not create an account before approval and invitation; partner directory; campaign workflow; versioned content review; publication/metrics; reports; manual commercial tracking; private files; audit events; RLS tests.
 
 ## Excluded
 
-No public partner self-registration without review, no direct social scraping, no payment gateway, no mass email/SMS, no background queue, no recommendation algorithm, no marketplace checkout, no mobile app.
+No automatic public Partner account self-registration without review and invitation, no direct social scraping, no payment gateway, no mass email/SMS, no background queue, no recommendation algorithm, no marketplace checkout, no mobile app.
 
 ## Source Data Constraints
 

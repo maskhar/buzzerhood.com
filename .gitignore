@@ -21,3 +21,4 @@ pnpm-debug.log*
 # Local CodeGraph index
 .codegraph/
 backups/local/
+.codegraphy/*
