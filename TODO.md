@@ -68,7 +68,7 @@ Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 - [x] Move active query keys into `src/lib/api/query-keys.ts` while retaining TanStack Query behavior.
 - [ ] [Release gate] Validate UI parity, build/typecheck/lint/tests, CORS/CSRF, refresh races, negative authorization, migration fresh/upgrade paths, and browser network traces.
 - [ ] [Release gate] Confirm browser runtime has zero direct PostgREST/GoTrue business calls; retain previous frontend artifact/compatibility for rollback.
-- [x] Recover versioned source migrations 0030-0032 and align them with local migration registry.
+- [ ] [Release blocker] Reconcile local migration registry entries 0029-0031 with recovered source migrations before any further schema change.
 
 ## Supabase Retirement B5
 
