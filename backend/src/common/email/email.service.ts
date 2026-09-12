@@ -18,6 +18,18 @@ export type PublicPartnerApplicationDecisionEmail = PublicPartnerApplicationEmai
   reviewNote: string | null;
 };
 
+export type PublicCampaignRequestEmail = {
+  id: string;
+  token: string;
+  contactName: string;
+  email: string;
+  whatsapp: string;
+  organizationName: string;
+  needType: string;
+  platformTarget: string;
+  brief: string;
+};
+
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
@@ -31,6 +43,13 @@ export class EmailService {
 
   async sendPartnerApplicationReceived(application: PublicPartnerApplicationEmail): Promise<void> {
     await Promise.allSettled([this.sendInternalNotification(application), this.sendApplicantConfirmation(application)]);
+  }
+
+  async sendCampaignRequestReceived(request: PublicCampaignRequestEmail): Promise<void> {
+    await Promise.allSettled([
+      this.send({ to: request.email, subject: 'Brief campaign Buzzerhood diterima', text: `Halo ${request.contactName},\n\nBrief campaign dari ${request.organizationName} sudah kami terima. Tim Buzzerhood akan meninjau dan menghubungi Anda melalui email atau WhatsApp.\n\nCek status: ${this.config.corsOrigins[0]}/campaign-request/status?token=${encodeURIComponent(request.token)}\n\nTim Buzzerhood` }),
+      this.sendInternalCampaignRequest(request)
+    ]);
   }
 
   async diagnostics() {
@@ -77,6 +96,11 @@ export class EmailService {
       subject: `Pendaftaran partner baru: ${application.fullName}`,
       text: `Pendaftaran partner baru masuk.\n\nID: ${application.id}\nNama: ${application.fullName}\nKategori: ${application.category}\nEmail: ${application.email}\nWhatsApp: ${application.whatsapp}\nKota: ${application.city}\nPesan: ${application.message ?? '-'}`
     });
+  }
+
+  private async sendInternalCampaignRequest(request: PublicCampaignRequestEmail): Promise<void> {
+    if (!this.config.email.partnerApplicationNotificationEmail) return;
+    await this.send({ to: this.config.email.partnerApplicationNotificationEmail, subject: `Brief campaign baru: ${request.organizationName}`, text: `Brief campaign baru masuk.\n\nID: ${request.id}\nNama: ${request.contactName}\nEmail: ${request.email}\nWhatsApp: ${request.whatsapp}\nOrganisasi: ${request.organizationName}\nKebutuhan: ${request.needType}\nPlatform: ${request.platformTarget}\nBrief: ${request.brief}` });
   }
 
   private async sendApplicantConfirmation(application: PublicPartnerApplicationEmail): Promise<void> {

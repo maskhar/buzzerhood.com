@@ -64,6 +64,9 @@ export interface Database {
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
   };
+  'buzzerhood.public_campaign_requests': {
+    id: Generated<string>; contact_name: string; email: string; whatsapp: string; organization_name: string; need_type: string; platform_target: string; brief: string; source_path: string; status: string; status_token_hash: string; review_note: string | null; reviewed_by: string | null; reviewed_at: Timestamp | null; converted_campaign_id: string | null; ip_hash: string | null; user_agent_hash: string | null; created_at: Generated<Timestamp>; updated_at: Generated<Timestamp>; archived_at: Timestamp | null; archived_by: string | null;
+  };
   'buzzerhood.user_roles': { profile_id: string; role_id: string; granted_by: string | null; granted_at: Timestamp; revoked_at: Timestamp | null };
   'buzzerhood.roles': { id: string; key: string; label: string; scope: string; created_at: Timestamp };
   'buzzerhood.permissions': { id: string; key: string; description: string; created_at: Timestamp };

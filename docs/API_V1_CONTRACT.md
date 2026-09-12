@@ -70,6 +70,13 @@ Pendaftaran publik hanya membuat application. Setelah Internal menyetujui melalu
 - `GET /me/partner-applications` — current user's applications and review status.
 - `GET /me/partner-claims` — current user's claim status; evidence exposure is limited to owner/admin need.
 
+## Public campaign request inbox
+
+- `POST /public/campaign-requests` menerima nama, email, WhatsApp, organisasi, jenis kebutuhan, target platform, dan brief. Semua field bisnis wajib; body strict, throttled, dan memakai honeypot.
+- Submission hanya membuat inbox record permanen. Submission tidak membuat Organization, user, atau Campaign otomatis.
+- `GET /public/campaign-requests/status?token=` memberi status aman melalui opaque token yang hanya dikirim lewat email; review note dan data Internal tidak diekspos.
+- `GET /admin/public-campaign-requests` dan detail/review/reject/archive memerlukan akses Admin `users.manage`. Conversion ke Campaign tetap tahap terpisah dan harus memilih Organization existing secara eksplisit.
+
 ## Organizations
 
 - `GET /organizations` — organizations visible through active membership or explicit internal permission.

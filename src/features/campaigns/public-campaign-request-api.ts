@@ -1,0 +1,4 @@
+import { apiRequest } from '@/lib/api/client';
+export type PublicCampaignRequestInput = { contactName: string; email: string; whatsapp: string; organizationName: string; needType: 'brand_awareness'|'creator_activation'|'community_amplification'|'buzzer_network'|'other'; platformTarget: string; brief: string; sourcePath: '/campaign-request'; website?: string };
+export function createPublicCampaignRequest(input: PublicCampaignRequestInput) { return apiRequest<{ id: string; status: 'received' }>('/public/campaign-requests', { method: 'POST', body: input, retryOnUnauthorized: false }); }
+export function getPublicCampaignRequestStatus(token: string) { return apiRequest<{ status: string; createdAt: string; updatedAt: string }>('/public/campaign-requests/status?token=' + encodeURIComponent(token), { credentials: 'omit', retryOnUnauthorized: false }); }

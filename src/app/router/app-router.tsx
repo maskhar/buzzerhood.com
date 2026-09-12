@@ -12,6 +12,7 @@ const TermsPage = lazy(() => import('@/pages/public/terms-page').then((module) =
 const LoginPage = lazy(() => import('@/pages/public/login-page').then((module) => ({ default: module.LoginPage })));
 const AccountPasswordPage = lazy(() => import('@/pages/public/account-password-page').then((module) => ({ default: module.AccountPasswordPage })));
 const CampaignRequestPage = lazy(() => import('@/pages/public/campaign-request-page').then((module) => ({ default: module.CampaignRequestPage })));
+const CampaignRequestStatusPage = lazy(() => import('@/pages/public/campaign-request-status-page').then((module) => ({ default: module.CampaignRequestStatusPage })));
 const WorkspacePage = lazy(() => import('@/pages/workspace/workspace-page').then((module) => ({ default: module.WorkspacePage })));
 const ClientLayout = lazy(() => import('@/layouts/dashboard-layouts').then((module) => ({ default: module.ClientLayout })));
 const PartnerLayout = lazy(() => import('@/layouts/dashboard-layouts').then((module) => ({ default: module.PartnerLayout })));
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
   { path: '/network', element: <Navigate to="/#database" replace /> },
   { path: '/partner/register-info', element: load(<CampaignRequestPage partner />) },
   { path: '/campaign-request', element: load(<CampaignRequestPage />) },
+  { path: '/campaign-request/status', element: load(<CampaignRequestStatusPage />) },
   { path: '/login', element: load(<LoginPage />) },
   { path: '/reset-password', element: load(<AccountPasswordPage />) },
   { path: '/activate-partner', element: load(<AccountPasswordPage />) },

@@ -58,6 +58,8 @@ Phase B3 is deployed dark and healthy. No frontend/API cutover is part of B3.
 
 ## Frontend API Migration B4
 
+- [x] Tambah public Campaign request inbox Phase 1: migration 0033, strict submission, email/WhatsApp wajib, honeypot/throttle, opaque status token, email konfirmasi generik, Admin inbox API, dan frontend submission.
+
 - [x] Implement and locally validate first public-registration slice: reviewed additive migration 0019, public submission with strict validation/honeypot/throttle/optional SMTP, private partner-management review queue and terminal approval/rejection audit, React registration-form transport, Super Admin review UI, status dashboard, and approval/rejection email templates. Approval does not auto-create identity, Partner, or membership. Backend migration/API deployed September 5, 2026; public frontend artifact remains on prior transport until its own release.
 - [x] Add local Partner identity deduplication and reversible approved-Partner archive lifecycle.
 - [x] Apply and locally validate migration `0020_public_partner_applications_rls_hardening.sql`; it removes fail-open app-role reads when `app.user_id` is absent.
