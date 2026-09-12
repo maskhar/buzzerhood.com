@@ -17,3 +17,4 @@
 .h02-header-logo{display:block;width:150px;height:48px;overflow:hidden;background:#fff;border-radius:3px}.h02-header-logo img{display:block;width:100%;height:100%;object-fit:contain}
 @media(max-width:640px){.h02-header-logo{width:112px;height:38px}}
 .h02-testimonials .h02-container>div:first-child h2{font-size:clamp(2.35rem,3.2vw,3.55rem);line-height:.84}
+.h02-footer-tagline{display:block;margin-top:10px;color:#8d857d;font-size:.56rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
