@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import buzzerhoodWordmark from '@/assets/buzzerhood-wordmark.svg';
+import headerLogo02 from '@/assets/images/buzzerhood-logo-02.png';
 import './privacy-page.css';
+import './terms-page.css';
 
 type PrivacySection = { title: string; paragraphs: string[]; items?: string[] };
 
@@ -23,21 +24,21 @@ const sections: PrivacySection[] = [
 export function PrivacyPage() {
   return <main className="privacy-public">
     <header>
-      <Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={buzzerhoodWordmark} alt="Buzzerhood" /></Link>
+      <Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={headerLogo02} alt="Buzzerhood" /></Link>
       <Link to="/home-02">Kembali ke Beranda</Link>
     </header>
-    <article>
+    <div className="terms-layout"><aside className="terms-toc"><p>DAFTAR ISI</p><nav>{sections.map((section) => <a key={section.title} href={`#${section.title.split(". ")[0]}`}>{section.title}</a>)}<a href="#14">14. Hubungi Kami</a></nav></aside><article>
       <p className="privacy-label">PRIVASI</p>
       <h1>Kebijakan Privasi</h1>
       <p className="privacy-updated">Terakhir diperbarui: 12 September 2026</p>
-      {sections.map((section) => <section key={section.title}>
+      {sections.map((section) => <section id={section.title.split(". ")[0]} key={section.title}>
         <h2>{section.title}</h2>
         <p>{section.paragraphs[0]}</p>
         {section.items ? <ul>{section.items.map((item) => <li key={item}>{item}</li>)}</ul> : null}
         {section.paragraphs.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
       </section>)}
-      <section><h2>14. Hubungi Kami</h2><p>Untuk pertanyaan, pelaksanaan hak, atau pengaduan data pribadi, hubungi <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a>. Cantumkan subjek “Privasi Data” dan informasi yang cukup agar permintaan dapat diverifikasi dan ditindaklanjuti.</p></section>
+      <section id="14"><h2>14. Hubungi Kami</h2><p>Untuk pertanyaan, pelaksanaan hak, atau pengaduan data pribadi, hubungi <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a>. Cantumkan subjek “Privasi Data” dan informasi yang cukup agar permintaan dapat diverifikasi dan ditindaklanjuti.</p></section>
       <aside className="privacy-note">Dokumen ini perlu ditinjau penasihat hukum serta diperbarui saat identitas badan hukum, fitur, vendor, atau praktik pemrosesan Buzzerhood berubah.</aside>
-    </article>
+    </article></div>
   </main>;
 }
