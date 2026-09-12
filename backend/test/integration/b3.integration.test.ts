@@ -10,7 +10,7 @@ import { ApiExceptionFilter } from '../../src/common/errors/api-exception.filter
 
 const databaseUrl=process.env.TEST_DATABASE_URL,adminUrl=process.env.TEST_ADMIN_DATABASE_URL;
 if(!databaseUrl||!adminUrl)throw new Error('B3 test database URLs are required.');
-function config():AppConfiguration{const pair=generateKeyPairSync('ed25519');return{environment:'test',host:'127.0.0.1',port:3100,database:{url:databaseUrl!,poolMin:0,poolMax:1,connectionTimeoutMs:5000,queryTimeoutMs:10000},jwt:{issuer:'https://auth.test.buzzerhood.invalid',audience:'buzzerhood-test',accessTtlSeconds:600,keyId:'b3-test',privateKeyPem:pair.privateKey.export({format:'pem',type:'pkcs8'}).toString(),publicKeyPem:pair.publicKey.export({format:'pem',type:'spki'}).toString()},refresh:{ttlSeconds:3600,cookieName:'buzzerhood_refresh',csrfCookieName:'buzzerhood_csrf',secure:false,sameSite:'lax'},corsOrigins:['https://test.buzzerhood.invalid'],registrationMode:'open',rateLimit:{ttlMs:60000,max:2000},email:{enabled:false,host:null,port:587,secure:false,user:null,password:null,from:null,partnerApplicationNotificationEmail:null},swaggerEnabled:false,logLevel:'silent'};}
+function config():AppConfiguration{const pair=generateKeyPairSync('ed25519');return{environment:'test',host:'127.0.0.1',port:3100,database:{url:databaseUrl!,poolMin:0,poolMax:1,connectionTimeoutMs:5000,queryTimeoutMs:10000},jwt:{issuer:'https://auth.test.buzzerhood.invalid',audience:'buzzerhood-test',accessTtlSeconds:600,keyId:'b3-test',privateKeyPem:pair.privateKey.export({format:'pem',type:'pkcs8'}).toString(),publicKeyPem:pair.publicKey.export({format:'pem',type:'spki'}).toString()},refresh:{ttlSeconds:3600,cookieName:'buzzerhood_refresh',csrfCookieName:'buzzerhood_csrf',secure:false,sameSite:'lax'},corsOrigins:['https://test.buzzerhood.invalid'],registrationMode:'open',rateLimit:{ttlMs:60000,max:2000},email:{enabled:false,host:null,port:587,secure:false,user:null,password:null,from:null,partnerApplicationNotificationEmail:null,publicWebUrl:"https://buzzerhood.com"},swaggerEnabled:false,logLevel:'silent'};}
 type Identity={id:string;token:string};
 
 describe('B3 Campaign API workflow and isolation',()=>{
@@ -89,3 +89,5 @@ describe('B3 Campaign API workflow and isolation',()=>{
     expect((await app.inject({method:'GET',url:`/api/v1/publications/${publication}/metrics`,headers:auth(partnerB)})).statusCode).toBe(404);
   });
 });
+
+

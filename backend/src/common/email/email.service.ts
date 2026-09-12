@@ -47,7 +47,7 @@ export class EmailService {
 
   async sendCampaignRequestReceived(request: PublicCampaignRequestEmail): Promise<void> {
     await Promise.allSettled([
-      this.send({ to: request.email, subject: 'Brief campaign Buzzerhood diterima', text: `Halo ${request.contactName},\n\nBrief campaign dari ${request.organizationName} sudah kami terima. Tim Buzzerhood akan meninjau dan menghubungi Anda melalui email atau WhatsApp.\n\nCek status: ${this.config.corsOrigins[0]}/campaign-request/status?token=${encodeURIComponent(request.token)}\n\nTim Buzzerhood` }),
+      this.send({ to: request.email, subject: 'Brief campaign Buzzerhood diterima', text: `Halo ${request.contactName},\n\nBrief campaign dari ${request.organizationName} sudah kami terima. Tim Buzzerhood akan meninjau dan menghubungi Anda melalui email atau WhatsApp.\n\nCek status: ${this.config.email.publicWebUrl}/campaign-request/status?token=${encodeURIComponent(request.token)}\n\nTim Buzzerhood` }),
       this.sendInternalCampaignRequest(request)
     ]);
   }
@@ -75,17 +75,17 @@ export class EmailService {
   }
 
   sendPartnerInvitation(input: { email: string; displayName: string; token: string }): Promise<void> {
-    const url = `${this.config.corsOrigins[0]}/activate-partner?token=${encodeURIComponent(input.token)}`;
+    const url = `${this.config.email.publicWebUrl}/activate-partner?token=${encodeURIComponent(input.token)}`;
     return this.send({ to: input.email, subject: 'Aktifkan akun Partner Buzzerhood', text: `Halo ${input.displayName},\n\nBuat password melalui tautan berikut:\n${url}\n\nTautan berlaku 24 jam dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
   }
 
   sendAccountInvitation(input: { email: string; displayName: string; token: string }): Promise<void> {
-    const url = `${this.config.corsOrigins[0]}/activate-partner?token=${encodeURIComponent(input.token)}`;
+    const url = `${this.config.email.publicWebUrl}/activate-partner?token=${encodeURIComponent(input.token)}`;
     return this.send({ to: input.email, subject: 'Aktifkan akun Buzzerhood', text: `Halo ${input.displayName},\n\nAkun Buzzerhood Anda telah dibuat. Buat password melalui tautan berikut:\n${url}\n\nTautan berlaku 24 jam dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
   }
 
   sendPasswordReset(input: { email: string; displayName: string | null; token: string }): Promise<void> {
-    const url = `${this.config.corsOrigins[0]}/reset-password?token=${encodeURIComponent(input.token)}`;
+    const url = `${this.config.email.publicWebUrl}/reset-password?token=${encodeURIComponent(input.token)}`;
     return this.send({ to: input.email, subject: 'Reset password Buzzerhood', text: `Halo ${input.displayName ?? 'Pengguna Buzzerhood'},\n\nGanti password melalui tautan berikut:\n${url}\n\nTautan berlaku 30 menit dan hanya dapat dipakai sekali.\n\nTim Buzzerhood` });
   }
 
@@ -123,3 +123,4 @@ export class EmailService {
     }
   }
 }
+

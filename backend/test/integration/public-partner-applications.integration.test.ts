@@ -23,7 +23,7 @@ function config(): AppConfiguration {
     jwt: { issuer: 'https://auth.test.buzzerhood.invalid', audience: 'buzzerhood-test', accessTtlSeconds: 600, keyId: 'public-applications-test', privateKeyPem: pair.privateKey.export({ format: 'pem', type: 'pkcs8' }).toString(), publicKeyPem: pair.publicKey.export({ format: 'pem', type: 'spki' }).toString() },
     refresh: { ttlSeconds: 3_600, cookieName: 'buzzerhood_refresh', csrfCookieName: 'buzzerhood_csrf', secure: false, sameSite: 'lax' },
     corsOrigins: ['https://test.buzzerhood.invalid'], registrationMode: 'open', rateLimit: { ttlMs: 60_000, max: 1_000 },
-    email: { enabled: false, host: null, port: 587, secure: false, user: null, password: null, from: null, partnerApplicationNotificationEmail: null },
+    email: { enabled: false, host: null, port: 587, secure: false, user: null, password: null, from: null, partnerApplicationNotificationEmail: null, publicWebUrl: "https://buzzerhood.com" },
     swaggerEnabled: false, logLevel: 'silent'
   };
 }
@@ -193,3 +193,4 @@ describe('public partner applications API', () => {
     expect(restore.json<{ error: { code: string } }>().error.code).toBe('PARTNER_APPLICATION_RESTORE_CONFLICT');
   });
 });
+

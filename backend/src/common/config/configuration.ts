@@ -56,6 +56,7 @@ const environmentSchema = z
     SMTP_PASSWORD: z.string().min(1).optional(),
     SMTP_FROM: z.string().email().optional(),
     PARTNER_APPLICATION_NOTIFICATION_EMAIL: z.string().email().optional(),
+    PUBLIC_WEB_URL: z.string().url().default("https://buzzerhood.com"),
     SWAGGER_ENABLED: booleanString.default(false),
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
@@ -142,6 +143,7 @@ export type AppConfiguration = {
     password: string | null;
     from: string | null;
     partnerApplicationNotificationEmail: string | null;
+    publicWebUrl: string;
   };
   swaggerEnabled: boolean;
   logLevel: Environment["LOG_LEVEL"];
@@ -203,8 +205,10 @@ export function loadConfiguration(
       from: parsed.SMTP_FROM ?? null,
       partnerApplicationNotificationEmail:
         parsed.PARTNER_APPLICATION_NOTIFICATION_EMAIL ?? null,
+      publicWebUrl: parsed.PUBLIC_WEB_URL,
     },
     swaggerEnabled: parsed.SWAGGER_ENABLED,
     logLevel: parsed.LOG_LEVEL,
   };
 }
+
