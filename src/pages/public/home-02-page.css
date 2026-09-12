@@ -13,3 +13,6 @@
 .h02-about h2{font-size:clamp(2rem,3vw,3.3rem);line-height:.98}.h02-heading h2{font-size:clamp(2.1rem,3.3vw,3.7rem);line-height:.98}.h02-final h2{font-size:clamp(2.1rem,3.5vw,3.8rem);line-height:.98;max-width:780px}.h02-number strong{font-weight:900}.h02-testimonial-intro h2{font-family:'Big Shoulders Display',sans-serif;font-size:clamp(3rem,4.1vw,4.6rem);font-weight:900;letter-spacing:-.02em;line-height:.8}.h02-testimonial-intro{display:flex;flex-direction:column;justify-content:center;padding-right:32px}.h02-testimonials blockquote{min-height:260px;padding:26px}.h02-socials img{display:block;width:13px;height:13px}.h02-socials a{transition:border-color .2s ease,background .2s ease}.h02-socials a:hover{background:var(--orange)}
 
 .h02-about-image{height:145px;margin:0;overflow:hidden;border-radius:8px;background:#111}.h02-about-image img{display:block;width:100%;height:100%;object-fit:cover;opacity:.82}
+
+.h02-header-logo{display:block;width:150px;height:48px;overflow:hidden;background:#fff;border-radius:3px}.h02-header-logo img{display:block;width:100%;height:100%;object-fit:contain}
+@media(max-width:640px){.h02-header-logo{width:112px;height:38px}}
