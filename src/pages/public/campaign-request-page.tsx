@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
-import buzzerhoodWordmark from '@/assets/buzzerhood-wordmark.svg';
+import buzzerhoodLogo from '@/assets/images/buzzerhood-logo-02.png';
 import campaignBackground from '@/assets/images/campaign-request-bg.png';
 import './campaign-request-page.css';
 
@@ -35,7 +35,7 @@ export function CampaignRequestPage({ partner }: { partner?: boolean }) {
   const { register, handleSubmit, formState: { errors, isSubmitSuccessful } } = useForm<RequestValues>({ resolver: zodResolver(requestSchema) });
   const title = partner ? <>Form Pendaftaran <span>Partner</span></> : <>Form Permintaan <span>Campaign</span></>;
   return <main className="campaign-request" style={{ '--campaign-bg': 'url(' + campaignBackground + ')' } as React.CSSProperties}>
-    <header className="campaign-request-nav"><Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={buzzerhoodWordmark} alt="Buzzerhood" /></Link><nav aria-label="Navigasi utama"><Link to="/home-02">Beranda</Link><Link to="/home-02#layanan">Layanan</Link><Link to="/home-02#studi-kasus">Studi Kasus</Link><Link to="/home-02#tentang">Tentang Kami</Link><Link to="/home-02#kontak">Kontak</Link></nav><Link className="campaign-nav-cta" to="/campaign-request">Ajukan Campaign <span>→</span></Link></header>
+    <header className="campaign-request-nav"><Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={buzzerhoodLogo} alt="Buzzerhood" /></Link><nav aria-label="Navigasi utama"><Link to="/home-02">Beranda</Link><Link to="/home-02#layanan">Layanan</Link><Link to="/home-02#studi-kasus">Studi Kasus</Link><Link to="/home-02#tentang">Tentang Kami</Link><Link to="/home-02#kontak">Kontak</Link></nav><Link className="campaign-nav-cta" to="/campaign-request">Ajukan Campaign <span>→</span></Link></header>
     <div className="campaign-request-layout"><section className="campaign-request-intro"><p className="campaign-request-kicker">Ideas&nbsp;&nbsp; People&nbsp;&nbsp; Impact</p><h1>Diskusikan <span>Campaign</span> Brand Anda</h1><p className="campaign-request-lead">Buzzerhood membantu brand, perusahaan, dan organisasi membangun <strong>awareness</strong>, <strong>engagement</strong>, dan <strong>dampak nyata</strong> melalui kekuatan creator, komunitas, dan kampanye buzz yang terukur.</p><div className="campaign-service-grid">{services.map(([icon, serviceTitle, copy]) => <article key={serviceTitle}><span className="campaign-service-icon"><Icon name={icon} /></span><div><h2>{serviceTitle}</h2><p>{copy}</p></div></article>)}</div><p className="campaign-request-script">Dari Ide,<br />Jadi Dampak.</p></section>
       <section className="campaign-request-card"><p className="campaign-form-kicker">Public Form</p><h2>{title}</h2><p className="campaign-form-copy">Isi brief singkat Anda, tim kami akan segera menghubungi Anda.</p><form onSubmit={handleSubmit(() => undefined)} noValidate>
         <label>Nama Lengkap<div className="campaign-field"><Icon name="user" /><input autoComplete="name" placeholder="Nama lengkap Anda" {...register('name')} /></div></label>{errors.name ? <small>{errors.name.message}</small> : null}
