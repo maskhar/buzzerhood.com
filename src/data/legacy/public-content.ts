@@ -70,8 +70,8 @@ export const whyBuzzerhood = [
   { mark: '6', name: 'Measurable', desc: 'Aktivitas dipantau & dilaporkan.' },
   { mark: '7', name: 'One Network', desc: 'Media, creator, community, buzzer — satu ekosistem.' },
   { mark: '8', name: 'Transparent', desc: 'Laporan lengkap dengan data terukur.' },
-  { mark: '6', name: 'Operational Team', desc: 'Tim dedicated untuk setiap campaign.' },
-  { mark: '7', name: 'Network Database', desc: 'Akses ke database 5.000+ akun digital.' },
+  { mark: '9', name: 'Operational Team', desc: 'Tim dedicated untuk setiap campaign.' },
+  { mark: '10', name: 'Network Database', desc: 'Akses ke database 5.000+ akun digital.' },
 ] as const;
 
 export const products = [
