@@ -6,6 +6,7 @@ import { WorkspaceEntryRedirect, WorkspaceGuard } from '@/features/workspaces/wo
 
 const PublicHomePage = lazy(() => import('@/pages/public/public-home-page').then((module) => ({ default: module.PublicHomePage })));
 const Home02Page = lazy(() => import('@/pages/public/home-02-page').then((module) => ({ default: module.Home02Page })));
+const NetworkDatabasePage = lazy(() => import('@/pages/public/network-database-page').then((module) => ({ default: module.NetworkDatabasePage })));
 const PrivacyPage = lazy(() => import('@/pages/public/privacy-page').then((module) => ({ default: module.PrivacyPage })));
 const TermsPage = lazy(() => import('@/pages/public/terms-page').then((module) => ({ default: module.TermsPage })));
 const LoginPage = lazy(() => import('@/pages/public/login-page').then((module) => ({ default: module.LoginPage })));
@@ -33,7 +34,8 @@ function placeholder(title: string) { return load(<DashboardPlaceholder title={t
 
 const router = createBrowserRouter([
   { path: '/', element: load(<PublicHomePage />) },
-  { path: '/home-02', element: load(<Home02Page />) },
+ { path: '/home-02', element: load(<Home02Page />) },
+  { path: '/database', element: load(<NetworkDatabasePage />) },
   { path: '/privacy', element: load(<PrivacyPage />) },
   { path: '/terms', element: load(<TermsPage />) },
   { path: '/services', element: <Navigate to="/#layanan" replace /> },
