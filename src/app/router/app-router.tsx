@@ -34,8 +34,8 @@ function load(element: React.ReactNode) { return <Suspense fallback={<LoadingSta
 function placeholder(title: string) { return load(<DashboardPlaceholder title={title} />); }
 
 const router = createBrowserRouter([
-  { path: '/', element: load(<PublicHomePage />) },
- { path: '/home-02', element: load(<Home02Page />) },
+  { path: '/', element: load(<Home02Page />) },
+  { path: '/home-old', element: load(<PublicHomePage />) },
   { path: '/database', element: load(<NetworkDatabasePage />) },
   { path: '/privacy', element: load(<PrivacyPage />) },
   { path: '/terms', element: load(<TermsPage />) },
