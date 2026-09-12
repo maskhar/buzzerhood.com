@@ -7,6 +7,7 @@ import { WorkspaceEntryRedirect, WorkspaceGuard } from '@/features/workspaces/wo
 const PublicHomePage = lazy(() => import('@/pages/public/public-home-page').then((module) => ({ default: module.PublicHomePage })));
 const Home02Page = lazy(() => import('@/pages/public/home-02-page').then((module) => ({ default: module.Home02Page })));
 const PrivacyPage = lazy(() => import('@/pages/public/privacy-page').then((module) => ({ default: module.PrivacyPage })));
+const TermsPage = lazy(() => import('@/pages/public/terms-page').then((module) => ({ default: module.TermsPage })));
 const LoginPage = lazy(() => import('@/pages/public/login-page').then((module) => ({ default: module.LoginPage })));
 const AccountPasswordPage = lazy(() => import('@/pages/public/account-password-page').then((module) => ({ default: module.AccountPasswordPage })));
 const CampaignRequestPage = lazy(() => import('@/pages/public/campaign-request-page').then((module) => ({ default: module.CampaignRequestPage })));
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
   { path: '/', element: load(<PublicHomePage />) },
   { path: '/home-02', element: load(<Home02Page />) },
   { path: '/privacy', element: load(<PrivacyPage />) },
+  { path: '/terms', element: load(<TermsPage />) },
   { path: '/services', element: <Navigate to="/#layanan" replace /> },
   { path: '/network', element: <Navigate to="/#database" replace /> },
   { path: '/partner/register-info', element: load(<CampaignRequestPage partner />) },

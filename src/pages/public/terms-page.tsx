@@ -1,0 +1,39 @@
+import { Link } from 'react-router-dom';
+import buzzerhoodWordmark from '@/assets/buzzerhood-wordmark.svg';
+import './privacy-page.css';
+import './terms-page.css';
+
+const sections = [
+  ['1. Penerimaan Ketentuan', 'Dengan mengakses situs atau menggunakan layanan Buzzerhood, Anda menyatakan telah membaca, memahami, dan menyetujui Syarat dan Ketentuan ini. Jika tidak setuju, jangan gunakan layanan.'],
+  ['2. Definisi', 'Buzzerhood berarti platform dan layanan Media, Influence & Distribution Network. Pengguna berarti setiap pengunjung, client, brand, partner, creator, media, komunitas, atau pihak lain yang menggunakan layanan. Campaign berarti pekerjaan komunikasi, distribusi, aktivasi, atau publikasi yang disepakati.'],
+  ['3. Ruang Lingkup Layanan', 'Buzzerhood menghubungkan kebutuhan campaign dengan jaringan media, KOL, influencer, creator, komunitas, dan partner. Ruang lingkup, deliverable, jadwal, biaya, metrik, dan hasil setiap campaign mengikuti brief, quotation, proposal, atau perjanjian tertulis yang disetujui para pihak.'],
+  ['4. Akun dan Informasi Pengguna', 'Pengguna wajib memberikan informasi yang benar, lengkap, dan terbaru; menjaga kerahasiaan kredensial; serta segera melaporkan akses tidak sah. Pengguna bertanggung jawab atas aktivitas yang terjadi melalui akunnya dan dilarang meminjamkan atau menjual akses tanpa izin tertulis.'],
+  ['5. Brief, Materi, dan Hak Kekayaan Intelektual', 'Pengguna menjamin memiliki hak atau izin untuk memberikan brief, logo, merek, foto, video, musik, teks, data, dan materi lain. Pengguna memberi Buzzerhood lisensi terbatas untuk menggunakan materi hanya sejauh diperlukan untuk menjalankan campaign. Hak atas materi tetap berada pada pemiliknya, kecuali disepakati lain secara tertulis.'],
+  ['6. Aturan Konten dan Perilaku', 'Pengguna dilarang menggunakan layanan untuk konten ilegal, menyesatkan, diskriminatif, mengancam, melanggar hak pihak lain, menyebarkan malware, melakukan spam, manipulasi engagement, impersonasi, atau aktivitas yang merusak reputasi dan keamanan platform. Buzzerhood dapat menolak, menunda, menghapus, atau menghentikan materi yang melanggar.'],
+  ['7. Pelaksanaan Campaign', 'Buzzerhood akan melakukan upaya profesional yang wajar sesuai brief yang disetujui. Jadwal dapat berubah karena revisi, keterlambatan approval, ketersediaan partner, kebijakan platform, peristiwa di luar kendali, atau kebutuhan kepatuhan. Publikasi hanya dianggap final setelah proses review dan approval yang disepakati selesai.'],
+  ['8. Revisi dan Persetujuan', 'Pengguna wajib memberikan feedback dan approval dalam waktu yang disepakati. Perubahan di luar brief, penambahan deliverable, atau revisi setelah approval dapat memerlukan biaya dan jadwal tambahan. Persetujuan dari kontak resmi pengguna dapat dianggap sebagai persetujuan organisasi pengguna.'],
+  ['9. Biaya, Pajak, dan Pembayaran', 'Biaya, termin, pajak, biaya pihak ketiga, dan konsekuensi keterlambatan pembayaran mengikuti dokumen komersial yang disetujui. Buzzerhood dapat menunda pekerjaan atau menahan publikasi jika pembayaran jatuh tempo belum diterima. Biaya yang telah dikeluarkan secara sah tetap dapat ditagihkan.'],
+  ['10. Metrik dan Hasil', 'Metrik campaign berasal dari data yang tersedia dari platform atau partner terkait. Angka estimasi bukan jaminan hasil. Buzzerhood tidak menjamin jumlah reach, engagement, penjualan, viralitas, ranking, atau hasil bisnis tertentu karena hasil dipengaruhi audiens, algoritma, pasar, materi, dan faktor eksternal.'],
+  ['11. Pihak Ketiga dan Platform', 'Campaign dapat menggunakan layanan, media, platform, payment provider, hosting, atau partner pihak ketiga. Aturan, biaya, ketersediaan, moderasi, dan kebijakan pihak ketiga berlaku terpisah. Buzzerhood tidak mengendalikan perubahan atau gangguan pada layanan pihak ketiga.'],
+  ['12. Kerahasiaan', 'Para pihak wajib menjaga informasi nonpublik yang diterima untuk pelaksanaan layanan dan menggunakannya hanya untuk tujuan yang disepakati. Kewajiban ini tidak berlaku untuk informasi yang telah publik, diperoleh secara sah dari pihak lain, atau wajib diungkapkan berdasarkan hukum.'],
+  ['13. Privasi dan Data Pribadi', 'Pemrosesan data pribadi dilakukan sesuai Kebijakan Privasi Buzzerhood dan peraturan yang berlaku. Pengguna wajib memiliki dasar dan izin yang diperlukan sebelum menyerahkan data pribadi pihak lain untuk campaign.'],
+  ['14. Penangguhan dan Pengakhiran', 'Buzzerhood dapat menangguhkan atau mengakhiri akses jika terjadi pelanggaran, risiko keamanan, penggunaan ilegal, keterlambatan pembayaran, atau kewajiban hukum. Pengguna dapat mengakhiri layanan sesuai perjanjian. Ketentuan mengenai pembayaran, kerahasiaan, hak kekayaan intelektual, batas tanggung jawab, dan penyelesaian sengketa tetap berlaku setelah pengakhiran.'],
+  ['15. Penafian', 'Layanan disediakan berdasarkan ketersediaan dan sesuai dokumen campaign. Sejauh diizinkan hukum, Buzzerhood menafikan jaminan tersirat mengenai kesesuaian untuk tujuan tertentu, ketersediaan tanpa gangguan, dan hasil tertentu.'],
+  ['16. Batas Tanggung Jawab', 'Sejauh diizinkan hukum, Buzzerhood tidak bertanggung jawab atas kerugian tidak langsung, kehilangan keuntungan, kehilangan data, kehilangan peluang, atau kerugian konsekuensial. Batas tanggung jawab maksimal mengikuti nilai biaya campaign yang dibayarkan untuk campaign terkait, kecuali batas tersebut dilarang hukum atau kerugian disebabkan kesengajaan atau kelalaian berat.'],
+  ['17. Ganti Rugi', 'Pengguna setuju membebaskan dan mengganti kerugian Buzzerhood dari klaim, kerugian, biaya, atau tuntutan pihak ketiga yang timbul dari pelanggaran ketentuan ini, materi pengguna, instruksi campaign, atau penggunaan layanan yang melanggar hukum atau hak pihak lain.'],
+  ['18. Keadaan Kahar', 'Pihak tidak dianggap wanprestasi jika kegagalan disebabkan keadaan di luar kendali wajar, termasuk bencana, gangguan jaringan, serangan siber, perang, kerusuhan, perubahan kebijakan platform, pemogokan, wabah, atau perintah pemerintah. Pihak terdampak wajib memberi pemberitahuan dan melakukan upaya wajar untuk memulihkan layanan.'],
+  ['19. Perubahan Ketentuan', 'Buzzerhood dapat memperbarui Syarat dan Ketentuan ini karena perubahan layanan, risiko, atau hukum. Versi terbaru berlaku sejak ditampilkan pada halaman ini atau sejak tanggal yang dinyatakan. Penggunaan berkelanjutan setelah perubahan berarti penerimaan atas versi terbaru.'],
+  ['20. Hukum dan Penyelesaian Sengketa', 'Ketentuan ini tunduk pada hukum Republik Indonesia. Para pihak akan mengupayakan penyelesaian melalui musyawarah terlebih dahulu. Jika tidak tercapai kesepakatan, sengketa diselesaikan melalui forum yang berwenang sesuai perjanjian tertulis atau ketentuan hukum yang berlaku.'],
+];
+
+export function TermsPage() {
+  return <main className="privacy-public">
+    <header><Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={buzzerhoodWordmark} alt="Buzzerhood" /></Link><Link to="/home-02">Kembali ke Beranda</Link></header>
+    <article><p className="privacy-label">LEGAL</p><h1>Syarat &amp; Ketentuan</h1><p className="privacy-updated">Terakhir diperbarui: 12 September 2026</p>
+      <p className="terms-intro">Dokumen ini mengatur penggunaan situs, layanan campaign, dan hubungan kerja antara Buzzerhood dengan pengguna, client, brand, serta partner.</p>
+      {sections.map(([title, content]) => <section key={title}><h2>{title}</h2><p>{content}</p></section>)}
+      <section><h2>21. Hubungi Kami</h2><p>Pertanyaan mengenai Syarat dan Ketentuan dapat dikirim ke <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a> dengan subjek “Syarat dan Ketentuan”.</p></section>
+      <aside className="privacy-note">Dokumen ini merupakan template operasional dan perlu ditinjau penasihat hukum sebelum diberlakukan sebagai perjanjian final.</aside>
+    </article>
+  </main>;
+}
