@@ -34,6 +34,6 @@ export function TermsPage() {
       {sections.map(([title, content]) => <section id={title.split(". ")[0]} key={title}><h2>{title}</h2><p>{content}</p></section>)}
       <section id="21"><h2>21. Hubungi Kami</h2><p>Pertanyaan mengenai Syarat dan Ketentuan dapat dikirim ke <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a> dengan subjek “Syarat dan Ketentuan”.</p></section>
       <aside className="privacy-note">Dokumen ini merupakan template operasional dan perlu ditinjau penasihat hukum sebelum diberlakukan sebagai perjanjian final.</aside>
-    </article>
+    </article></div>
   </main>;
 }
