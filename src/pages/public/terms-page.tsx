@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import buzzerhoodWordmark from '@/assets/buzzerhood-wordmark.svg';
+import headerLogo02 from '@/assets/images/buzzerhood-logo-02.png';
 import './privacy-page.css';
 import './terms-page.css';
 
@@ -28,11 +28,11 @@ const sections = [
 
 export function TermsPage() {
   return <main className="privacy-public">
-    <header><Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={buzzerhoodWordmark} alt="Buzzerhood" /></Link><Link to="/home-02">Kembali ke Beranda</Link></header>
-    <article><p className="privacy-label">LEGAL</p><h1>Syarat &amp; Ketentuan</h1><p className="privacy-updated">Terakhir diperbarui: 12 September 2026</p>
+    <header><Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={headerLogo02} alt="Buzzerhood" /></Link><Link to="/home-02">Kembali ke Beranda</Link></header>
+    <div className="terms-layout"><aside className="terms-toc"><p>DAFTAR ISI</p><nav>{sections.map(([title]) => <a key={title} href={`#${title.split(". ")[0]}`}>{title}</a>)}<a href="#21">21. Hubungi Kami</a></nav></aside><article><p className="privacy-label">LEGAL</p><h1>Syarat &amp; Ketentuan</h1><p className="privacy-updated">Terakhir diperbarui: 12 September 2026</p>
       <p className="terms-intro">Dokumen ini mengatur penggunaan situs, layanan campaign, dan hubungan kerja antara Buzzerhood dengan pengguna, client, brand, serta partner.</p>
-      {sections.map(([title, content]) => <section key={title}><h2>{title}</h2><p>{content}</p></section>)}
-      <section><h2>21. Hubungi Kami</h2><p>Pertanyaan mengenai Syarat dan Ketentuan dapat dikirim ke <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a> dengan subjek “Syarat dan Ketentuan”.</p></section>
+      {sections.map(([title, content]) => <section id={title.split(". ")[0]} key={title}><h2>{title}</h2><p>{content}</p></section>)}
+      <section id="21"><h2>21. Hubungi Kami</h2><p>Pertanyaan mengenai Syarat dan Ketentuan dapat dikirim ke <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a> dengan subjek “Syarat dan Ketentuan”.</p></section>
       <aside className="privacy-note">Dokumen ini merupakan template operasional dan perlu ditinjau penasihat hukum sebelum diberlakukan sebagai perjanjian final.</aside>
     </article>
   </main>;
