@@ -2,12 +2,50 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
+import buzzerhoodWordmark from '@/assets/buzzerhood-wordmark.svg';
+import campaignBackground from '@/assets/images/campaign-request-bg.png';
 import './campaign-request-page.css';
 
-const requestSchema = z.object({ name: z.string().min(2, 'Masukkan nama.'), email: z.string().email('Masukkan email valid.'), company: z.string().min(2, 'Masukkan organisasi.'), message: z.string().min(10, 'Ceritakan kebutuhan campaign.'), });
+const requestSchema = z.object({
+  name: z.string().min(2, 'Masukkan nama.'), email: z.string().min(6, 'Masukkan email atau WhatsApp.'), company: z.string().min(2, 'Masukkan organisasi.'),
+  need: z.string().min(1, 'Pilih jenis kebutuhan.'), platform: z.string().min(2, 'Masukkan platform atau target campaign.'), message: z.string().min(10, 'Ceritakan kebutuhan campaign.'),
+});
 type RequestValues = z.infer<typeof requestSchema>;
+const services = [
+  ['megaphone', 'Brand Awareness', 'Perluas jangkauan brand Anda secara masif.'], ['people', 'Creator Activation', 'Kolaborasi dengan creator, KOL, dan influencer relevan.'],
+  ['community', 'Community Amplification', 'Gerakkan komunitas untuk dukungan yang lebih kuat.'], ['network', 'Buzzer Network', 'Sebarkan narasi positif melalui jaringan buzzer kami.'],
+] as const;
+
+function Icon({ name }: { name: string }) {
+  const common = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true };
+  if (name === 'megaphone') return <svg {...common}><path d="m3 11 17-6v12L3 13z"/><path d="M11.6 16.1 13 21H8l-1.7-6"/><path d="M20 9a3 3 0 0 1 0 4"/></svg>;
+  if (name === 'people') return <svg {...common}><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20v-2a5.5 5.5 0 0 1 11 0v2"/><path d="M14 14.5a4.5 4.5 0 0 1 7.5 3.5v2"/></svg>;
+  if (name === 'community') return <svg {...common}><circle cx="12" cy="7" r="3"/><circle cx="5" cy="10" r="2.5"/><circle cx="19" cy="10" r="2.5"/><path d="M7 21v-2a5 5 0 0 1 10 0v2"/><path d="M1 20v-1.5A4.5 4.5 0 0 1 6 14"/><path d="M23 20v-1.5a4.5 4.5 0 0 0-5-4.5"/></svg>;
+  if (name === 'network') return <svg {...common}><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.2 10.8 7.6-3.6M8.2 13.2l7.6 3.6"/></svg>;
+  if (name === 'mail') return <svg {...common}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>;
+  if (name === 'building') return <svg {...common}><path d="M4 21V4h10v17M14 9h6v12M8 8h2M8 12h2M8 16h2M17 13h1M17 17h1"/></svg>;
+  if (name === 'list') return <svg {...common}><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>;
+  if (name === 'target') return <svg {...common}><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="m15 9 6-6M17 3h4v4"/></svg>;
+  if (name === 'file') return <svg {...common}><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></svg>;
+  if (name === 'send') return <svg {...common}><path d="m22 2-7 20-4-9-9-4zM22 2 11 13"/></svg>;
+  return <svg {...common}><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>;
+}
+
 export function CampaignRequestPage({ partner }: { partner?: boolean }) {
   const { register, handleSubmit, formState: { errors, isSubmitSuccessful } } = useForm<RequestValues>({ resolver: zodResolver(requestSchema) });
-  const title = partner ? 'Bergabung sebagai partner' : 'Diskusikan campaign';
-  return <main className="auth-page campaign-request-page"><Link className="brand" to="/">BUZZER<span>HOOD</span></Link><section className="auth-card campaign-request-card"><p className="eyebrow">PUBLIC FORM SHELL</p><h1>{title}</h1><p>Form tervalidasi. Integrasi submission aman belum diaktifkan pada Phase 1.</p><form onSubmit={handleSubmit(() => undefined)} noValidate><label>Nama<input {...register('name')} /></label>{errors.name ? <small>{errors.name.message}</small> : null}<label>Email<input type="email" {...register('email')} /></label>{errors.email ? <small>{errors.email.message}</small> : null}<label>{partner ? 'Organisasi / nama channel' : 'Perusahaan / organisasi'}<input {...register('company')} /></label>{errors.company ? <small>{errors.company.message}</small> : null}<label>Kebutuhan<textarea rows={5} {...register('message')} /></label>{errors.message ? <small>{errors.message.message}</small> : null}<button className="btn-solid" type="submit">Kirim permintaan</button>{isSubmitSuccessful ? <p className="form-message">Draft form valid. Submission backend akan ditambahkan pada fase workflow.</p> : null}</form></section></main>;
+  const title = partner ? <>Form Pendaftaran <span>Partner</span></> : <>Form Permintaan <span>Campaign</span></>;
+  return <main className="campaign-request" style={{ '--campaign-bg': 'url(' + campaignBackground + ')' } as React.CSSProperties}>
+    <header className="campaign-request-nav"><Link to="/home-02" aria-label="Buzzerhood — kembali ke beranda"><img src={buzzerhoodWordmark} alt="Buzzerhood" /></Link><nav aria-label="Navigasi utama"><Link to="/home-02">Beranda</Link><Link to="/home-02#layanan">Layanan</Link><Link to="/home-02#studi-kasus">Studi Kasus</Link><Link to="/home-02#tentang">Tentang Kami</Link><Link to="/home-02#kontak">Kontak</Link></nav><Link className="campaign-nav-cta" to="/campaign-request">Ajukan Campaign <span>→</span></Link></header>
+    <div className="campaign-request-layout"><section className="campaign-request-intro"><p className="campaign-request-kicker">Ideas&nbsp;&nbsp; People&nbsp;&nbsp; Impact</p><h1>Diskusikan <span>Campaign</span> Brand Anda</h1><p className="campaign-request-lead">Buzzerhood membantu brand, perusahaan, dan organisasi membangun <strong>awareness</strong>, <strong>engagement</strong>, dan <strong>dampak nyata</strong> melalui kekuatan creator, komunitas, dan kampanye buzz yang terukur.</p><div className="campaign-service-grid">{services.map(([icon, serviceTitle, copy]) => <article key={serviceTitle}><span className="campaign-service-icon"><Icon name={icon} /></span><div><h2>{serviceTitle}</h2><p>{copy}</p></div></article>)}</div><p className="campaign-request-script">Dari Ide,<br />Jadi Dampak.</p></section>
+      <section className="campaign-request-card"><p className="campaign-form-kicker">Public Form</p><h2>{title}</h2><p className="campaign-form-copy">Isi brief singkat Anda, tim kami akan segera menghubungi Anda.</p><form onSubmit={handleSubmit(() => undefined)} noValidate>
+        <label>Nama Lengkap<div className="campaign-field"><Icon name="user" /><input autoComplete="name" placeholder="Nama lengkap Anda" {...register('name')} /></div></label>{errors.name ? <small>{errors.name.message}</small> : null}
+        <label>Email / WhatsApp<div className="campaign-field"><Icon name="mail" /><input autoComplete="email" placeholder="nama@perusahaan.com / 08xxxxxxxx" {...register('email')} /></div></label>{errors.email ? <small>{errors.email.message}</small> : null}
+        <label>{partner ? 'Organisasi / Nama Channel' : 'Perusahaan / Brand / Organisasi'}<div className="campaign-field"><Icon name="building" /><input autoComplete="organization" placeholder={partner ? 'Nama organisasi atau channel Anda' : 'Nama perusahaan atau brand Anda'} {...register('company')} /></div></label>{errors.company ? <small>{errors.company.message}</small> : null}
+        <label>Jenis Kebutuhan<div className="campaign-field"><Icon name="list" /><select defaultValue="" {...register('need')}><option value="" disabled>Pilih jenis kebutuhan</option><option>Brand Awareness</option><option>Creator Activation</option><option>Community Amplification</option><option>Buzzer Network</option><option>Lainnya</option></select></div></label>{errors.need ? <small>{errors.need.message}</small> : null}
+        <label>Platform / Target Campaign<div className="campaign-field"><Icon name="target" /><input placeholder="Contoh: Instagram, TikTok, YouTube, dll" {...register('platform')} /></div></label>{errors.platform ? <small>{errors.platform.message}</small> : null}
+        <label>Ceritakan kebutuhan Anda<div className="campaign-field campaign-textarea"><Icon name="file" /><textarea rows={3} placeholder="Jelaskan detail campaign, tujuan, timeline, dll." {...register('message')} /></div></label>{errors.message ? <small>{errors.message.message}</small> : null}
+        <button className="campaign-submit" type="submit"><Icon name="send" />Kirim Brief Campaign</button>{isSubmitSuccessful ? <p className="campaign-form-message" role="status">Draft form valid. Submission backend akan ditambahkan pada fase workflow.</p> : null}
+      </form><p className="campaign-form-note">◇&nbsp; Untuk brand, agency, organisasi, event, dan campaign kolaboratif.</p></section></div>
+    <footer className="campaign-request-stats" aria-label="Statistik jaringan Buzzerhood"><div><strong>500+</strong><span>Creator & KOL<br />Network</span></div><div><strong>100+</strong><span>Brand & Agency<br />Partner</span></div><div><strong>1000+</strong><span>Campaign<br />Kolaborasi</span></div><div><strong>Indonesia</strong><span>Lebih banyak<br />dampak positif</span></div><p>Good People<br />Good Impact</p></footer>
+  </main>;
 }
