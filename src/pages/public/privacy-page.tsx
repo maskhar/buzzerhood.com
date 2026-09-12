@@ -38,7 +38,6 @@ export function PrivacyPage() {
         {section.paragraphs.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
       </section>)}
       <section id="14"><h2>14. Hubungi Kami</h2><p>Untuk pertanyaan, pelaksanaan hak, atau pengaduan data pribadi, hubungi <a href="mailto:hallo@buzzerhood.com">hallo@buzzerhood.com</a>. Cantumkan subjek “Privasi Data” dan informasi yang cukup agar permintaan dapat diverifikasi dan ditindaklanjuti.</p></section>
-      <aside className="privacy-note">Dokumen ini perlu ditinjau penasihat hukum serta diperbarui saat identitas badan hukum, fitur, vendor, atau praktik pemrosesan Buzzerhood berubah.</aside>
     </article></div>
   </main>;
 }
