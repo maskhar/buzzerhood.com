@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { LoadingState } from '@/components/common/loading-state';
 import { ProtectedRoute } from '@/features/auth/protected-route';
@@ -56,4 +56,14 @@ const router = createBrowserRouter([
   { path: '*', element: <Navigate to="/" replace /> },
 ]);
 
-export function AppRouter() { return <RouterProvider router={router} />; }
+export function AppRouter() {
+  useEffect(() => {
+    let currentPath = router.state.location.pathname;
+    return router.subscribe((state) => {
+      if (state.location.pathname === currentPath) return;
+      currentPath = state.location.pathname;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
+  }, []);
+  return <RouterProvider router={router} />;
+}
